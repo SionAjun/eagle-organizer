@@ -1,0 +1,82 @@
+[
+  {
+    "index": 1,
+    "item_id": "MO5Z7732ZERIH",
+    "deprecated_found": ["光-柔光"],
+    "tags_to_remove": ["光-柔光"],
+    "tags_to_add": ["光-漫反射"],
+    "note": "科幻磁带播放器3D渲染，暗灰背景，全向柔和环境光，全息屏发光为自发光而非主光源"
+  },
+  {
+    "index": 2,
+    "item_id": "MO4KY8XI3HIAG",
+    "deprecated_found": ["材-金属"],
+    "tags_to_remove": ["材-金属"],
+    "tags_to_add": ["材-金属-烤漆"],
+    "note": "同设备高精度3D版，机体外壳为哑黑涂装金属（已有侧光/荧光/高对比保留，无需补光）"
+  },
+  {
+    "index": 3,
+    "item_id": "MO4FBTGT5MMLF",
+    "deprecated_found": ["光-柔光"],
+    "tags_to_remove": ["光-柔光"],
+    "tags_to_add": ["光-漫反射"],
+    "note": "同设备2D正交俯视概念图，格纸背景均匀平光"
+  },
+  {
+    "index": 4,
+    "item_id": "MO4F3ALR3AGIP",
+    "deprecated_found": ["光-柔光"],
+    "tags_to_remove": ["光-柔光"],
+    "tags_to_add": ["光-漫反射"],
+    "note": "同设备等轴视角AI辅助概念图，格纸背景，软环境光"
+  },
+  {
+    "index": 5,
+    "item_id": "MO4EQV1IHPFJY",
+    "deprecated_found": ["材-皮革"],
+    "tags_to_remove": ["材-皮革"],
+    "tags_to_add": ["材-布料-皮革"],
+    "note": "ZZZ联名黑色滚筒包实物照，表面哑光合成皮革/PU革质感"
+  },
+  {
+    "index": 6,
+    "item_id": "MO4EQT8DMPRB1",
+    "deprecated_found": ["光-柔光"],
+    "tags_to_remove": ["光-柔光"],
+    "tags_to_add": ["光-漫反射"],
+    "note": "YooTube科幻VCR+磁带概念图，白底软光"
+  },
+  {
+    "index": 7,
+    "item_id": "MO4EQR02TGP64",
+    "deprecated_found": ["光-柔光"],
+    "tags_to_remove": ["光-柔光"],
+    "tags_to_add": ["光-漫反射"],
+    "note": "MILK+/CEREAL科幻消耗品容器概念图，白底均匀软光"
+  },
+  {
+    "index": 8,
+    "item_id": "MO4EN3HTYZ4CP",
+    "deprecated_found": ["光-柔光", "材-金属"],
+    "tags_to_remove": ["光-柔光", "材-金属"],
+    "tags_to_add": ["光-漫反射", "材-金属-光面"],
+    "note": "FPC连接器实物白底产品照；金色SMD贴片+连接器触点为光面金属；白底漫射布光"
+  },
+  {
+    "index": 9,
+    "item_id": "MO4EMMMXHV8NE",
+    "deprecated_found": ["材-金属"],
+    "tags_to_remove": ["材-金属"],
+    "tags_to_add": ["材-金属-烤漆"],
+    "note": "纽约地铁站仰拍，深灰色穿孔金属天花板板块为涂装工业钢（已有荧光/高对比保留）"
+  },
+  {
+    "index": 10,
+    "item_id": "MO4DJAG75YDH9",
+    "deprecated_found": ["光-柔光"],
+    "tags_to_remove": ["光-柔光"],
+    "tags_to_add": ["光-漫反射"],
+    "note": "丰田概念车手绘设计草图（马克笔+铅笔），白底，渲染光为示意性软光"
+  }
+]

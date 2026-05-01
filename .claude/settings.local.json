@@ -1,0 +1,34 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:localhost)",
+      "Bash(curl -v http://localhost:41595/api/application/info)",
+      "Bash(curl *)",
+      "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\('total:', d.get\\('data',{}\\) if isinstance\\(d.get\\('data'\\),int\\) else len\\(d.get\\('data',[]\\)\\) if isinstance\\(d.get\\('data'\\),list\\) else d\\)\")",
+      "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d, indent=2, ensure_ascii=False\\)\\)\")",
+      "Bash(python *)",
+      "WebFetch(domain:api.eagle.cool)",
+      "Skill(update-config)",
+      "PowerShell(Copy-Item *)",
+      "Bash(python3 *)",
+      "Bash(cp tags.json tags.json.bak.v1.1)",
+      "Bash(cp tag_real.py tag_real.py.bak.20260423)",
+      "Bash(powershell -Command \"Get-ChildItem -File | Select-Object Name, Length, LastWriteTime | Sort-Object Name | Format-Table -AutoSize\")",
+      "Bash(powershell -Command 'Get-ChildItem *.py | ForEach-Object { $lines = \\(Get-Content $_.FullName\\).Count; Write-Output \"$\\($_.Name\\) | $lines 行 | $\\($_.LastWriteTime.ToString\\('\\\\''yyyy-MM-dd HH:mm'\\\\''\\)\\)\" }')",
+      "Bash(powershell -Command 'Get-ChildItem *.json | ForEach-Object { $size = $_.Length; $content = Get-Content $_.FullName -Raw | ConvertFrom-Json; $keys = \\($content | Get-Member -MemberType NoteProperty\\).Name -join '\\\\'', '\\\\''; Write-Output \"$\\($_.Name\\) | ${size}B | keys: $keys\" }')",
+      "PowerShell(Test-Path *)",
+      "Bash(rm \"C:/GAME 2333/game/Claud cod/eagle-organizer/archive/backups/tag_real.py.bak.20260424\")",
+      "Bash(rm \"C:/GAME 2333/game/Claud cod/eagle-organizer/archive/review_queue.json.deprecated_20260425\")",
+      "WebSearch",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Skill(claude-hud:setup)",
+      "Bash(grep -n \"标靶扫描\" batch_results_*.json archive/batches/batch_results_*.json)",
+      "Bash(grep -c \"标靶扫描\" batch_results_*.json archive/batches/batch_results_*.json)",
+      "Bash(sed 's/.*batch_results_//')",
+      "Bash(sed 's/.json//')",
+      "Bash(md5sum config/tags.json config/rules.json)",
+      "Bash(md5 config/tags.json config/rules.json)",
+      "Bash(pip freeze *)"
+    ]
+  }
+}

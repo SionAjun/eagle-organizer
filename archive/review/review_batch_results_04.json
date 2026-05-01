@@ -1,0 +1,82 @@
+[
+  {
+    "index": 1,
+    "item_id": "MO4DJ3BWGZ8RN",
+    "deprecated_found": ["光-柔光", "材-金属"],
+    "tags_to_remove": ["光-柔光", "材-金属"],
+    "tags_to_add": ["光-漫反射", "材-金属-光面"],
+    "note": "科幻滑雪靴3D+中世纪头盔实景拼图，白底软光；金属卡扣/承重件为光面铬色金属"
+  },
+  {
+    "index": 2,
+    "item_id": "MM24H5PHVSOT7",
+    "deprecated_found": ["光-柔光"],
+    "tags_to_remove": ["光-柔光"],
+    "tags_to_add": ["光-漫反射"],
+    "note": "突击载具3D卡渲，灰背景软环境光，车身白色烤漆塑料为主材（无需补材）"
+  },
+  {
+    "index": 3,
+    "item_id": "MO4D1M7EGMOYZ",
+    "deprecated_found": ["光-柔光"],
+    "tags_to_remove": ["光-柔光"],
+    "tags_to_add": ["光-漫反射"],
+    "note": "Drifter城市巴士多视角厚涂概念图，白/透明背景，软漫射布光"
+  },
+  {
+    "index": 4,
+    "item_id": "MO4D1EVE3W34N",
+    "deprecated_found": ["光-柔光"],
+    "tags_to_remove": ["光-柔光"],
+    "tags_to_add": ["光-漫反射"],
+    "note": "奥迪越野概念车CGI，已有光-顶光保留，漫射环境光作为补充"
+  },
+  {
+    "index": 5,
+    "item_id": "MO4D1A408L87H",
+    "deprecated_found": ["光-柔光", "材-金属"],
+    "tags_to_remove": ["光-柔光", "材-金属"],
+    "tags_to_add": ["光-漫反射", "材-金属-拉丝"],
+    "note": "汽车底盘X光透视3D，灰底均匀漫射；底架结构管/导轨为拉丝铝合金质感"
+  },
+  {
+    "index": 6,
+    "item_id": "MO4CZYSSBPVBH",
+    "deprecated_found": ["光-柔光", "材-金属"],
+    "tags_to_remove": ["光-柔光", "材-金属"],
+    "tags_to_add": ["光-漫反射", "材-金属-烤漆"],
+    "note": "Mars Cruiser围栏道具多损坏状态，灰底软光；主体金属板为奶白/米色烤漆（损坏版显露做旧，完好版为烤漆）"
+  },
+  {
+    "index": 7,
+    "item_id": "MO4CJIXMM84KN",
+    "deprecated_found": ["光-柔光", "材-金属"],
+    "tags_to_remove": ["光-柔光", "材-金属"],
+    "tags_to_add": ["光-漫反射", "材-金属-光面"],
+    "note": "Fri复古TV 3D产品海报，浅灰背景漫射；橙色六角螺帽配件+天线尖端为光面金属"
+  },
+  {
+    "index": 8,
+    "item_id": "MO4CHIPPTBAAD",
+    "deprecated_found": ["光-柔光"],
+    "tags_to_remove": ["光-柔光"],
+    "tags_to_add": ["光-白天"],
+    "note": "等距日系城市建筑插图，场-白天已在标签中，光质对应白天自然光"
+  },
+  {
+    "index": 9,
+    "item_id": "MO4CGCEG7HXU6",
+    "deprecated_found": ["光-柔光", "材-金属"],
+    "tags_to_remove": ["光-柔光", "材-金属"],
+    "tags_to_add": ["材-金属-光面"],
+    "note": "同款复古TV完整展示海报，光-侧光已保留无需补光；金属元素为光面铬色螺帽/按钮装饰"
+  },
+  {
+    "index": 10,
+    "item_id": "MO4CFQVAS0HJB",
+    "deprecated_found": ["材-金属"],
+    "tags_to_remove": ["材-金属"],
+    "tags_to_add": ["材-金属-做旧"],
+    "note": "ZZZ游戏截图街道转角，侧光/高对比/体积光已保留；金属管道+电箱为灰色做旧磨损金属"
+  }
+]

@@ -1,0 +1,66 @@
+[
+  {
+    "index": 1,
+    "item_id": "MNYS46GFSLG4C",
+    "deprecated_found": ["光-柔光"],
+    "tags_to_remove": ["光-柔光"],
+    "tags_to_add": ["光-漫反射"],
+    "note": "动态赛璐璐anime角色俯冲图，绿色网点背景，无方向光源，整体平面漫射光"
+  },
+  {
+    "index": 2,
+    "item_id": "MNYS3CBDSNLW9",
+    "deprecated_found": ["光-柔光"],
+    "tags_to_remove": ["光-柔光"],
+    "tags_to_add": ["光-侧光"],
+    "note": "赛璐璐风科幻女角色持巨型炮，蓝绿背景，角色左侧投影清晰，强方向侧光"
+  },
+  {
+    "index": 3,
+    "item_id": "MNYRWLRQVUPUZ",
+    "deprecated_found": ["材-金属"],
+    "tags_to_remove": ["材-金属"],
+    "tags_to_add": ["材-金属-烤漆"],
+    "note": "Apex Legends城市道具概念图（交通灯/ATM/路牌），灰蓝色哑光烤漆金属涂装"
+  },
+  {
+    "index": 4,
+    "item_id": "MNYPD7CYL57B0",
+    "deprecated_found": ["光-柔光", "材-金属"],
+    "tags_to_remove": ["光-柔光", "材-金属"],
+    "tags_to_add": ["光-漫反射", "材-金属-烤漆"],
+    "note": "复古薄荷绿自动贩卖机3D卡渲，均匀漫射背景光；机身为彩色平涂烤漆金属壳"
+  },
+  {
+    "index": 5,
+    "item_id": "MNXHVV73WPTYW",
+    "deprecated_found": ["光-柔光", "材-金属"],
+    "tags_to_remove": ["光-柔光", "材-金属"],
+    "tags_to_add": ["光-漫反射", "材-金属-烤漆"],
+    "note": "科幻设备箱写实3D，已有光-侧光（主光），光-柔光描述的环境漫射补光→光-漫反射；橙+深灰哑光烤漆金属外壳"
+  },
+  {
+    "index": 6,
+    "item_id": "MNYV4NBJGVNP0",
+    "deprecated_found": ["光-柔光", "材-金属"],
+    "tags_to_remove": ["光-柔光", "材-金属"],
+    "tags_to_add": ["光-漫反射", "材-金属-烤漆"],
+    "note": "Apex Legends仓库区鸟瞰游戏截图，阴天漫射日光，天空泛白；工业建筑钢构哑光烤漆"
+  },
+  {
+    "index": 7,
+    "item_id": "MNYV4HM7BX8T1",
+    "deprecated_found": ["光-柔光", "材-金属"],
+    "tags_to_remove": ["光-柔光", "材-金属"],
+    "tags_to_add": ["光-漫反射", "材-金属-烤漆"],
+    "note": "Star Citizen ACPD警用路障概念图，平涂白底中性漫射光；路障为多色彩烤漆金属构造"
+  },
+  {
+    "index": 8,
+    "item_id": "MNYV4FLZSSMXA",
+    "deprecated_found": ["光-柔光"],
+    "tags_to_remove": ["光-柔光"],
+    "tags_to_add": ["光-白天"],
+    "note": "Splatoon地图鸟瞰游戏截图，明亮晴天白昼光，建筑投影清晰可见"
+  }
+]

@@ -1,0 +1,82 @@
+[
+  {
+    "index": 1,
+    "item_id": "MO32VEHA0S2BC",
+    "deprecated_found": ["材-金属"],
+    "tags_to_remove": ["材-金属"],
+    "tags_to_add": ["材-金属-烤漆"],
+    "note": "科幻军事基地多视角概念图，白色涂装金属建筑板块结构（混凝土已在keep中）"
+  },
+  {
+    "index": 2,
+    "item_id": "MNYWPABO6KLH7",
+    "deprecated_found": ["光-柔光", "材-玻璃"],
+    "tags_to_remove": ["光-柔光", "材-玻璃"],
+    "tags_to_add": ["光-漫反射", "材-玻璃-清透"],
+    "note": "科幻手机+游戏手柄3D产品渲染，白背景漫射；透明手柄外壳为清透玻璃/亚克力质感"
+  },
+  {
+    "index": 3,
+    "item_id": "MNYWOAC4QLPBP",
+    "deprecated_found": ["光-柔光", "材-金属"],
+    "tags_to_remove": ["光-柔光", "材-金属"],
+    "tags_to_add": ["光-漫反射", "材-金属-拉丝"],
+    "note": "RED V-RAPTOR摄影机+机笼产品白底照；黑色CNC机笼为阳极氧化拉丝铝合金"
+  },
+  {
+    "index": 4,
+    "item_id": "MNYWLPWBCOHV8",
+    "deprecated_found": ["光-柔光"],
+    "tags_to_remove": ["光-柔光"],
+    "tags_to_add": ["光-漫反射"],
+    "note": "日本古代寺庙精品建筑缩尺模型白底实物照，多向漫射布光"
+  },
+  {
+    "index": 5,
+    "item_id": "MNYWFZADNLFBR",
+    "deprecated_found": ["光-柔光"],
+    "tags_to_remove": ["光-柔光"],
+    "tags_to_add": ["光-漫反射"],
+    "note": "奇幻毒刀+骨质护手+药水瓶武器概念图，白背景均匀软光"
+  },
+  {
+    "index": 6,
+    "item_id": "MNYWDTX0514GR",
+    "deprecated_found": ["光-柔光", "材-金属"],
+    "tags_to_remove": ["光-柔光", "材-金属"],
+    "tags_to_add": ["光-漫反射", "材-金属-光面"],
+    "note": "Sony磁带录音机实物近景照，浅背景漫射为主；铬色金属边条/按键装饰为光面金属"
+  },
+  {
+    "index": 7,
+    "item_id": "MNYVXFHTZOY1Q",
+    "deprecated_found": ["材-金属", "材-玻璃"],
+    "tags_to_remove": ["材-金属", "材-玻璃"],
+    "tags_to_add": ["材-金属-光面", "材-玻璃-磨砂"],
+    "note": "攻壳机动队Echo-Box 3D，光-荧光已保留；主体磨砂白色半透明壳+快接接头为光面铬色金属"
+  },
+  {
+    "index": 8,
+    "item_id": "MNYVU5ZV9BLFR",
+    "deprecated_found": ["光-柔光"],
+    "tags_to_remove": ["光-柔光"],
+    "tags_to_add": ["光-白天"],
+    "note": "中世纪集市鸟瞰厚涂插图，场-白天+场-集市已在keep，白天暖色阳光清晰可见"
+  },
+  {
+    "index": 9,
+    "item_id": "MCJBNNJ2CKSMJ",
+    "deprecated_found": ["材-金属"],
+    "tags_to_remove": ["材-金属"],
+    "tags_to_add": ["材-金属-烤漆"],
+    "note": "⚠️文件读取失败（日文文件名编码问题）；根据标签（科幻未来汽车概念图+暖色）推断车身漆面为烤漆金属"
+  },
+  {
+    "index": 10,
+    "item_id": "MNYVEXOGMIYOY",
+    "deprecated_found": ["光-柔光"],
+    "tags_to_remove": ["光-柔光"],
+    "tags_to_add": ["光-漫反射"],
+    "note": "科幻二次元角色立绘（灰背景，机能服双枪女性），全向均匀漫射环境光"
+  }
+]

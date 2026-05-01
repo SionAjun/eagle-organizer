@@ -1,0 +1,2963 @@
+{
+  "version": "2.3",
+  "changelog": [
+    {
+      "version": "2.3",
+      "date": "2026-05-01",
+      "changes": [
+        "新增「件-」前缀(32 个):机械/载具/武器/道具的形态、部件、设计语言",
+        "新增「载-」前缀(24 个):载具子类细分",
+        "新增「域-」前缀(4 个):物体/场景的物理活动域(陆/空/海/太空)",
+        "题- 前缀追加 6 个:战斗/运输/工程/民用/竞速/探索",
+        "所有标签项新增 applies_to/experimental/hit_count/scope_count 字段",
+        "合计 294 标签,18 个前缀"
+      ]
+    },
+    {
+      "version": "2.2",
+      "date": "2026-04-30",
+      "changes": [
+        "格-喷射战士 从 suggested 升入词表(count=3,首次达标)",
+        "格-命名规范:尽量中文译名,无法翻译才保留原文(rules.json v2.2.0)",
+        "合计 228 标签,15 个前缀"
+      ]
+    },
+    {
+      "version": "2.1",
+      "date": "2026-04-25",
+      "changes": [
+        "新增「格-」前缀(21 个):游戏美学锚点,作为 UI/排版类素材主检索入口",
+        "  硬科幻机能(9):光环/死亡搁浅/赛博朋克2077/命运2/质量效应/异形:隔离/装甲核心6/失落星船马拉松/终末地",
+        "  奇幻日式(3):魂系/对马岛之魂/塞尔达王国之泪",
+        "  末世废土(2):辐射系列/逃离塔科夫",
+        "  二次元(2):绝区零/明日方舟",
+        "  独立游戏(5):极乐迪斯科/控制/Hades/雨世界/VA-11 HALL-A",
+        "新增「版-」前缀(9 个):排版结构(散点/网格/密集堆叠/留白极简/不对称/杂志式/拆解爆炸/标靶扫描/故障噪点)",
+        "废除「风-黑魂」(迁移至 格-魂系),废除「风-米哈游」(无锚点游戏)",
+        "排异规则更新:类-UI / 类-排版 对 格- / 版- 放行",
+        "合计 229 标签,15 个前缀"
+      ]
+    },
+    {
+      "version": "2.0.2",
+      "date": "2026-04-24",
+      "changes": [
+        "色前缀补入 色-暖色主导 / 色-冷色主导(v2.0.1 误删,实际使用频率高,非冗余)",
+        "物前缀补入 物-柔性线缆 / 物-主机箱(首批打标 suggested 确认为有效标签)",
+        "合计 199 标签,13 个前缀"
+      ]
+    },
+    {
+      "version": "2.0.1",
+      "date": "2026-04-24",
+      "changes": [
+        "光前缀回滚:撤销 4 个主观时间词(黄金时刻/阴天散射/室内漫反射/蓝调时刻),恢复 v1.1 原版 18 个客观光学标签",
+        "全量对账 13 个前缀,确保与最终规范严格一致",
+        "类前缀补入 类-拆解图(v2.0 遗漏),共 17 个",
+        "题前缀重构为 19 个:聚焦硬科幻/工业/军事/奇幻核心题材",
+        "风前缀精简为 15 个:保留主流绘画风格标识符",
+        "氛前缀重构为 14 个:移除语义重叠条目",
+        "光前缀回滚为 v1.1 原版 18 个客观光学标签",
+        "镜前缀精简为 15 个:保留景别+视角+镜头类型",
+        "构前缀新增(10 个):拆解自原镜前缀的构图规则",
+        "场前缀精简为 16 个核心场景",
+        "角前缀确认 18 个:13 基础 + 5 兽迁入(巨兽/魔物/机械兽/现实动物/变异体)",
+        "兽前缀完全废除,13 个待定标签全部删除",
+        "物前缀重构为 13 个:粗粒度分类替代原细粒度列举",
+        "材前缀 24 个保持不变(v2.0 重构已正确)",
+        "色前缀重构为 10 个:配色关系优先,去除单色系冗余",
+        "教前缀精简为 6 个核心维度",
+        "合计 195 标签,13 个前缀(兽已废除)"
+      ]
+    },
+    {
+      "version": "2.0",
+      "date": "2026-04-23",
+      "changes": [
+        "删除 光-柔光,新增 光-黄金时刻/光-阴天散射/光-室内漫反射/光-蓝调时刻(v2.0.1 已回滚此变更)",
+        "兽前缀 5 个标签迁入角前缀:巨兽/魔物/机械兽/现实动物/变异体",
+        "材前缀从 v1.0 重构为 24 个细分标签",
+        "新增 INCOMPATIBLE_PREFIXES 排异规则(5 条)"
+      ]
+    },
+    {
+      "version": "1.0",
+      "date": "2026-04-22",
+      "changes": [
+        "初始词表,13 个维度,约 403 个标签"
+      ]
+    }
+  ],
+  "tags": {
+    "类": [
+      {
+        "name": "类-概念图",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 15,
+        "scope_count": 20
+      },
+      {
+        "name": "类-场景原画",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "类-角色原画",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 2,
+        "scope_count": 20
+      },
+      {
+        "name": "类-道具设定",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 3,
+        "scope_count": 20
+      },
+      {
+        "name": "类-插画",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "类-像素画",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "类-2D",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "类-3D",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "类-手绘",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "类-摄影",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "类-实景参考",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "类-游戏截图",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "类-影视截图",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "类-UI",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "类-排版",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "类-教程",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "类-拆解图",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 1,
+        "scope_count": 20
+      }
+    ],
+    "题": [
+      {
+        "name": "题-硬科幻",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 4,
+        "scope_count": 20
+      },
+      {
+        "name": "题-工业设计",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 11,
+        "scope_count": 20
+      },
+      {
+        "name": "题-赛博朋克",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "题-末日废土",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "题-航天航空",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "题-军事",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 2,
+        "scope_count": 20
+      },
+      {
+        "name": "题-机甲",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 6,
+        "scope_count": 20
+      },
+      {
+        "name": "题-功能主义",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "题-高科技",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 3,
+        "scope_count": 20
+      },
+      {
+        "name": "题-复古未来",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "题-中世纪",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "题-维多利亚",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "题-黑暗奇幻",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "题-剑与魔法",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 1,
+        "scope_count": 20
+      },
+      {
+        "name": "题-克苏鲁",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "题-二次元",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "题-都市幻想",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "题-近未来",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "题-现代",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "题-战斗",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "题-运输",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "题-工程",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 1,
+        "scope_count": 20
+      },
+      {
+        "name": "题-民用",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "题-竞速",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "题-探索",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      }
+    ],
+    "风": [
+      {
+        "name": "风-写实",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 1,
+        "scope_count": 20
+      },
+      {
+        "name": "风-半写实",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 8,
+        "scope_count": 20
+      },
+      {
+        "name": "风-卡通",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 1,
+        "scope_count": 20
+      },
+      {
+        "name": "风-机能风",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "风-厚涂",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 1,
+        "scope_count": 20
+      },
+      {
+        "name": "风-赛璐璐",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "风-卡渲",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "风-写实3D",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 7,
+        "scope_count": 20
+      },
+      {
+        "name": "风-日系",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 2,
+        "scope_count": 20
+      },
+      {
+        "name": "风-韩系",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "风-美式卡通",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "风-吉卜力",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "风-Artstation",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      }
+    ],
+    "格": [
+      {
+        "name": "格-光环",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "格-死亡搁浅",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "格-赛博朋克2077",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "格-命运2",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "格-质量效应",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "格-异形:隔离",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "格-装甲核心6",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 1,
+        "scope_count": 20
+      },
+      {
+        "name": "格-失落星船马拉松",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "格-终末地",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "格-魂系",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "格-对马岛之魂",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "格-塞尔达王国之泪",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "格-辐射系列",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "格-逃离塔科夫",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "格-绝区零",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "格-明日方舟",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 4,
+        "scope_count": 20
+      },
+      {
+        "name": "格-极乐迪斯科",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "格-控制",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "格-Hades",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "格-雨世界",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "格-VA-11 HALL-A",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "格-喷射战士",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      }
+    ],
+    "版": [
+      {
+        "name": "版-散点",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 1,
+        "scope_count": 20
+      },
+      {
+        "name": "版-网格",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "版-密集堆叠",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "版-留白极简",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "版-不对称",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "版-杂志式",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "版-拆解爆炸",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 2,
+        "scope_count": 20
+      },
+      {
+        "name": "版-标靶扫描",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "版-故障噪点",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      }
+    ],
+    "氛": [
+      {
+        "name": "氛-史诗",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "氛-神秘",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "氛-诡异",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "氛-压抑",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 1,
+        "scope_count": 20
+      },
+      {
+        "name": "氛-孤独",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "氛-荒凉",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "氛-恐怖",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "氛-战斗",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "氛-日常",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "氛-温馨",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "氛-宏大",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "氛-神圣",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "氛-杂乱",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "氛-极简",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 1,
+        "scope_count": 20
+      }
+    ],
+    "光": [
+      {
+        "name": "光-白天",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 2,
+        "scope_count": 20
+      },
+      {
+        "name": "光-黄昏",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "光-黎明",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "光-夜晚",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "光-暗光",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "光-顶光",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "光-侧光",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 1,
+        "scope_count": 20
+      },
+      {
+        "name": "光-底光",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "光-伦勃朗光",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "光-蝴蝶光",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "光-边缘光",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "光-轮廓光",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "光-三点布光",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "光-高反差",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "光-丁达尔",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "光-漫反射",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 5,
+        "scope_count": 20
+      },
+      {
+        "name": "光-霓虹",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "光-自发光",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      }
+    ],
+    "镜": [
+      {
+        "name": "镜-大远景",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "镜-全景",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 2,
+        "scope_count": 20
+      },
+      {
+        "name": "镜-中景",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 2,
+        "scope_count": 20
+      },
+      {
+        "name": "镜-特写",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 1,
+        "scope_count": 20
+      },
+      {
+        "name": "镜-大特写",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "镜-平视",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 3,
+        "scope_count": 20
+      },
+      {
+        "name": "镜-仰视",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "镜-俯视",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 1,
+        "scope_count": 20
+      },
+      {
+        "name": "镜-鸟瞰",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "镜-虫视",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "镜-广角",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "镜-长焦",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "镜-鱼眼",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "镜-过肩",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "镜-正交",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 5,
+        "scope_count": 20
+      }
+    ],
+    "构": [
+      {
+        "name": "构-三分法",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "构-对称",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 1,
+        "scope_count": 20
+      },
+      {
+        "name": "构-中心",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 10,
+        "scope_count": 20
+      },
+      {
+        "name": "构-框景",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "构-引导线",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 1,
+        "scope_count": 20
+      },
+      {
+        "name": "构-对角线",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "构-黄金分割",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "构-三角形",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "构-垂直轴",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 1,
+        "scope_count": 20
+      },
+      {
+        "name": "构-重复",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 1,
+        "scope_count": 20
+      }
+    ],
+    "场": [
+      {
+        "name": "场-城市",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 1,
+        "scope_count": 20
+      },
+      {
+        "name": "场-工业区",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "场-实验室",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "场-驾驶舱",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "场-飞船内部",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "场-废墟",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "场-战场",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "场-贫民窟",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "场-街道",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "场-室内",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "场-森林",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "场-沙漠",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "场-雪山",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "场-太空",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "场-外星",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "场-水下",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      }
+    ],
+    "角": [
+      {
+        "name": "角-男",
+        "applies_to": [
+          "角色"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 5
+      },
+      {
+        "name": "角-女",
+        "applies_to": [
+          "角色"
+        ],
+        "experimental": false,
+        "hit_count": 3,
+        "scope_count": 5
+      },
+      {
+        "name": "角-机甲",
+        "applies_to": [
+          "角色"
+        ],
+        "experimental": false,
+        "hit_count": 1,
+        "scope_count": 5
+      },
+      {
+        "name": "角-机器人",
+        "applies_to": [
+          "角色"
+        ],
+        "experimental": false,
+        "hit_count": 1,
+        "scope_count": 5
+      },
+      {
+        "name": "角-义体人",
+        "applies_to": [
+          "角色"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 5
+      },
+      {
+        "name": "角-战士",
+        "applies_to": [
+          "角色"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 5
+      },
+      {
+        "name": "角-平民",
+        "applies_to": [
+          "角色"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 5
+      },
+      {
+        "name": "角-BOSS",
+        "applies_to": [
+          "角色"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 5
+      },
+      {
+        "name": "角-三视图",
+        "applies_to": [
+          "角色"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 5
+      },
+      {
+        "name": "角-立绘",
+        "applies_to": [
+          "角色"
+        ],
+        "experimental": false,
+        "hit_count": 1,
+        "scope_count": 5
+      },
+      {
+        "name": "角-全身",
+        "applies_to": [
+          "角色"
+        ],
+        "experimental": false,
+        "hit_count": 1,
+        "scope_count": 5
+      },
+      {
+        "name": "角-半身",
+        "applies_to": [
+          "角色"
+        ],
+        "experimental": false,
+        "hit_count": 1,
+        "scope_count": 5
+      },
+      {
+        "name": "角-头像",
+        "applies_to": [
+          "角色"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 5
+      },
+      {
+        "name": "角-巨兽",
+        "applies_to": [
+          "角色"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 5
+      },
+      {
+        "name": "角-魔物",
+        "applies_to": [
+          "角色"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 5
+      },
+      {
+        "name": "角-机械兽",
+        "applies_to": [
+          "角色"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 5
+      },
+      {
+        "name": "角-现实动物",
+        "applies_to": [
+          "角色"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 5
+      },
+      {
+        "name": "角-变异体",
+        "applies_to": [
+          "角色"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 5
+      }
+    ],
+    "物": [
+      {
+        "name": "物-枪械",
+        "applies_to": [
+          "机械",
+          "载具",
+          "武器",
+          "道具",
+          "装备"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 19
+      },
+      {
+        "name": "物-近战武器",
+        "applies_to": [
+          "机械",
+          "载具",
+          "武器",
+          "道具",
+          "装备"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 19
+      },
+      {
+        "name": "物-机甲",
+        "applies_to": [
+          "机械",
+          "载具",
+          "武器",
+          "道具",
+          "装备"
+        ],
+        "experimental": false,
+        "hit_count": 7,
+        "scope_count": 19
+      },
+      {
+        "name": "物-载具",
+        "applies_to": [
+          "机械",
+          "载具",
+          "武器",
+          "道具",
+          "装备"
+        ],
+        "experimental": false,
+        "hit_count": 6,
+        "scope_count": 19
+      },
+      {
+        "name": "物-摩托",
+        "applies_to": [
+          "机械",
+          "载具",
+          "武器",
+          "道具",
+          "装备"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 19
+      },
+      {
+        "name": "物-飞船",
+        "applies_to": [
+          "机械",
+          "载具",
+          "武器",
+          "道具",
+          "装备"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 19
+      },
+      {
+        "name": "物-战术装备",
+        "applies_to": [
+          "机械",
+          "载具",
+          "武器",
+          "道具",
+          "装备"
+        ],
+        "experimental": false,
+        "hit_count": 1,
+        "scope_count": 19
+      },
+      {
+        "name": "物-电子设备",
+        "applies_to": [
+          "机械",
+          "载具",
+          "武器",
+          "道具",
+          "装备"
+        ],
+        "experimental": false,
+        "hit_count": 3,
+        "scope_count": 19
+      },
+      {
+        "name": "物-零件",
+        "applies_to": [
+          "机械",
+          "载具",
+          "武器",
+          "道具",
+          "装备"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 19
+      },
+      {
+        "name": "物-建筑",
+        "applies_to": [
+          "机械",
+          "载具",
+          "武器",
+          "道具",
+          "装备"
+        ],
+        "experimental": false,
+        "hit_count": 1,
+        "scope_count": 19
+      },
+      {
+        "name": "物-服装",
+        "applies_to": [
+          "机械",
+          "载具",
+          "武器",
+          "道具",
+          "装备"
+        ],
+        "experimental": false,
+        "hit_count": 1,
+        "scope_count": 19
+      },
+      {
+        "name": "物-配饰",
+        "applies_to": [
+          "机械",
+          "载具",
+          "武器",
+          "道具",
+          "装备"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 19
+      },
+      {
+        "name": "物-家具",
+        "applies_to": [
+          "机械",
+          "载具",
+          "武器",
+          "道具",
+          "装备"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 19
+      },
+      {
+        "name": "物-柔性线缆",
+        "applies_to": [
+          "机械",
+          "载具",
+          "武器",
+          "道具",
+          "装备"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 19
+      },
+      {
+        "name": "物-主机箱",
+        "applies_to": [
+          "机械",
+          "载具",
+          "武器",
+          "道具",
+          "装备"
+        ],
+        "experimental": false,
+        "hit_count": 1,
+        "scope_count": 19
+      }
+    ],
+    "材": [
+      {
+        "name": "材-金属-光面",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 9,
+        "scope_count": 20
+      },
+      {
+        "name": "材-金属-拉丝",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "材-金属-生锈",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "材-金属-烤漆",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 2,
+        "scope_count": 20
+      },
+      {
+        "name": "材-金属-做旧",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 6,
+        "scope_count": 20
+      },
+      {
+        "name": "材-金属-镀铬",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "材-塑料-光面",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 2,
+        "scope_count": 20
+      },
+      {
+        "name": "材-塑料-磨砂",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "材-玻璃-清透",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "材-玻璃-磨砂",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "材-玻璃-彩色",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "材-布料-普通",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "材-布料-机能",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "材-布料-皮革",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "材-布料-毛料",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "材-布料-丝绸",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "材-碳纤维",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "材-橡胶",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 1,
+        "scope_count": 20
+      },
+      {
+        "name": "材-亚克力",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "材-石材",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 1,
+        "scope_count": 20
+      },
+      {
+        "name": "材-混凝土",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "材-木材",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "材-发光体",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "材-水",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      }
+    ],
+    "色": [
+      {
+        "name": "色-冷暖对比",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 4,
+        "scope_count": 20
+      },
+      {
+        "name": "色-互补色",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "色-邻近色",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "色-高饱和",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 1,
+        "scope_count": 20
+      },
+      {
+        "name": "色-低饱和",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 6,
+        "scope_count": 20
+      },
+      {
+        "name": "色-高对比",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 1,
+        "scope_count": 20
+      },
+      {
+        "name": "色-灰调",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 2,
+        "scope_count": 20
+      },
+      {
+        "name": "色-黑白",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 2,
+        "scope_count": 20
+      },
+      {
+        "name": "色-单色调",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "色-莫兰迪",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "色-暖色主导",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 2,
+        "scope_count": 20
+      },
+      {
+        "name": "色-冷色主导",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      }
+    ],
+    "教": [
+      {
+        "name": "教-构图",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "教-光影",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "教-材质",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "教-人体",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "教-透视",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "教-流程",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      }
+    ],
+    "件": [
+      {
+        "name": "件-人形",
+        "applies_to": [
+          "机械",
+          "载具",
+          "武器",
+          "道具",
+          "装备"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 19
+      },
+      {
+        "name": "件-兽形",
+        "applies_to": [
+          "机械",
+          "载具",
+          "武器",
+          "道具",
+          "装备"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 19
+      },
+      {
+        "name": "件-昆虫形",
+        "applies_to": [
+          "机械",
+          "载具",
+          "武器",
+          "道具",
+          "装备"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 19
+      },
+      {
+        "name": "件-蛇形",
+        "applies_to": [
+          "机械",
+          "载具",
+          "武器",
+          "道具",
+          "装备"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 19
+      },
+      {
+        "name": "件-轮式",
+        "applies_to": [
+          "机械",
+          "载具",
+          "武器",
+          "道具",
+          "装备"
+        ],
+        "experimental": false,
+        "hit_count": 3,
+        "scope_count": 19
+      },
+      {
+        "name": "件-履带",
+        "applies_to": [
+          "机械",
+          "载具",
+          "武器",
+          "道具",
+          "装备"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 19
+      },
+      {
+        "name": "件-腿足",
+        "applies_to": [
+          "机械",
+          "载具",
+          "武器",
+          "道具",
+          "装备"
+        ],
+        "experimental": false,
+        "hit_count": 1,
+        "scope_count": 19
+      },
+      {
+        "name": "件-悬浮",
+        "applies_to": [
+          "机械",
+          "载具",
+          "武器",
+          "道具",
+          "装备"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 19
+      },
+      {
+        "name": "件-多足",
+        "applies_to": [
+          "机械",
+          "载具",
+          "武器",
+          "道具",
+          "装备"
+        ],
+        "experimental": false,
+        "hit_count": 1,
+        "scope_count": 19
+      },
+      {
+        "name": "件-机械臂",
+        "applies_to": [
+          "机械",
+          "载具",
+          "武器",
+          "道具",
+          "装备"
+        ],
+        "experimental": false,
+        "hit_count": 1,
+        "scope_count": 19
+      },
+      {
+        "name": "件-武器挂载",
+        "applies_to": [
+          "机械",
+          "载具",
+          "武器",
+          "道具",
+          "装备"
+        ],
+        "experimental": false,
+        "hit_count": 1,
+        "scope_count": 19
+      },
+      {
+        "name": "件-推进器",
+        "applies_to": [
+          "机械",
+          "载具",
+          "武器",
+          "道具",
+          "装备"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 19
+      },
+      {
+        "name": "件-驾驶舱外露",
+        "applies_to": [
+          "机械",
+          "载具",
+          "武器",
+          "道具",
+          "装备"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 19
+      },
+      {
+        "name": "件-外露管线",
+        "applies_to": [
+          "机械",
+          "载具",
+          "武器",
+          "道具",
+          "装备"
+        ],
+        "experimental": false,
+        "hit_count": 1,
+        "scope_count": 19
+      },
+      {
+        "name": "件-装甲板",
+        "applies_to": [
+          "机械",
+          "载具",
+          "武器",
+          "道具",
+          "装备"
+        ],
+        "experimental": false,
+        "hit_count": 5,
+        "scope_count": 19
+      },
+      {
+        "name": "件-动力核心",
+        "applies_to": [
+          "机械",
+          "载具",
+          "武器",
+          "道具",
+          "装备"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 19
+      },
+      {
+        "name": "件-传感器阵列",
+        "applies_to": [
+          "机械",
+          "载具",
+          "武器",
+          "道具",
+          "装备"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 19
+      },
+      {
+        "name": "件-起落架",
+        "applies_to": [
+          "机械",
+          "载具",
+          "武器",
+          "道具",
+          "装备"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 19
+      },
+      {
+        "name": "件-背包模块",
+        "applies_to": [
+          "机械",
+          "载具",
+          "武器",
+          "道具",
+          "装备"
+        ],
+        "experimental": false,
+        "hit_count": 1,
+        "scope_count": 19
+      },
+      {
+        "name": "件-发光元件",
+        "applies_to": [
+          "机械",
+          "载具",
+          "武器",
+          "道具",
+          "装备"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 19
+      },
+      {
+        "name": "件-硬表面",
+        "applies_to": [
+          "机械",
+          "载具",
+          "武器",
+          "道具",
+          "装备"
+        ],
+        "experimental": false,
+        "hit_count": 9,
+        "scope_count": 19
+      },
+      {
+        "name": "件-仿生",
+        "applies_to": [
+          "机械",
+          "载具",
+          "武器",
+          "道具",
+          "装备"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 19
+      },
+      {
+        "name": "件-模块化",
+        "applies_to": [
+          "机械",
+          "载具",
+          "武器",
+          "道具",
+          "装备"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 19
+      },
+      {
+        "name": "件-工业感重",
+        "applies_to": [
+          "机械",
+          "载具",
+          "武器",
+          "道具",
+          "装备"
+        ],
+        "experimental": false,
+        "hit_count": 1,
+        "scope_count": 19
+      },
+      {
+        "name": "件-精致科技",
+        "applies_to": [
+          "机械",
+          "载具",
+          "武器",
+          "道具",
+          "装备"
+        ],
+        "experimental": false,
+        "hit_count": 1,
+        "scope_count": 19
+      },
+      {
+        "name": "件-改装拼装",
+        "applies_to": [
+          "机械",
+          "载具",
+          "武器",
+          "道具",
+          "装备"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 19
+      },
+      {
+        "name": "件-单人级",
+        "applies_to": [
+          "机械",
+          "载具",
+          "武器",
+          "道具",
+          "装备"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 19
+      },
+      {
+        "name": "件-重型",
+        "applies_to": [
+          "机械",
+          "载具",
+          "武器",
+          "道具",
+          "装备"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 19
+      },
+      {
+        "name": "件-巨型",
+        "applies_to": [
+          "机械",
+          "载具",
+          "武器",
+          "道具",
+          "装备"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 19
+      },
+      {
+        "name": "件-磨损",
+        "applies_to": [
+          "机械",
+          "载具",
+          "武器",
+          "道具",
+          "装备"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 19
+      },
+      {
+        "name": "件-精密",
+        "applies_to": [
+          "机械",
+          "载具",
+          "武器",
+          "道具",
+          "装备"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 19
+      },
+      {
+        "name": "件-按钮面板",
+        "applies_to": [
+          "机械",
+          "载具",
+          "武器",
+          "道具",
+          "装备"
+        ],
+        "experimental": false,
+        "hit_count": 1,
+        "scope_count": 19
+      }
+    ],
+    "载": [
+      {
+        "name": "载-坦克",
+        "applies_to": [
+          "载具"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 6
+      },
+      {
+        "name": "载-装甲车",
+        "applies_to": [
+          "载具"
+        ],
+        "experimental": false,
+        "hit_count": 1,
+        "scope_count": 6
+      },
+      {
+        "name": "载-摩托",
+        "applies_to": [
+          "载具"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 6
+      },
+      {
+        "name": "载-越野车",
+        "applies_to": [
+          "载具"
+        ],
+        "experimental": false,
+        "hit_count": 1,
+        "scope_count": 6
+      },
+      {
+        "name": "载-工程车",
+        "applies_to": [
+          "载具"
+        ],
+        "experimental": false,
+        "hit_count": 4,
+        "scope_count": 6
+      },
+      {
+        "name": "载-民用车",
+        "applies_to": [
+          "载具"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 6
+      },
+      {
+        "name": "载-反重力车",
+        "applies_to": [
+          "载具"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 6
+      },
+      {
+        "name": "载-战机",
+        "applies_to": [
+          "载具"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 6
+      },
+      {
+        "name": "载-直升机",
+        "applies_to": [
+          "载具"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 6
+      },
+      {
+        "name": "载-飞船",
+        "applies_to": [
+          "载具"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 6
+      },
+      {
+        "name": "载-气垫",
+        "applies_to": [
+          "载具"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 6
+      },
+      {
+        "name": "载-无人机",
+        "applies_to": [
+          "载具"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 6
+      },
+      {
+        "name": "载-悬浮载具",
+        "applies_to": [
+          "载具"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 6
+      },
+      {
+        "name": "载-巡洋舰",
+        "applies_to": [
+          "载具"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 6
+      },
+      {
+        "name": "载-小艇",
+        "applies_to": [
+          "载具"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 6
+      },
+      {
+        "name": "载-潜艇",
+        "applies_to": [
+          "载具"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 6
+      },
+      {
+        "name": "载-航母",
+        "applies_to": [
+          "载具"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 6
+      },
+      {
+        "name": "载-星际战舰",
+        "applies_to": [
+          "载具"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 6
+      },
+      {
+        "name": "载-小型飞船",
+        "applies_to": [
+          "载具"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 6
+      },
+      {
+        "name": "载-空间穿梭机",
+        "applies_to": [
+          "载具"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 6
+      },
+      {
+        "name": "载-星际母舰",
+        "applies_to": [
+          "载具"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 6
+      },
+      {
+        "name": "载-机甲式",
+        "applies_to": [
+          "载具"
+        ],
+        "experimental": false,
+        "hit_count": 2,
+        "scope_count": 6
+      },
+      {
+        "name": "载-异形载具",
+        "applies_to": [
+          "载具"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 6
+      },
+      {
+        "name": "载-骑乘载具",
+        "applies_to": [
+          "载具"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 6
+      }
+    ],
+    "域": [
+      {
+        "name": "域-陆",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 11,
+        "scope_count": 20
+      },
+      {
+        "name": "域-空",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "域-海",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      },
+      {
+        "name": "域-太空",
+        "applies_to": [
+          "全图"
+        ],
+        "experimental": false,
+        "hit_count": 0,
+        "scope_count": 20
+      }
+    ]
+  }
+}

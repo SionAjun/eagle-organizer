@@ -1,0 +1,731 @@
+"""
+Eagle 素材库真实打标脚本
+架构：
+  --prepare --limit N        取待处理 items，输出路径列表 + 写 pending.json
+  --apply --item ID --tags   单张模式：合并旧标签后写回 Eagle，落盘进度
+  --apply-batch              批量模式：读 batch_results.json，批量写回 Eagle
+  --checkpoint               手动触发检查点（更新所有状态文件 + REPORT.md）
+
+批量流程（推荐）：
+  1. python tag_real.py --prepare --limit 10
+  2. 一次读取全部 10 张图，输出 JSON 写入 batch_results.json：
+     [{"item_id": "xxx", "tags_to_add": ["类-角色设定", ...], "suggested": ["新概念"]}, ...]
+  3. python tag_real.py --apply-batch
+"""
+
+import argparse
+import json
+import time
+import urllib.request
+from datetime import datetime, timezone
+from pathlib import Path
+
+# ── 路径常量 ──────────────────────────────────────────────────────────────────
+BASE_DIR            = Path(__file__).parent
+PROGRESS_FILE       = BASE_DIR / "progress.json"
+PENDING_FILE        = BASE_DIR / "pending.json"
+SUGGESTED_FILE      = BASE_DIR / "suggested_tags.json"
+TAGS_FILE           = BASE_DIR / "tags.json"
+BATCH_RESULTS_FILE  = BASE_DIR / "batch_results.json"
+STATE_FILE          = BASE_DIR / "STATE.md"
+RESUME_FILE         = BASE_DIR / "RESUME.md"
+CHECKPOINT_LOG      = BASE_DIR / "checkpoint_log.md"
+PENDING_REVIEW_FILE = BASE_DIR / "pending_review.md"
+HANDOFF_FILE        = BASE_DIR / "HANDOFF.md"
+REPORT_FILE         = BASE_DIR / "REPORT.md"
+
+EAGLE_API        = "http://localhost:41595/api"
+LIB_PATH         = Path("D:/杂项/素材.library")
+PAGE_LIMIT       = 1000
+PROTECTION_HOURS = 24
+LIBRARY_TOTAL    = 20378
+CHECKPOINT_EVERY = 50
+BATCH_SIZE       = 10
+
+KNOWN_PREFIXES = ["类", "题", "风", "氛", "光", "镜", "场", "角", "兽", "物", "材", "色", "教"]
+
+# ── Eagle API（绕过系统代理） ──────────────────────────────────────────────────
+_opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
+
+def eagle_get(path: str) -> dict:
+    with _opener.open(EAGLE_API + path, timeout=30) as r:
+        return json.loads(r.read())
+
+def eagle_post(path: str, body: dict) -> dict:
+    data = json.dumps(body, ensure_ascii=False).encode("utf-8")
+    req  = urllib.request.Request(
+        EAGLE_API + path, data=data,
+        headers={"Content-Type": "application/json"}, method="POST"
+    )
+    with _opener.open(req, timeout=30) as r:
+        return json.loads(r.read())
+
+# ── 工具函数 ──────────────────────────────────────────────────────────────────
+def load_json(path: Path, default):
+    return json.loads(path.read_text(encoding="utf-8")) if path.exists() else default
+
+def save_json(path: Path, obj) -> None:
+    path.write_text(json.dumps(obj, ensure_ascii=False, indent=2), encoding="utf-8")
+
+def load_tags() -> tuple:
+    data     = load_json(TAGS_FILE, {})
+    all_tags = set()
+    for v in data.get("tags", {}).values():
+        all_tags.update(v)
+    return data.get("tags", {}), all_tags, data.get("version", "unknown")
+
+def fmt_modtime(ms: int) -> str:
+    if not ms:
+        return "[时间缺失]"
+    return datetime.fromtimestamp(ms / 1000).strftime("%Y-%m-%d %H:%M")
+
+def is_protected(item: dict) -> bool:
+    btime_ms  = item.get("btime", 0)
+    age_hours = (time.time() - btime_ms / 1000) / 3600
+    return age_hours < PROTECTION_HOURS
+
+def resolve_path(item: dict) -> Path:
+    item_id = item["id"]
+    name    = item.get("name", item_id)
+    ext     = item.get("ext", "")
+    return LIB_PATH / "images" / f"{item_id}.info" / f"{name}.{ext}"
+
+def default_prog() -> dict:
+    return {
+        "processed_ids": [],
+        "total_processed": 0,
+        "tag_version_used": {},
+        "last_run_time": None,
+        "records": [],
+        "round_start_time": None,
+        "last_checkpoint_total": 0,
+        "prepare_skip_stats": {"already_processed": 0, "protected_24h": 0, "time_missing_1970": 0},
+        "apply_error_stats": {"api_error": 0, "read_fail": 0},
+        "round_tag_input": 0,
+        "round_tag_in_vocab": 0,
+        "new_suggested_this_round": [],
+    }
+
+def ensure_prog_fields(prog: dict) -> dict:
+    for k, v in default_prog().items():
+        if k not in prog:
+            prog[k] = v
+    return prog
+
+# ── 分页拉取 ──────────────────────────────────────────────────────────────────
+def iter_items():
+    offset, empty_streak = 0, 0
+    while True:
+        try:
+            data = eagle_get(f"/item/list?limit={PAGE_LIMIT}&offset={offset}").get("data", [])
+        except Exception as e:
+            print(f"  [警告] 分页请求异常 offset={offset}: {e}")
+            empty_streak += 1
+            if empty_streak >= 2:
+                break
+            offset += PAGE_LIMIT
+            continue
+        if not data:
+            empty_streak += 1
+            if empty_streak >= 2:
+                break
+        else:
+            empty_streak = 0
+            yield from data
+        offset += PAGE_LIMIT
+
+# ── --prepare ─────────────────────────────────────────────────────────────────
+def cmd_prepare(limit: int) -> None:
+    prog          = ensure_prog_fields(load_json(PROGRESS_FILE, default_prog()))
+    processed_set = set(prog.get("processed_ids", []))
+
+    # 每次 prepare 重置本轮统计
+    prog["prepare_skip_stats"]      = {"already_processed": 0, "protected_24h": 0, "time_missing_1970": 0}
+    prog["apply_error_stats"]       = {"api_error": 0, "read_fail": 0}
+    prog["round_tag_input"]         = 0
+    prog["round_tag_in_vocab"]      = 0
+    prog["new_suggested_this_round"] = []
+    prog["round_start_time"]        = datetime.now(timezone.utc).isoformat()
+
+    pending        = []
+    scanned        = 0
+    skip_already   = 0
+    skip_protected = 0
+    skip_1970      = 0
+
+    for item in iter_items():
+        item_id = item["id"]
+        if item_id in processed_set:
+            skip_already += 1
+            continue
+        if is_protected(item):
+            skip_protected += 1
+            continue
+
+        mod_ms = item.get("modificationTime", 0)
+        if mod_ms < 1000:
+            skip_1970 += 1
+
+        scanned   += 1
+        file_path  = resolve_path(item)
+
+        try:
+            info     = eagle_get(f"/item/info?id={item_id}")
+            cur_tags = info.get("data", {}).get("tags", [])
+        except Exception:
+            cur_tags = item.get("tags", [])
+
+        entry = {
+            "index":            scanned,
+            "item_id":          item_id,
+            "name":             item.get("name", ""),
+            "ext":              item.get("ext", ""),
+            "file_path":        str(file_path),
+            "existing_tags":    cur_tags,
+            "modificationTime": mod_ms,
+        }
+        pending.append(entry)
+
+        tags_display = cur_tags if cur_tags else "（无）"
+        print(f"\n[{scanned}/{limit}] item_id: {item_id}")
+        print(f"      文件名: {item.get('name', '')}.{item.get('ext', '')}")
+        print(f"      路径: {file_path}")
+        print(f"      已有标签: {tags_display}")
+        print(f"      modificationTime: {fmt_modtime(mod_ms)}")
+
+        if scanned >= limit:
+            break
+
+    prog["prepare_skip_stats"]["already_processed"] = skip_already
+    prog["prepare_skip_stats"]["protected_24h"]     = skip_protected
+    prog["prepare_skip_stats"]["time_missing_1970"] = skip_1970
+    save_json(PROGRESS_FILE, prog)
+    save_json(PENDING_FILE, pending)
+
+    print(f"\n✅ pending.json 已保存（{len(pending)} 条）")
+    print(f"   跳过已处理: {skip_already} | 24h保护: {skip_protected} | 1970时间: {skip_1970}")
+    print(f"\n下一步（批量模式）：")
+    print(f"  1. 一次读取全部 {len(pending)} 张图，输出 JSON 写入 batch_results.json")
+    print(f"  2. python tag_real.py --apply-batch")
+
+# ── 单张 apply 核心逻辑（批量和单张共用） ────────────────────────────────────
+def _apply_one(item_id: str, tags_to_add: list, suggested_raw: list,
+               prog: dict, sdata: dict,
+               all_valid_tags: set, tag_version: str,
+               pending_lookup: dict) -> bool:
+    in_vocab     = [t for t in tags_to_add if t in all_valid_tags]
+    out_of_vocab = [t for t in tags_to_add if t not in all_valid_tags]
+    for t in suggested_raw:
+        if t not in all_valid_tags and t not in out_of_vocab:
+            out_of_vocab.append(t)
+
+    prog["round_tag_input"]    = prog.get("round_tag_input", 0) + len(tags_to_add)
+    prog["round_tag_in_vocab"] = prog.get("round_tag_in_vocab", 0) + len(in_vocab)
+
+    if out_of_vocab:
+        print(f"  [词表外，记录 suggested]: {out_of_vocab}")
+        today          = datetime.now().strftime("%Y-%m-%d")
+        smap           = sdata.setdefault("suggested", {})
+        new_this_round = prog.setdefault("new_suggested_this_round", [])
+        for t in out_of_vocab:
+            if t in smap:
+                smap[t]["count"] += 1
+                ex = smap[t].setdefault("example_items", [])
+                if item_id not in ex:
+                    ex.append(item_id)
+                    if len(ex) > 5:
+                        smap[t]["example_items"] = ex[-5:]
+                smap[t]["last_seen"] = today
+            else:
+                smap[t] = {"count": 1, "example_items": [item_id], "first_seen": today, "last_seen": today}
+                if t not in new_this_round:
+                    new_this_round.append(t)
+
+    try:
+        info     = eagle_get(f"/item/info?id={item_id}")
+        old_tags = info.get("data", {}).get("tags", [])
+    except Exception:
+        old_tags = pending_lookup.get(item_id, {}).get("existing_tags", [])
+
+    merged = list(old_tags)
+    for t in in_vocab:
+        if t not in merged:
+            merged.append(t)
+
+    try:
+        resp = eagle_post("/item/update", {"id": item_id, "tags": merged})
+        if resp.get("status") != "success":
+            print(f"❌ Eagle API 写回失败 {item_id}: {resp}")
+            prog["apply_error_stats"]["api_error"] = prog.get("apply_error_stats", {}).get("api_error", 0) + 1
+            return False
+    except Exception as e:
+        print(f"❌ Eagle API 异常 {item_id}: {e}")
+        prog["apply_error_stats"]["api_error"] = prog.get("apply_error_stats", {}).get("api_error", 0) + 1
+        return False
+
+    newly_added = [t for t in in_vocab if t not in old_tags]
+    print(f"  ✅ {item_id} | 新增: {newly_added if newly_added else '（无新增）'} | 最终: {merged}")
+
+    if item_id not in prog["processed_ids"]:
+        prog["processed_ids"].append(item_id)
+        prog["total_processed"] = prog.get("total_processed", 0) + 1
+
+    prog.setdefault("records", []).append({
+        "item_id":      item_id,
+        "tags_added":   newly_added,
+        "tag_version":  tag_version,
+        "processed_at": datetime.now(timezone.utc).isoformat(),
+    })
+    prog["tag_version_used"][item_id] = tag_version
+    prog["last_run_time"]             = datetime.now(timezone.utc).isoformat()
+    return True
+
+# ── --apply（单张，保持兼容） ─────────────────────────────────────────────────
+def cmd_apply(item_id: str, new_tags_raw: str) -> None:
+    t0             = time.time()
+    pending        = load_json(PENDING_FILE, [])
+    pending_lookup = {e["item_id"]: e for e in pending}
+
+    if item_id not in pending_lookup:
+        print(f"❌ {item_id} 不在 pending.json 里，拒绝操作。")
+        return
+
+    _, all_valid_tags, tag_version = load_tags()
+    raw_list = [t.strip() for t in new_tags_raw.split(",") if t.strip()]
+
+    prog  = ensure_prog_fields(load_json(PROGRESS_FILE, default_prog()))
+    sdata = load_json(SUGGESTED_FILE, {"version": "1.1", "suggested": {}})
+
+    ok = _apply_one(item_id, raw_list, [], prog, sdata, all_valid_tags, tag_version, pending_lookup)
+
+    save_json(SUGGESTED_FILE, sdata)
+    save_json(PROGRESS_FILE, prog)
+
+    elapsed = time.time() - t0
+    if ok:
+        print(f"   progress.json 已更新（累计 {prog['total_processed']} 张，单张耗时 {elapsed:.1f}s）")
+        if prog["total_processed"] % CHECKPOINT_EVERY == 0:
+            print(f"\n  [自动检查点] 已达 {prog['total_processed']} 张...")
+            run_checkpoint(prog)
+            save_json(PROGRESS_FILE, prog)
+
+# ── --apply-batch ─────────────────────────────────────────────────────────────
+def cmd_apply_batch() -> None:
+    if not BATCH_RESULTS_FILE.exists():
+        print(f"❌ 找不到 {BATCH_RESULTS_FILE}，请先写入批量决策 JSON。")
+        return
+
+    batch = load_json(BATCH_RESULTS_FILE, [])
+    if not batch:
+        print("❌ batch_results.json 为空。")
+        return
+
+    t0             = time.time()
+    pending        = load_json(PENDING_FILE, [])
+    pending_lookup = {e["item_id"]: e for e in pending}
+
+    _, all_valid_tags, tag_version = load_tags()  # 整批只加载一次
+
+    prog  = ensure_prog_fields(load_json(PROGRESS_FILE, default_prog()))
+    sdata = load_json(SUGGESTED_FILE, {"version": "1.1", "suggested": {}})
+
+    success_count = 0
+    for i, item_result in enumerate(batch, 1):
+        item_id     = item_result.get("item_id", "")
+        tags_to_add = item_result.get("tags_to_add", [])
+        suggested   = item_result.get("suggested", [])
+
+        if not item_id:
+            print(f"[{i}/{len(batch)}] ❌ 跳过：缺少 item_id")
+            continue
+        if item_id not in pending_lookup:
+            print(f"[{i}/{len(batch)}] ❌ {item_id} 不在 pending.json，跳过")
+            continue
+
+        print(f"\n[{i}/{len(batch)}] {item_id}")
+        ok = _apply_one(item_id, tags_to_add, suggested, prog, sdata, all_valid_tags, tag_version, pending_lookup)
+        if ok:
+            success_count += 1
+
+        if ok and prog["total_processed"] % CHECKPOINT_EVERY == 0:
+            print(f"\n  [自动检查点] 已达 {prog['total_processed']} 张...")
+            save_json(SUGGESTED_FILE, sdata)  # flush 再让 write_report 读盘
+            run_checkpoint(prog)
+
+    save_json(SUGGESTED_FILE, sdata)
+    save_json(PROGRESS_FILE, prog)
+
+    elapsed = time.time() - t0
+    avg     = elapsed / len(batch) if batch else 0
+    print(f"\n✅ 批量完成：{success_count}/{len(batch)} 张成功")
+    print(f"   累计已处理: {prog['total_processed']} 张")
+    print(f"   本批耗时: {elapsed:.1f}s（平均 {avg:.1f}s/张，批量模式 {len(batch)} 张/批）")
+
+# ── REPORT.md ─────────────────────────────────────────────────────────────────
+def write_report(prog: dict) -> None:
+    now     = datetime.now()
+    now_str = now.strftime("%Y-%m-%d %H:%M")
+
+    total   = prog.get("total_processed", 0)
+    last_cp = prog.get("last_checkpoint_total", 0)
+    round_z = total - last_cp
+    start_x = last_cp + 1
+    end_y   = total
+
+    # 耗时计算
+    round_start_iso = prog.get("round_start_time")
+    if round_start_iso and round_z > 0:
+        try:
+            start_dt    = datetime.fromisoformat(round_start_iso.replace("Z", "+00:00"))
+            elapsed_sec = (now.astimezone(timezone.utc) - start_dt).total_seconds()
+            elapsed_min = round(elapsed_sec / 60, 1)
+            avg_sec_per = round(elapsed_sec / round_z, 1)
+        except Exception:
+            elapsed_min = "估算"
+            avg_sec_per = "估算"
+    else:
+        elapsed_min = "估算"
+        avg_sec_per = "估算"
+
+    # 本轮 records（从 last_checkpoint_total 开始）
+    records       = prog.get("records", [])
+    round_records = records[last_cp:] if last_cp <= len(records) else []
+
+    # TOP10 标签
+    tag_counter: dict = {}
+    for r in round_records:
+        for t in r.get("tags_added", []):
+            tag_counter[t] = tag_counter.get(t, 0) + 1
+    top10 = sorted(tag_counter.items(), key=lambda x: -x[1])[:10]
+    top10_str = ", ".join(f"{t}: {c}" for t, c in top10) if top10 else "（无）"
+
+    # 未使用前缀
+    used_pfx = set()
+    for t in tag_counter:
+        for pfx in KNOWN_PREFIXES:
+            if t.startswith(pfx + "-"):
+                used_pfx.add(pfx)
+                break
+    unused_pfx = [p for p in KNOWN_PREFIXES if p not in used_pfx]
+    unused_str = str(unused_pfx) if unused_pfx else "（全部前缀均有使用）"
+
+    # suggested 统计
+    sdata      = load_json(SUGGESTED_FILE, {"version": "1.1", "suggested": {}})
+    smap       = sdata.get("suggested", {})
+    sug_total  = len(smap)
+    sug_review = sum(1 for v in smap.values() if v.get("count", 0) >= 3)
+    new_sug    = prog.get("new_suggested_this_round", [])
+
+    # 跳过 / 报错统计
+    skip = prog.get("prepare_skip_stats", {})
+    err  = prog.get("apply_error_stats", {})
+
+    # 效率指标
+    avg_tags = (
+        round(sum(len(r.get("tags_added", [])) for r in round_records) / round_z, 1)
+        if round_z > 0 else "N/A"
+    )
+    tag_in   = prog.get("round_tag_input", 0)
+    tag_voc  = prog.get("round_tag_in_vocab", 0)
+    hit_rate = f"{tag_voc / tag_in * 100:.1f}%" if tag_in > 0 else "N/A"
+
+    tags_ver = load_json(TAGS_FILE, {}).get("version", "1.0")
+
+    report = f"""# Eagle 打标项目运行报告
+生成时间: {now_str}
+报告区间: 第{start_x}张 → 第{end_y}张（本轮处理 {round_z} 张）
+
+## 进度
+- 总量: {LIBRARY_TOTAL}
+- 已处理: {total}
+- 完成率: {total / LIBRARY_TOTAL * 100:.2f}%
+- 本轮耗时: {elapsed_min}分钟（从启动到本检查点）
+- 平均每张耗时: {avg_sec_per}秒
+
+## 标签统计
+- tags.json 版本: {tags_ver}
+- 本轮使用频率 TOP10 标签: {top10_str}
+- 本轮从未使用的前缀: {unused_str}
+- suggested 总条目数: {sug_total}
+- 其中 count>=3 待审核: {sug_review} 条
+- 新增 suggested: {new_sug if new_sug else "（无）"}
+
+## 异常与跳过
+- 跳过已处理: {skip.get("already_processed", 0)} 张
+- 跳过24h保护期: {skip.get("protected_24h", 0)} 张
+- 时间缺失(1970): {skip.get("time_missing_1970", 0)} 张
+- API 报错: {err.get("api_error", 0)} 次
+- 读图失败: {err.get("read_fail", 0)} 次（由外部 Claude 报告，此处为估算）
+
+## 效率指标
+- 每张平均打标数: {avg_tags} 个
+- 词表命中率: {hit_rate}（词表内标签数 / 总输入标签数）
+- 批次大小: 每次处理 {BATCH_SIZE} 张（批量模式）
+
+## 待决策事项
+- {"需要审核 " + str(sug_review) + " 个 count>=3 的 suggested 标签（见 pending_review.md）" if sug_review > 0 else "无待审核项"}
+
+## Claude Code 自评
+- 最浪费 token 的环节：单张模式下每张图需独立一次上下文 + 一次工具调用往返；批量 {BATCH_SIZE} 张后上下文共享，前置 tags.json 词表只读一次，预计节省约 {BATCH_SIZE - 1}x 前置文本 token。
+- 改进建议：如批量质量下降或超时，请将 BATCH_SIZE 从 10 降至 5，并在下一份报告的自评里说明。
+"""
+    REPORT_FILE.write_text(report, encoding="utf-8")
+    print(f" REPORT.md:     ✅ 已覆盖写入")
+
+# ── 检查点 ────────────────────────────────────────────────────────────────────
+def run_checkpoint(prog: dict, force: bool = False) -> None:
+    total        = prog.get("total_processed", 0)
+    checkpoint_n = max(total // CHECKPOINT_EVERY, 1) if force else (total // CHECKPOINT_EVERY)
+
+    records   = prog.get("records", [])
+    last      = records[-1] if records else {}
+    last_id   = last.get("item_id", "—")
+    last_name = "—"
+    pending   = load_json(PENDING_FILE, [])
+    match     = next((e for e in pending if e["item_id"] == last_id), None)
+    if match:
+        last_name = f"{match['name']}.{match['ext']}"
+
+    sdata_cp            = load_json(SUGGESTED_FILE, {"version": "1.1", "suggested": {}})
+    smap_cp             = sdata_cp.get("suggested", {})
+    suggested_keys      = list(smap_cp.keys())
+    pending_review_tags = [k for k, v in smap_cp.items() if v.get("count", 0) >= 3]
+    now_str             = datetime.now().strftime("%Y-%m-%d %H:%M")
+
+    # ── REPORT.md（先写，使用 last_checkpoint_total 的旧值计算区间） ──────────
+    write_report(prog)
+
+    # 更新 last_checkpoint_total（write_report 之后再更新，区间才正确）
+    prog["last_checkpoint_total"] = total
+
+    # ── STATE.md ──────────────────────────────────────────────────────────────
+    state_content = f"""# Eagle 素材库打标签项目 — 当前状态
+
+最后更新：{now_str}　　进度：{total} / {LIBRARY_TOTAL} 张
+
+---
+
+## 当前进度
+
+- **已处理**：{total} / {LIBRARY_TOTAL} 张（{total/LIBRARY_TOTAL*100:.2f}%）
+- **最后处理**：`{last_id}`　`{last_name}`
+- **待审建议标签**：{suggested_keys if suggested_keys else "（无）"}
+
+---
+
+## 已完成事项
+
+- Eagle API 连通性验证（`http://localhost:41595/api`，Eagle 4.0 Build 20250627）
+- 资源库：素材，路径 `D:\\杂项\\素材.library`，共 {LIBRARY_TOTAL} 张 / 121 个文件夹
+- dry_run.py 骨架验证通过（分页、排序、断点续跑全部正常）
+- tags.json 词表生成完毕（version 1.0，398 个标签，13 个维度）
+- tag_real.py 真实打标脚本验证通过，链路完整（取图→看图→打标→写回→落盘）
+- 检查点机制已建立（每 50 张自动触发，含 REPORT.md 覆盖写入）
+- 批量读图模式（每批 {BATCH_SIZE} 张，tags.json 一次加载）
+
+---
+
+## 踩过的坑与解决方案
+
+| 坑 | 现象 | 解决方案 |
+|---|---|---|
+| 系统代理劫持 localhost | curl/urllib 走 127.0.0.1:7892，返回 502 | `urllib.request.ProxyHandler({{}})` 绕过 |
+| limit 小时分页静默截断 | `limit=50` 只能访问约 440 条 | 统一用 `limit=1000` |
+| Eagle API 无总数字段 | `/api/item/list` 无 total | `limit=25000` 探底得 20378 |
+| orderBy=-CREATEDATE 排序反了 | 加参数后返回 1970 epoch 老素材 | 去掉 orderBy，依赖 Eagle 默认倒序 |
+| btime 字段大量为 0 | 老素材 btime=Unix 纪元 | 改用 `modificationTime` 字段 |
+| `/api/v2/` 端点不存在 | Eagle 4.0 没有 v2 API | 全部使用 `/api/` 前缀 |
+| limit=200 offset=200 返回空 | Eagle API limit 影响可访问总量 | 用大 limit（1000）单次拉取 |
+
+---
+
+## 下一步待办
+
+1. 执行 `python tag_real.py --prepare --limit {BATCH_SIZE}`
+2. 一次读取全部 {BATCH_SIZE} 张图，输出 JSON 写入 batch_results.json
+3. 执行 `python tag_real.py --apply-batch`
+4. 每 50 张自动触发检查点（含 REPORT.md 生成）
+5. 累积建议标签后，与用户确认是否加入词表并更新 version
+
+---
+
+## 关键约束（不可违反）
+
+- 标签严格从 `tags.json` 词表选，**绝不自由发挥**
+- 13 维度前缀：类、题、风、氛、光、镜、场、角、兽、物、材、色、教
+- 每张图只做一次视觉分析
+- 新素材保护期：btime < 24 小时的跳过
+- 分页：`limit=1000`，不传 `orderBy`
+- 写回前先拉旧标签合并，不覆盖用户手动标签
+- 词表外概念写 `suggested_tags.json`，不擅自加到素材
+- 批量模式：一次 {BATCH_SIZE} 张，tags.json 只加载一次
+
+---
+
+## 给下次会话 Claude Code 的指令
+
+你好。这是一个长期项目，正在整理用户的 Eagle 素材库（游戏美术/概念设计方向）。
+用户的库共 {LIBRARY_TOTAL} 张，需要按词表打标签。
+
+请按以下顺序工作：
+1. 读完本文件（STATE.md），了解全部上下文
+2. 读 `tags.json` 了解词表（13 个维度，398 个标签）
+3. 读 `progress.json` 了解已处理 ID
+4. 读 `suggested_tags.json` 了解待审建议标签
+5. 不要重复跑 dry_run 测试，那些已经验证过
+6. 按用户指示继续执行批量流程（prepare → 读图输出 JSON → apply-batch）
+7. 看图选标签时严格从 `tags.json` 选，不自由发挥
+8. 每 50 张自动触发检查点（含 REPORT.md）
+
+**当前进度：已处理 {total} 张 / {LIBRARY_TOTAL}**
+"""
+    STATE_FILE.write_text(state_content, encoding="utf-8")
+
+    # ── RESUME.md ─────────────────────────────────────────────────────────────
+    resume_content = f"""# 下次启动指引
+
+**第一件事：读 STATE.md，了解当前进度和所有已踩的坑。**
+
+---
+
+## 当前进度（{now_str} 更新）
+
+已处理 **{total} / {LIBRARY_TOTAL}** 张（{total/LIBRARY_TOTAL*100:.2f}%）
+
+---
+
+## 启动顺序
+
+1. 读 `STATE.md`（全部上下文、踩坑记录）
+2. 读 `tags.json`（词表，398 个标签，version 1.0）
+3. 读 `progress.json`（已处理 ID 列表，跳过这些）
+4. 读 `suggested_tags.json`（待审建议标签，先展示给用户）
+
+---
+
+## 下一步操作（批量模式）
+
+```bash
+python tag_real.py --prepare --limit {BATCH_SIZE}
+```
+
+一次读取全部 {BATCH_SIZE} 张图，输出如下 JSON 写入 batch_results.json：
+
+```json
+[
+  {{"item_id": "xxx", "tags_to_add": ["类-角色设定", "风-写实"], "suggested": ["新概念"]}},
+  ...
+]
+```
+
+```bash
+python tag_real.py --apply-batch
+```
+
+---
+
+## 不需要重做的事
+
+- API 连通性测试（已验证）
+- 项目结构（所有文件已存在）
+- dry_run.py 验证（已通过）
+- 分页/排序/代理的任何诊断（结论在 STATE.md）
+- progress.json 里已有 {total} 条记录，--apply-batch 会自动跳过已处理项
+
+---
+
+## 关键记住
+
+- 系统代理劫持 localhost，脚本已用 `ProxyHandler({{}})` 绕过
+- 分页用 `limit=1000`，不传 `orderBy`
+- 写回前自动拉旧标签合并，不覆盖手动标签
+- 每 50 张自动检查点；也可手动：`python tag_real.py --checkpoint`
+- tags.json 在一个批次内只加载一次（_apply_one 复用已加载的 all_valid_tags）
+"""
+    RESUME_FILE.write_text(resume_content, encoding="utf-8")
+
+    # ── pending_review.md（count≥3 条目） ────────────────────────────────────
+    if pending_review_tags:
+        review_lines = [f"# 待审标签（count≥3）\n\n生成时间：{now_str}\n\n---\n"]
+        for tag in pending_review_tags:
+            entry = smap_cp[tag]
+            review_lines.append(f"\n## `{tag}`\n\n")
+            review_lines.append(f"- **count**: {entry['count']}\n")
+            review_lines.append(f"- **example_items**: {entry.get('example_items', [])}\n")
+            review_lines.append(f"- **first_seen**: {entry.get('first_seen', '?')}\n")
+            review_lines.append(f"- **last_seen**: {entry.get('last_seen', '?')}\n")
+            review_lines.append(f"- **决定**: （填 yes 加入词表 / 填 no 忽略）\n")
+        PENDING_REVIEW_FILE.write_text("".join(review_lines), encoding="utf-8")
+
+    # ── checkpoint_log.md 追加 ────────────────────────────────────────────────
+    log_line = (
+        f"[{now_str}] 检查点 #{checkpoint_n} | "
+        f"已处理 {total}/{LIBRARY_TOTAL} | "
+        f"建议词表 {len(smap_cp)} 个: {suggested_keys} | "
+        f"待审 count≥3: {len(pending_review_tags)} 个\n"
+    )
+    with open(CHECKPOINT_LOG, "a", encoding="utf-8") as f:
+        f.write(log_line)
+
+    # ── HANDOFF.md 追加 ───────────────────────────────────────────────────────
+    next_step     = "等待审核suggested" if pending_review_tags else "继续打标"
+    handoff_entry = (
+        f"\n## 检查点 @第{total}张 | {now_str}\n"
+        f"- 已处理: {total}/{LIBRARY_TOTAL}\n"
+        f"- 最后item: {last_id}\n"
+        f"- suggested: {len(smap_cp)}条, 其中count>=3有{len(pending_review_tags)}条\n"
+        f"- pending_review: {'有' if pending_review_tags else '无'}\n"
+        f"- tags.json版本: 1.0\n"
+        f"- 下一步: {next_step}\n"
+        f"- 异常: 无\n"
+    )
+    with open(HANDOFF_FILE, "a", encoding="utf-8") as f:
+        f.write(handoff_entry)
+
+    # ── 终端报告 ──────────────────────────────────────────────────────────────
+    print(f"\n{'━'*50}")
+    print(f" 检查点 #{checkpoint_n}")
+    print(f"{'━'*50}")
+    print(f" 已处理:           {total} / {LIBRARY_TOTAL} ({total/LIBRARY_TOTAL*100:.2f}%)")
+    print(f" 最后处理:         {last_id}  {last_name}")
+    print(f" 建议词表:         {suggested_keys if suggested_keys else '（无）'}")
+    print(f" 待审 count≥3:     {len(pending_review_tags)} 条{'  → pending_review.md 已更新' if pending_review_tags else ''}")
+    print(f" STATE.md:        ✅ 已更新")
+    print(f" RESUME.md:       ✅ 已更新")
+    print(f" checkpoint_log:  ✅ 已追加")
+    print(f" HANDOFF.md:      ✅ 已追加")
+    print(f" REPORT.md:       ✅ 已覆盖写入")
+    print(f"{'━'*50}\n")
+
+
+# ── 入口 ──────────────────────────────────────────────────────────────────────
+def main():
+    parser = argparse.ArgumentParser(description="Eagle 真实打标脚本")
+    parser.add_argument("--prepare",     action="store_true", help="取待处理 items，写 pending.json")
+    parser.add_argument("--apply",       action="store_true", help="单张模式：写回 Eagle")
+    parser.add_argument("--apply-batch", action="store_true", dest="apply_batch",
+                        help="批量模式：读 batch_results.json，批量写回 Eagle")
+    parser.add_argument("--checkpoint",  action="store_true", help="手动触发检查点")
+    parser.add_argument("--limit",       type=int, default=BATCH_SIZE, help="--prepare 最多取多少条")
+    parser.add_argument("--item",        type=str, default="", help="--apply 的 item_id")
+    parser.add_argument("--tags",        type=str, default="", help="--apply 的标签（逗号分隔）")
+    args = parser.parse_args()
+
+    if args.prepare:
+        cmd_prepare(args.limit)
+    elif args.apply:
+        if not args.item or not args.tags:
+            parser.error("--apply 需要同时提供 --item 和 --tags")
+        cmd_apply(args.item, args.tags)
+    elif args.apply_batch:
+        cmd_apply_batch()
+    elif args.checkpoint:
+        prog = ensure_prog_fields(load_json(PROGRESS_FILE, default_prog()))
+        run_checkpoint(prog, force=True)
+        save_json(PROGRESS_FILE, prog)
+    else:
+        parser.print_help()
+
+
+if __name__ == "__main__":
+    main()

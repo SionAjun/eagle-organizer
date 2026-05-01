@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "additionalDirectories": [
+      "D:\\杂项\\素材.library"
+    ],
+    "allow": [
+      "Read",
+      "Glob",
+      "Grep",
+      "Read(D:\\杂项\\素材.library/**)",
+      "Bash(ls *)",
+      "Bash(find *)",
+      "Bash(cat *)",
+      "Bash(head *)",
+      "Bash(tail *)",
+      "Bash(wc *)",
+      "Bash(stat *)",
+      "Bash(du *)",
+      "Bash(dir *)",
+      "Bash(type *)"
+    ]
+  }
+}

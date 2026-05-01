@@ -1,0 +1,1611 @@
+{
+  "need_001.png": [
+    {
+      "slot": 1,
+      "item_id": "ML3U0JCMW0XR7",
+      "candidates_ge": [
+        "格-赛博朋克2077",
+        "格-命运2",
+        "格-控制"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 2,
+      "item_id": "MO7GO1CNWEWSL",
+      "candidates_ge": [
+        "格-赛博朋克2077",
+        "格-命运2",
+        "格-控制"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 3,
+      "item_id": "MO7GIRYPH16V9",
+      "candidates_ge": [
+        "格-赛博朋克2077",
+        "格-命运2",
+        "格-控制"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 4,
+      "item_id": "MO7FG8PPO0G7P",
+      "candidates_ge": [],
+      "candidates_ban": [
+        "版-散点",
+        "版-网格",
+        "版-密集堆叠",
+        "版-留白极简",
+        "版-不对称",
+        "版-杂志式",
+        "版-拆解爆炸",
+        "版-标靶扫描",
+        "版-故障噪点"
+      ]
+    },
+    {
+      "slot": 5,
+      "item_id": "MO7F5B7Y9KH3K",
+      "candidates_ge": [],
+      "candidates_ban": [
+        "版-散点",
+        "版-网格",
+        "版-密集堆叠",
+        "版-留白极简",
+        "版-不对称",
+        "版-杂志式",
+        "版-拆解爆炸",
+        "版-标靶扫描",
+        "版-故障噪点"
+      ]
+    },
+    {
+      "slot": 6,
+      "item_id": "MO7F22WJLEUJA",
+      "candidates_ge": [
+        "格-赛博朋克2077",
+        "格-命运2",
+        "格-控制"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 7,
+      "item_id": "MO7EX61L9RFZJ",
+      "candidates_ge": [
+        "格-辐射系列",
+        "格-逃离塔科夫",
+        "格-死亡搁浅"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 8,
+      "item_id": "MO7ETFCKD48Z3",
+      "candidates_ge": [],
+      "candidates_ban": [
+        "版-散点",
+        "版-网格",
+        "版-密集堆叠",
+        "版-留白极简",
+        "版-不对称",
+        "版-杂志式",
+        "版-拆解爆炸",
+        "版-标靶扫描",
+        "版-故障噪点"
+      ]
+    },
+    {
+      "slot": 9,
+      "item_id": "MO7ESGQK09ASF",
+      "candidates_ge": [],
+      "candidates_ban": [
+        "版-散点",
+        "版-网格",
+        "版-密集堆叠",
+        "版-留白极简",
+        "版-不对称",
+        "版-杂志式",
+        "版-拆解爆炸",
+        "版-标靶扫描",
+        "版-故障噪点"
+      ]
+    },
+    {
+      "slot": 10,
+      "item_id": "MO7ECXLICNA4J",
+      "candidates_ge": [],
+      "candidates_ban": [
+        "版-散点",
+        "版-网格",
+        "版-密集堆叠",
+        "版-留白极简",
+        "版-不对称",
+        "版-杂志式",
+        "版-拆解爆炸",
+        "版-标靶扫描",
+        "版-故障噪点"
+      ]
+    },
+    {
+      "slot": 11,
+      "item_id": "MO7AU2L3ABCJM",
+      "candidates_ge": [
+        "格-赛博朋克2077",
+        "格-命运2",
+        "格-控制"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 12,
+      "item_id": "MO797ICI9QM3B",
+      "candidates_ge": [],
+      "candidates_ban": [
+        "版-散点",
+        "版-网格",
+        "版-密集堆叠",
+        "版-留白极简",
+        "版-不对称",
+        "版-杂志式",
+        "版-拆解爆炸",
+        "版-标靶扫描",
+        "版-故障噪点"
+      ]
+    },
+    {
+      "slot": 13,
+      "item_id": "MO78SJGSUMWC2",
+      "candidates_ge": [],
+      "candidates_ban": [
+        "版-散点",
+        "版-网格",
+        "版-密集堆叠",
+        "版-留白极简",
+        "版-不对称",
+        "版-杂志式",
+        "版-拆解爆炸",
+        "版-标靶扫描",
+        "版-故障噪点"
+      ]
+    },
+    {
+      "slot": 14,
+      "item_id": "MO78NAMJSD54F",
+      "candidates_ge": [
+        "格-原神",
+        "格-塞尔达王国之泪",
+        "格-魂系",
+        "格-Hades"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 15,
+      "item_id": "MO78N7HY0P3UF",
+      "candidates_ge": [],
+      "candidates_ban": [
+        "版-散点",
+        "版-网格",
+        "版-密集堆叠",
+        "版-留白极简",
+        "版-不对称",
+        "版-杂志式",
+        "版-拆解爆炸",
+        "版-标靶扫描",
+        "版-故障噪点"
+      ]
+    },
+    {
+      "slot": 16,
+      "item_id": "M3YJ8L586Q7ZS",
+      "candidates_ge": [],
+      "candidates_ban": [
+        "版-散点",
+        "版-网格",
+        "版-密集堆叠",
+        "版-留白极简",
+        "版-不对称",
+        "版-杂志式",
+        "版-拆解爆炸",
+        "版-标靶扫描",
+        "版-故障噪点"
+      ]
+    }
+  ],
+  "need_002.png": [
+    {
+      "slot": 1,
+      "item_id": "MO78C3SPLOG1T",
+      "candidates_ge": [],
+      "candidates_ban": [
+        "版-散点",
+        "版-网格",
+        "版-密集堆叠",
+        "版-留白极简",
+        "版-不对称",
+        "版-杂志式",
+        "版-拆解爆炸",
+        "版-标靶扫描",
+        "版-故障噪点"
+      ]
+    },
+    {
+      "slot": 2,
+      "item_id": "MO62CZRPDW9RC",
+      "candidates_ge": [
+        "格-原神",
+        "格-塞尔达王国之泪",
+        "格-魂系",
+        "格-Hades"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 3,
+      "item_id": "MNQ6G4FX48QXL",
+      "candidates_ge": [
+        "格-明日方舟",
+        "格-原神",
+        "格-绝区零"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 4,
+      "item_id": "MNYPCF0HB60W3",
+      "candidates_ge": [
+        "格-赛博朋克2077",
+        "格-命运2",
+        "格-控制"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 5,
+      "item_id": "MO624S5303U4W",
+      "candidates_ge": [
+        "格-明日方舟",
+        "格-原神",
+        "格-绝区零"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 6,
+      "item_id": "MO5Z7732ZERIH",
+      "candidates_ge": [
+        "格-赛博朋克2077",
+        "格-命运2",
+        "格-控制"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 7,
+      "item_id": "MO4KY8XI3HIAG",
+      "candidates_ge": [
+        "格-赛博朋克2077",
+        "格-命运2",
+        "格-控制"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 8,
+      "item_id": "MO4FBTGT5MMLF",
+      "candidates_ge": [
+        "格-赛博朋克2077",
+        "格-命运2",
+        "格-控制"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 9,
+      "item_id": "MO4F3ALR3AGIP",
+      "candidates_ge": [
+        "格-赛博朋克2077",
+        "格-命运2",
+        "格-控制"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 10,
+      "item_id": "MO36U6U615TOG",
+      "candidates_ge": [],
+      "candidates_ban": [
+        "版-散点",
+        "版-网格",
+        "版-密集堆叠",
+        "版-留白极简",
+        "版-不对称",
+        "版-杂志式",
+        "版-拆解爆炸",
+        "版-标靶扫描",
+        "版-故障噪点"
+      ]
+    },
+    {
+      "slot": 11,
+      "item_id": "MO36GQHQZTDXW",
+      "candidates_ge": [
+        "格-辐射系列",
+        "格-逃离塔科夫",
+        "格-死亡搁浅"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 12,
+      "item_id": "MO34GCYMLUFAV",
+      "candidates_ge": [
+        "格-明日方舟",
+        "格-原神",
+        "格-绝区零"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 13,
+      "item_id": "MO34BOOKMIO9Z",
+      "candidates_ge": [
+        "格-原神",
+        "格-塞尔达王国之泪",
+        "格-魂系",
+        "格-Hades"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 14,
+      "item_id": "MO32MD7EHD0CN",
+      "candidates_ge": [
+        "格-赛博朋克2077",
+        "格-命运2",
+        "格-控制"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 15,
+      "item_id": "MNYWFZADNLFBR",
+      "candidates_ge": [
+        "格-原神",
+        "格-塞尔达王国之泪",
+        "格-魂系",
+        "格-Hades"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 16,
+      "item_id": "MNYVXFHTZOY1Q",
+      "candidates_ge": [
+        "格-赛博朋克2077",
+        "格-命运2",
+        "格-控制"
+      ],
+      "candidates_ban": null
+    }
+  ],
+  "need_003.png": [
+    {
+      "slot": 1,
+      "item_id": "MNYVU5ZV9BLFR",
+      "candidates_ge": [
+        "格-原神",
+        "格-塞尔达王国之泪",
+        "格-魂系",
+        "格-Hades"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 2,
+      "item_id": "MNYVEXOGMIYOY",
+      "candidates_ge": [
+        "格-明日方舟",
+        "格-原神",
+        "格-绝区零"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 3,
+      "item_id": "MNYUR0S2CAAN4",
+      "candidates_ge": [
+        "格-明日方舟",
+        "格-原神",
+        "格-绝区零"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 4,
+      "item_id": "MNYUNK5L5ECSG",
+      "candidates_ge": [
+        "格-明日方舟",
+        "格-原神",
+        "格-绝区零"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 5,
+      "item_id": "MNYSH785U7SA4",
+      "candidates_ge": [
+        "格-明日方舟",
+        "格-原神",
+        "格-绝区零"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 6,
+      "item_id": "MNYSD58HRTTH0",
+      "candidates_ge": [
+        "格-明日方舟",
+        "格-原神",
+        "格-绝区零"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 7,
+      "item_id": "MNYS6B12H41P6",
+      "candidates_ge": [
+        "格-辐射系列",
+        "格-逃离塔科夫",
+        "格-死亡搁浅"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 8,
+      "item_id": "MNYS46GFSLG4C",
+      "candidates_ge": [
+        "格-明日方舟",
+        "格-原神",
+        "格-绝区零"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 9,
+      "item_id": "MNYS3CBDSNLW9",
+      "candidates_ge": [
+        "格-明日方舟",
+        "格-原神",
+        "格-绝区零"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 10,
+      "item_id": "MNYREHM0K114M",
+      "candidates_ge": [],
+      "candidates_ban": [
+        "版-散点",
+        "版-网格",
+        "版-密集堆叠",
+        "版-留白极简",
+        "版-不对称",
+        "版-杂志式",
+        "版-拆解爆炸",
+        "版-标靶扫描",
+        "版-故障噪点"
+      ]
+    },
+    {
+      "slot": 11,
+      "item_id": "MN4TDGGXDOBIF",
+      "candidates_ge": [],
+      "candidates_ban": [
+        "版-散点",
+        "版-网格",
+        "版-密集堆叠",
+        "版-留白极简",
+        "版-不对称",
+        "版-杂志式",
+        "版-拆解爆炸",
+        "版-标靶扫描",
+        "版-故障噪点"
+      ]
+    },
+    {
+      "slot": 12,
+      "item_id": "MOAAGB6MSBSZP",
+      "candidates_ge": [
+        "格-赛博朋克2077",
+        "格-命运2",
+        "格-控制"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 13,
+      "item_id": "MNXF1WZF0MBK7",
+      "candidates_ge": [
+        "格-赛博朋克2077",
+        "格-命运2",
+        "格-控制"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 14,
+      "item_id": "MNXBWTC5HBB95",
+      "candidates_ge": [
+        "格-赛博朋克2077",
+        "格-命运2",
+        "格-控制"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 15,
+      "item_id": "MNXBJLLEX902O",
+      "candidates_ge": [
+        "格-辐射系列",
+        "格-极乐迪斯科",
+        "格-VA-11 HALL-A"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 16,
+      "item_id": "MNW2LUX5CBBYJ",
+      "candidates_ge": [
+        "格-绝区零",
+        "格-控制",
+        "格-VA-11 HALL-A"
+      ],
+      "candidates_ban": null
+    }
+  ],
+  "need_004.png": [
+    {
+      "slot": 1,
+      "item_id": "MNW2LSG01OLI2",
+      "candidates_ge": [],
+      "candidates_ban": [
+        "版-散点",
+        "版-网格",
+        "版-密集堆叠",
+        "版-留白极简",
+        "版-不对称",
+        "版-杂志式",
+        "版-拆解爆炸",
+        "版-标靶扫描",
+        "版-故障噪点"
+      ]
+    },
+    {
+      "slot": 2,
+      "item_id": "MNVYQ1UXO58KN",
+      "candidates_ge": [
+        "格-绝区零",
+        "格-控制",
+        "格-VA-11 HALL-A"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 3,
+      "item_id": "MNVYP528V7I5U",
+      "candidates_ge": [],
+      "candidates_ban": [
+        "版-散点",
+        "版-网格",
+        "版-密集堆叠",
+        "版-留白极简",
+        "版-不对称",
+        "版-杂志式",
+        "版-拆解爆炸",
+        "版-标靶扫描",
+        "版-故障噪点"
+      ]
+    },
+    {
+      "slot": 4,
+      "item_id": "MMNQDEJ0BCGBD",
+      "candidates_ge": [
+        "格-辐射系列",
+        "格-极乐迪斯科",
+        "格-VA-11 HALL-A"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 5,
+      "item_id": "MNUJ9IG0MAM9X",
+      "candidates_ge": [
+        "格-绝区零",
+        "格-控制",
+        "格-VA-11 HALL-A"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 6,
+      "item_id": "MNUJ1G4YPBJR1",
+      "candidates_ge": [
+        "格-原神",
+        "格-塞尔达王国之泪",
+        "格-魂系"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 7,
+      "item_id": "MNUIO2A5TZ2BY",
+      "candidates_ge": [
+        "格-原神",
+        "格-塞尔达王国之泪",
+        "格-魂系"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 8,
+      "item_id": "MNUHZ8GXAWFL4",
+      "candidates_ge": [
+        "格-绝区零",
+        "格-控制",
+        "格-VA-11 HALL-A"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 9,
+      "item_id": "MNUHZ0YX3XV9C",
+      "candidates_ge": [
+        "格-绝区零",
+        "格-控制",
+        "格-VA-11 HALL-A"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 10,
+      "item_id": "MNUHREV2T9F9L",
+      "candidates_ge": [
+        "格-绝区零",
+        "格-控制",
+        "格-VA-11 HALL-A"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 11,
+      "item_id": "MNUHQ7F66P94I",
+      "candidates_ge": [
+        "格-绝区零",
+        "格-控制",
+        "格-VA-11 HALL-A"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 12,
+      "item_id": "MNUHQ2C06GUGZ",
+      "candidates_ge": [
+        "格-绝区零",
+        "格-控制",
+        "格-VA-11 HALL-A"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 13,
+      "item_id": "MNUE2N4MMW51A",
+      "candidates_ge": [],
+      "candidates_ban": [
+        "版-散点",
+        "版-网格",
+        "版-密集堆叠",
+        "版-留白极简",
+        "版-不对称",
+        "版-杂志式",
+        "版-拆解爆炸",
+        "版-标靶扫描",
+        "版-故障噪点"
+      ]
+    },
+    {
+      "slot": 14,
+      "item_id": "MNUE2ETOZUO81",
+      "candidates_ge": [],
+      "candidates_ban": [
+        "版-散点",
+        "版-网格",
+        "版-密集堆叠",
+        "版-留白极简",
+        "版-不对称",
+        "版-杂志式",
+        "版-拆解爆炸",
+        "版-标靶扫描",
+        "版-故障噪点"
+      ]
+    },
+    {
+      "slot": 15,
+      "item_id": "MNUE1R9UHSRVD",
+      "candidates_ge": [],
+      "candidates_ban": [
+        "版-散点",
+        "版-网格",
+        "版-密集堆叠",
+        "版-留白极简",
+        "版-不对称",
+        "版-杂志式",
+        "版-拆解爆炸",
+        "版-标靶扫描",
+        "版-故障噪点"
+      ]
+    },
+    {
+      "slot": 16,
+      "item_id": "MNUDWC48P58PU",
+      "candidates_ge": [
+        "格-辐射系列",
+        "格-极乐迪斯科",
+        "格-VA-11 HALL-A"
+      ],
+      "candidates_ban": null
+    }
+  ],
+  "need_005.png": [
+    {
+      "slot": 1,
+      "item_id": "MNUDNC1JSML03",
+      "candidates_ge": [
+        "格-辐射系列",
+        "格-极乐迪斯科",
+        "格-VA-11 HALL-A"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 2,
+      "item_id": "MGTI31IJXAVEO",
+      "candidates_ge": [
+        "格-绝区零",
+        "格-控制",
+        "格-VA-11 HALL-A"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 3,
+      "item_id": "MJBJ20WAENOIC",
+      "candidates_ge": [],
+      "candidates_ban": [
+        "版-散点",
+        "版-网格",
+        "版-密集堆叠",
+        "版-留白极简",
+        "版-不对称",
+        "版-杂志式",
+        "版-拆解爆炸",
+        "版-标靶扫描",
+        "版-故障噪点"
+      ]
+    },
+    {
+      "slot": 4,
+      "item_id": "MNT6VF9WMDLEI",
+      "candidates_ge": [],
+      "candidates_ban": [
+        "版-散点",
+        "版-网格",
+        "版-密集堆叠",
+        "版-留白极简",
+        "版-不对称",
+        "版-杂志式",
+        "版-拆解爆炸",
+        "版-标靶扫描",
+        "版-故障噪点"
+      ]
+    },
+    {
+      "slot": 5,
+      "item_id": "MNT6VBPGT868P",
+      "candidates_ge": [],
+      "candidates_ban": [
+        "版-散点",
+        "版-网格",
+        "版-密集堆叠",
+        "版-留白极简",
+        "版-不对称",
+        "版-杂志式",
+        "版-拆解爆炸",
+        "版-标靶扫描",
+        "版-故障噪点"
+      ]
+    },
+    {
+      "slot": 6,
+      "item_id": "MNT6TKDYICKM2",
+      "candidates_ge": [],
+      "candidates_ban": [
+        "版-散点",
+        "版-网格",
+        "版-密集堆叠",
+        "版-留白极简",
+        "版-不对称",
+        "版-杂志式",
+        "版-拆解爆炸",
+        "版-标靶扫描",
+        "版-故障噪点"
+      ]
+    },
+    {
+      "slot": 7,
+      "item_id": "MNT3IHRJXLDFN",
+      "candidates_ge": [],
+      "candidates_ban": [
+        "版-散点",
+        "版-网格",
+        "版-密集堆叠",
+        "版-留白极简",
+        "版-不对称",
+        "版-杂志式",
+        "版-拆解爆炸",
+        "版-标靶扫描",
+        "版-故障噪点"
+      ]
+    },
+    {
+      "slot": 8,
+      "item_id": "MNT2W7D2UOVNX",
+      "candidates_ge": [
+        "格-赛博朋克2077",
+        "格-命运2",
+        "格-控制"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 9,
+      "item_id": "M6Z4PA8VUL3IQ",
+      "candidates_ge": [
+        "格-辐射系列",
+        "格-极乐迪斯科",
+        "格-VA-11 HALL-A"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 10,
+      "item_id": "MNT2HHC65AICB",
+      "candidates_ge": [
+        "格-绝区零",
+        "格-控制",
+        "格-VA-11 HALL-A"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 11,
+      "item_id": "MNRSDOINPOGZV",
+      "candidates_ge": [
+        "格-绝区零",
+        "格-控制",
+        "格-VA-11 HALL-A"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 12,
+      "item_id": "MNRS94W3BV4WC",
+      "candidates_ge": [
+        "格-绝区零",
+        "格-控制",
+        "格-VA-11 HALL-A"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 13,
+      "item_id": "MNRS90NH9Y9QW",
+      "candidates_ge": [
+        "格-绝区零",
+        "格-控制",
+        "格-VA-11 HALL-A"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 14,
+      "item_id": "MNRS2WMXJ1HMJ",
+      "candidates_ge": [
+        "格-赛博朋克2077",
+        "格-命运2",
+        "格-控制"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 15,
+      "item_id": "MNRS25YR7YR4J",
+      "candidates_ge": [],
+      "candidates_ban": [
+        "版-散点",
+        "版-网格",
+        "版-密集堆叠",
+        "版-留白极简",
+        "版-不对称",
+        "版-杂志式",
+        "版-拆解爆炸",
+        "版-标靶扫描",
+        "版-故障噪点"
+      ]
+    },
+    {
+      "slot": 16,
+      "item_id": "MNRRKAJDCP0MZ",
+      "candidates_ge": [],
+      "candidates_ban": [
+        "版-散点",
+        "版-网格",
+        "版-密集堆叠",
+        "版-留白极简",
+        "版-不对称",
+        "版-杂志式",
+        "版-拆解爆炸",
+        "版-标靶扫描",
+        "版-故障噪点"
+      ]
+    }
+  ],
+  "need_006.png": [
+    {
+      "slot": 1,
+      "item_id": "MNRRCBOHYS7ZE",
+      "candidates_ge": [],
+      "candidates_ban": [
+        "版-散点",
+        "版-网格",
+        "版-密集堆叠",
+        "版-留白极简",
+        "版-不对称",
+        "版-杂志式",
+        "版-拆解爆炸",
+        "版-标靶扫描",
+        "版-故障噪点"
+      ]
+    },
+    {
+      "slot": 2,
+      "item_id": "MNRQQYSMLLFM3",
+      "candidates_ge": [],
+      "candidates_ban": [
+        "版-散点",
+        "版-网格",
+        "版-密集堆叠",
+        "版-留白极简",
+        "版-不对称",
+        "版-杂志式",
+        "版-拆解爆炸",
+        "版-标靶扫描",
+        "版-故障噪点"
+      ]
+    },
+    {
+      "slot": 3,
+      "item_id": "MNRQQINPFIHMO",
+      "candidates_ge": [],
+      "candidates_ban": [
+        "版-散点",
+        "版-网格",
+        "版-密集堆叠",
+        "版-留白极简",
+        "版-不对称",
+        "版-杂志式",
+        "版-拆解爆炸",
+        "版-标靶扫描",
+        "版-故障噪点"
+      ]
+    },
+    {
+      "slot": 4,
+      "item_id": "MNRQNV75HQVD0",
+      "candidates_ge": [],
+      "candidates_ban": [
+        "版-散点",
+        "版-网格",
+        "版-密集堆叠",
+        "版-留白极简",
+        "版-不对称",
+        "版-杂志式",
+        "版-拆解爆炸",
+        "版-标靶扫描",
+        "版-故障噪点"
+      ]
+    },
+    {
+      "slot": 5,
+      "item_id": "MK5GI6YHZ9K5J",
+      "candidates_ge": [],
+      "candidates_ban": [
+        "版-散点",
+        "版-网格",
+        "版-密集堆叠",
+        "版-留白极简",
+        "版-不对称",
+        "版-杂志式",
+        "版-拆解爆炸",
+        "版-标靶扫描",
+        "版-故障噪点"
+      ]
+    },
+    {
+      "slot": 6,
+      "item_id": "MNRQFTR6VY074",
+      "candidates_ge": [
+        "格-绝区零",
+        "格-控制",
+        "格-VA-11 HALL-A"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 7,
+      "item_id": "MNRPZRVB72ZGJ",
+      "candidates_ge": [
+        "格-辐射系列",
+        "格-极乐迪斯科",
+        "格-VA-11 HALL-A"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 8,
+      "item_id": "MNRJVF2J3P8YQ",
+      "candidates_ge": [],
+      "candidates_ban": [
+        "版-散点",
+        "版-网格",
+        "版-密集堆叠",
+        "版-留白极简",
+        "版-不对称",
+        "版-杂志式",
+        "版-拆解爆炸",
+        "版-标靶扫描",
+        "版-故障噪点"
+      ]
+    },
+    {
+      "slot": 9,
+      "item_id": "MFSBTQ6I1YYT7",
+      "candidates_ge": [
+        "格-辐射系列",
+        "格-极乐迪斯科",
+        "格-VA-11 HALL-A"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 10,
+      "item_id": "MOBQITJ1J3C9Y",
+      "candidates_ge": [
+        "格-绝区零",
+        "格-控制",
+        "格-VA-11 HALL-A"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 11,
+      "item_id": "MOBQJ6U0Y5WAC",
+      "candidates_ge": [
+        "格-辐射系列",
+        "格-极乐迪斯科",
+        "格-VA-11 HALL-A"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 12,
+      "item_id": "MOBMJYYGIET8S",
+      "candidates_ge": [],
+      "candidates_ban": [
+        "版-散点",
+        "版-网格",
+        "版-密集堆叠",
+        "版-留白极简",
+        "版-不对称",
+        "版-杂志式",
+        "版-拆解爆炸",
+        "版-标靶扫描",
+        "版-故障噪点"
+      ]
+    },
+    {
+      "slot": 13,
+      "item_id": "MOBMJJ8WMB1NY",
+      "candidates_ge": [
+        "格-绝区零",
+        "格-控制",
+        "格-VA-11 HALL-A"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 14,
+      "item_id": "MOBMJ0NWPPDT5",
+      "candidates_ge": [],
+      "candidates_ban": [
+        "版-散点",
+        "版-网格",
+        "版-密集堆叠",
+        "版-留白极简",
+        "版-不对称",
+        "版-杂志式",
+        "版-拆解爆炸",
+        "版-标靶扫描",
+        "版-故障噪点"
+      ]
+    },
+    {
+      "slot": 15,
+      "item_id": "MOBMGYC4IBR3M",
+      "candidates_ge": [],
+      "candidates_ban": [
+        "版-散点",
+        "版-网格",
+        "版-密集堆叠",
+        "版-留白极简",
+        "版-不对称",
+        "版-杂志式",
+        "版-拆解爆炸",
+        "版-标靶扫描",
+        "版-故障噪点"
+      ]
+    },
+    {
+      "slot": 16,
+      "item_id": "MOBM97VBW11FX",
+      "candidates_ge": [
+        "格-绝区零",
+        "格-控制",
+        "格-VA-11 HALL-A"
+      ],
+      "candidates_ban": null
+    }
+  ],
+  "need_007.png": [
+    {
+      "slot": 1,
+      "item_id": "MNRI1C44O4CUV",
+      "candidates_ge": [
+        "格-绝区零",
+        "格-控制",
+        "格-VA-11 HALL-A"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 2,
+      "item_id": "MNQAII7RU3X47",
+      "candidates_ge": [
+        "格-绝区零",
+        "格-控制",
+        "格-VA-11 HALL-A"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 3,
+      "item_id": "MNQAI5P6426BG",
+      "candidates_ge": [
+        "格-绝区零",
+        "格-控制",
+        "格-VA-11 HALL-A"
+      ],
+      "candidates_ban": null
+    },
+    {
+      "slot": 4,
+      "item_id": "MNQAHWFVP5CJ1",
+      "candidates_ge": [
+        "格-绝区零",
+        "格-控制",
+        "格-VA-11 HALL-A"
+      ],
+      "candidates_ban": null
+    }
+  ],
+  "uncertain_001.png": [
+    {
+      "slot": 1,
+      "item_id": "MNNCVRGGYNHWV",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 2,
+      "item_id": "MO7F1V14Y3P81",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 3,
+      "item_id": "MO7EXA3DVKVZE",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 4,
+      "item_id": "MO78SPV1I5HKR",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 5,
+      "item_id": "MO62BWPFS0J1L",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 6,
+      "item_id": "MO4EQT8DMPRB1",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 7,
+      "item_id": "MO4EQR02TGP64",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 8,
+      "item_id": "MO4DJAG75YDH9",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 9,
+      "item_id": "MM24H5PHVSOT7",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 10,
+      "item_id": "MO4D1M7EGMOYZ",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 11,
+      "item_id": "MO4D1EVE3W34N",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 12,
+      "item_id": "MO4D1A408L87H",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 13,
+      "item_id": "MO4CZYSSBPVBH",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 14,
+      "item_id": "MO4CJIXMM84KN",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 15,
+      "item_id": "MO4CHIPPTBAAD",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 16,
+      "item_id": "MO4CGCEG7HXU6",
+      "candidates_ge": null,
+      "candidates_ban": null
+    }
+  ],
+  "uncertain_002.png": [
+    {
+      "slot": 1,
+      "item_id": "MO4C95BNZ5RO6",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 2,
+      "item_id": "MO37O9V25ZLDY",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 3,
+      "item_id": "MO37FFJC76N5R",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 4,
+      "item_id": "MO37EXMCH0K6I",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 5,
+      "item_id": "MO37EDVSST0JV",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 6,
+      "item_id": "MO37D89K2F5NI",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 7,
+      "item_id": "MO37CWNVY2874",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 8,
+      "item_id": "MO36IUIHK87T5",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 9,
+      "item_id": "MO34ER59DPIY8",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 10,
+      "item_id": "MO34BRTTXVCCN",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 11,
+      "item_id": "MO32VEHA0S2BC",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 12,
+      "item_id": "MNYWD69O5786H",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 13,
+      "item_id": "MNYVW9HAR7HCN",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 14,
+      "item_id": "MCJBNNJ2CKSMJ",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 15,
+      "item_id": "MNYV3XVNKVRZN",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 16,
+      "item_id": "MNYV2SSGC673N",
+      "candidates_ge": null,
+      "candidates_ban": null
+    }
+  ],
+  "uncertain_003.png": [
+    {
+      "slot": 1,
+      "item_id": "MNYV1QV1HFHKY",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 2,
+      "item_id": "MNYT1MUZRPWT8",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 3,
+      "item_id": "MNYRWLRQVUPUZ",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 4,
+      "item_id": "MNYPD7CYL57B0",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 5,
+      "item_id": "MNXHVV73WPTYW",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 6,
+      "item_id": "MNYV4HM7BX8T1",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 7,
+      "item_id": "MN4QNQHIYNX9B",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 8,
+      "item_id": "MOAAGDH85N1OZ",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 9,
+      "item_id": "MNXHO3WDIUSN7",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 10,
+      "item_id": "MNXGETZI7JOTE",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 11,
+      "item_id": "MNXFVNGYOJDZ2",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 12,
+      "item_id": "MNW2TNFD3FO71",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 13,
+      "item_id": "MNVLF4UG6S4OM",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 14,
+      "item_id": "MI0GG2UP4CO8B",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 15,
+      "item_id": "MNUL0ZJ3VDIML",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 16,
+      "item_id": "MNUKYZ0VX3BOL",
+      "candidates_ge": null,
+      "candidates_ban": null
+    }
+  ],
+  "uncertain_004.png": [
+    {
+      "slot": 1,
+      "item_id": "MNUJ5HO9I7RE4",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 2,
+      "item_id": "MNUEYK33FF6J3",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 3,
+      "item_id": "MNUCD0VZ5GGAT",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 4,
+      "item_id": "MNT2X4TAC2QOT",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 5,
+      "item_id": "MNT2HXFWBACE5",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 6,
+      "item_id": "MNRTODQTAULJQ",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 7,
+      "item_id": "MNRTOA9W2COUH",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 8,
+      "item_id": "MNRS3L1FVX6JY",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 9,
+      "item_id": "MNRS3E1TMI24J",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 10,
+      "item_id": "MJBLI3DX600U5",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 11,
+      "item_id": "MNRKEVV3Z94NJ",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 12,
+      "item_id": "MOBQJ1YMK96JV",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 13,
+      "item_id": "MOBMCMPKCQC0U",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 14,
+      "item_id": "MOBLMRHBSIKCN",
+      "candidates_ge": null,
+      "candidates_ban": null
+    },
+    {
+      "slot": 15,
+      "item_id": "MNRIDXCB85SLG",
+      "candidates_ge": null,
+      "candidates_ban": null
+    }
+  ]
+}

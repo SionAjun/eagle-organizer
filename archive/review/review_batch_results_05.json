@@ -1,0 +1,82 @@
+[
+  {
+    "index": 1,
+    "item_id": "MO4CF7ULVV6FD",
+    "deprecated_found": ["材-金属"],
+    "tags_to_remove": ["材-金属"],
+    "tags_to_add": ["材-金属-拉丝"],
+    "note": "智云G60 LED补光灯产品照，已有侧光/高对比；铝合金支架/把手为拉丝质感"
+  },
+  {
+    "index": 2,
+    "item_id": "MO4C3YN9JFWY6",
+    "deprecated_found": ["光-柔光", "材-金属"],
+    "tags_to_remove": ["光-柔光", "材-金属"],
+    "tags_to_add": ["光-漫反射", "材-金属-烤漆"],
+    "note": "Hitachi卷带录像机实物白底照，白背景漫射布光；军绿/深灰哑光烤漆金属机体"
+  },
+  {
+    "index": 3,
+    "item_id": "MO36IUIHK87T5",
+    "deprecated_found": ["光-柔光", "材-金属"],
+    "tags_to_remove": ["光-柔光", "材-金属"],
+    "tags_to_add": ["光-漫反射", "材-金属-做旧"],
+    "note": "PLAICE科幻容器3D，奶背景软环境光；机体表面密布划痕和磨损痕迹，典型做旧枪灰金属"
+  },
+  {
+    "index": 4,
+    "item_id": "MO34GCYMLUFAV",
+    "deprecated_found": ["光-柔光"],
+    "tags_to_remove": ["光-柔光"],
+    "tags_to_add": ["光-漫反射"],
+    "note": "生物科技概念工作站日系插画，白背景均匀软光"
+  },
+  {
+    "index": 5,
+    "item_id": "MO34EUWZITIET",
+    "deprecated_found": ["光-柔光", "材-金属"],
+    "tags_to_remove": ["光-柔光", "材-金属"],
+    "tags_to_add": ["光-漫反射", "材-金属-烤漆"],
+    "note": "钻井平台旋转台重型设备CAD渲染，白背景软光；工业青绿色烤漆钢铁构造"
+  },
+  {
+    "index": 6,
+    "item_id": "MO34ESQQQD9BS",
+    "deprecated_found": ["光-柔光"],
+    "tags_to_remove": ["光-柔光"],
+    "tags_to_add": ["光-漫反射"],
+    "note": "二战德军榴弹炮弹药+弹药箱1/35比例模型套件包装图，蓝背景平光"
+  },
+  {
+    "index": 7,
+    "item_id": "MO34ER59DPIY8",
+    "deprecated_found": ["光-柔光", "材-金属"],
+    "tags_to_remove": ["光-柔光", "材-金属"],
+    "tags_to_add": ["光-漫反射", "材-金属-光面"],
+    "note": "SUBMER科幻通讯器三配色方案概念图，白背景软光；天线/金属扣具为光面铬色金属"
+  },
+  {
+    "index": 8,
+    "item_id": "MO34BRTTXVCCN",
+    "deprecated_found": ["光-柔光"],
+    "tags_to_remove": ["光-柔光"],
+    "tags_to_add": ["光-漫反射"],
+    "note": "Project Wing海上石油平台概念图，阴天漫射天空光，无强方向光"
+  },
+  {
+    "index": 9,
+    "item_id": "MO34BOOKMIO9Z",
+    "deprecated_found": ["光-柔光"],
+    "tags_to_remove": ["光-柔光"],
+    "tags_to_add": ["光-白天"],
+    "note": "东方奇幻游戏建筑设计图，外景白天暖色阳光，场-村庄已在保留标签中"
+  },
+  {
+    "index": 10,
+    "item_id": "MJ7ACNFATLJ9A",
+    "deprecated_found": ["光-柔光"],
+    "tags_to_remove": ["光-柔光"],
+    "tags_to_add": ["光-侧光"],
+    "note": "Art Deco塔形木工艺雕塑实景照，右上方明显暖色单点侧光，左侧有清晰阴影"
+  }
+]

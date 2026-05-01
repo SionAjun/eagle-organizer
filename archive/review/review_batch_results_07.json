@@ -1,0 +1,82 @@
+[
+  {
+    "index": 1,
+    "item_id": "MNYV5LFWEI24K",
+    "deprecated_found": ["光-柔光"],
+    "tags_to_remove": ["光-柔光"],
+    "tags_to_add": ["光-白天"],
+    "note": "厚涂科幻城市游戏截图，场-白天在keep，画面顶部蓝天清晰可见，白天强光"
+  },
+  {
+    "index": 2,
+    "item_id": "MNYV3XVNKVRZN",
+    "deprecated_found": ["光-柔光"],
+    "tags_to_remove": ["光-柔光"],
+    "tags_to_add": ["光-黄昏"],
+    "note": "中国公寓楼立面暖色平涂插图，右侧午后/黄昏金色阳光斜射，阳台有明显阴影"
+  },
+  {
+    "index": 3,
+    "item_id": "MNYV2SSGC673N",
+    "deprecated_found": ["光-柔光"],
+    "tags_to_remove": ["光-柔光"],
+    "tags_to_add": ["光-漫反射"],
+    "note": "日本城市街角小店插图，阴天/多云漫射光，无明显方向阳光"
+  },
+  {
+    "index": 4,
+    "item_id": "MNYV1QV1HFHKY",
+    "deprecated_found": ["材-金属"],
+    "tags_to_remove": ["材-金属"],
+    "tags_to_add": ["材-金属-烤漆"],
+    "note": "科幻机关模块3D俯视，黑背景；外壳为哑黑涂装金属（光-荧光描述橙色发光内腔，已在keep）"
+  },
+  {
+    "index": 5,
+    "item_id": "MNYURG79J9M9O",
+    "deprecated_found": ["光-柔光", "材-金属"],
+    "tags_to_remove": ["光-柔光", "材-金属"],
+    "tags_to_add": ["光-漫反射", "材-金属-拉丝"],
+    "note": "科幻圆形SSD存储卡道具3D，暗背景软环境光；银灰色精密铝合金壳体为拉丝质感"
+  },
+  {
+    "index": 6,
+    "item_id": "MNYUNK5L5ECSG",
+    "deprecated_found": ["光-柔光"],
+    "tags_to_remove": ["光-柔光"],
+    "tags_to_add": ["光-霓虹"],
+    "note": "二次元角色室内插图，ANGEL霓虹灯+电脑屏幕为主光源，典型霓虹灯粉色氛围"
+  },
+  {
+    "index": 7,
+    "item_id": "MNYT1MUZRPWT8",
+    "deprecated_found": ["光-柔光", "材-金属"],
+    "tags_to_remove": ["光-柔光", "材-金属"],
+    "tags_to_add": ["光-漫反射", "材-金属-烤漆"],
+    "note": "科幻容器/宝箱卡渲3D，白背景软光；主体深灰金属框架为哑光烤漆涂装"
+  },
+  {
+    "index": 8,
+    "item_id": "MNYSH785U7SA4",
+    "deprecated_found": ["光-柔光"],
+    "tags_to_remove": ["光-柔光"],
+    "tags_to_add": ["光-漫反射"],
+    "note": "日系赛璐璐猫耳女仆+粉红枪半身图，纯绿背景平光，无特定光方向"
+  },
+  {
+    "index": 9,
+    "item_id": "MNYSD58HRTTH0",
+    "deprecated_found": ["光-柔光"],
+    "tags_to_remove": ["光-柔光"],
+    "tags_to_add": ["光-漫反射"],
+    "note": "同角色全身立绘，纯绿背景，平面漫射光"
+  },
+  {
+    "index": 10,
+    "item_id": "MNYS6B12H41P6",
+    "deprecated_found": ["光-柔光"],
+    "tags_to_remove": ["光-柔光"],
+    "tags_to_add": ["光-漫反射"],
+    "note": "同系列角色俯视立绘，粉色背景，平面漫射光"
+  }
+]

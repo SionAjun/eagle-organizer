@@ -1,0 +1,82 @@
+[
+  {
+    "index": 1,
+    "item_id": "MO7ECXLICNA4J",
+    "deprecated_found": ["光-柔光"],
+    "tags_to_remove": ["光-柔光"],
+    "tags_to_add": [],
+    "note": "赛博朋克UI Kit素材，类-UI排异屏蔽光前缀，光-柔光为v1.0误标，直接移除"
+  },
+  {
+    "index": 2,
+    "item_id": "MO7AU2L3ABCJM",
+    "deprecated_found": ["光-柔光"],
+    "tags_to_remove": ["光-柔光"],
+    "tags_to_add": ["光-漫反射"],
+    "note": "科幻存储器俯视正交概念图，白底均匀漫射，无方向光"
+  },
+  {
+    "index": 3,
+    "item_id": "MO78T1QSSOS45",
+    "deprecated_found": ["光-柔光"],
+    "tags_to_remove": ["光-柔光"],
+    "tags_to_add": ["光-漫反射"],
+    "note": "70年代复古录音机产品摄影，柔和室内漫射布光（已有光-侧光描述方向，漫反射补充整体光质）"
+  },
+  {
+    "index": 4,
+    "item_id": "MO78SPV1I5HKR",
+    "deprecated_found": ["光-柔光"],
+    "tags_to_remove": ["光-柔光"],
+    "tags_to_add": ["光-漫反射"],
+    "note": "TERRAIN科幻便当盒/容器概念图，浅背景软光，平面概念布光"
+  },
+  {
+    "index": 5,
+    "item_id": "MO78NAMJSD54F",
+    "deprecated_found": ["材-金属", "材-皮革"],
+    "tags_to_remove": ["材-金属", "材-皮革"],
+    "tags_to_add": ["材-金属-做旧", "材-布料-皮革"],
+    "note": "暗黑奇幻角色挂件特写：金色雕纹矩形挂件+灰色圆盘为做旧古铜/金属；斗篷材质为皮革布料"
+  },
+  {
+    "index": 6,
+    "item_id": "MO78C3SPLOG1T",
+    "deprecated_found": ["光-柔光"],
+    "tags_to_remove": ["光-柔光"],
+    "tags_to_add": [],
+    "note": "赛博朋克HUD框架UI素材，类-UI+类-排版双重排异屏蔽光前缀，直接移除"
+  },
+  {
+    "index": 7,
+    "item_id": "MO62CZRPDW9RC",
+    "deprecated_found": ["光-柔光"],
+    "tags_to_remove": ["光-柔光"],
+    "tags_to_add": ["光-漫反射"],
+    "note": "东方奇幻道具集合概念图（踏板车/马鞍/锁头等），白底软光漫射"
+  },
+  {
+    "index": 8,
+    "item_id": "MO62BWPFS0J1L",
+    "deprecated_found": ["光-柔光"],
+    "tags_to_remove": ["光-柔光"],
+    "tags_to_add": ["光-白天"],
+    "note": "低多边形古代东亚建筑鸟瞰3D，白天室外自然光，场-白天标签已存在，光质对应光-白天"
+  },
+  {
+    "index": 9,
+    "item_id": "MNQ6G4FX48QXL",
+    "deprecated_found": ["光-柔光"],
+    "tags_to_remove": ["光-柔光"],
+    "tags_to_add": ["光-漫反射"],
+    "note": "科幻宠物背包二次元概念图（日系半写实），浅灰背景均匀软光"
+  },
+  {
+    "index": 10,
+    "item_id": "MNYPCF0HB60W3",
+    "deprecated_found": ["材-金属"],
+    "tags_to_remove": ["材-金属"],
+    "tags_to_add": ["材-金属-做旧"],
+    "note": "赛博朋克自动贩卖机卡渲概念图，机体深灰金属面板涂装磨损+涂鸦，典型做旧质感（已有霓虹/侧光无需补光）"
+  }
+]

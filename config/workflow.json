@@ -1,0 +1,9 @@
+{
+  "batch_size": 20,
+  "checkpoint_every_n": 50,
+  "compress_after": 10,
+  "protect_hours": 24,
+  "api_base": "http://localhost:41595/api",
+  "library_path": "D:\\杂项\\素材.library",
+  "library_total": 20378
+}

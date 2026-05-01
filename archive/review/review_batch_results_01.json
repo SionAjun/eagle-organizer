@@ -1,0 +1,79 @@
+[
+  {
+    "index": 1,
+    "item_id": "MNW2LSG01OLI2",
+    "file_path": "D:\\杂项\\素材.library\\images\\MNW2LSG01OLI2.info\\收藏到 Book.png",
+    "name": "收藏到 Book",
+    "old_tags": ["类-角色原画", "类-排版", "题-剑与魔法", "风-米哈游", "角-男", "角-女", "角-立绘", "物-近战武器", "色-低饱和"],
+    "deprecated_found": ["风-米哈游"],
+    "tags_to_remove": ["风-米哈游"],
+    "tags_to_add": [],
+    "tags_to_keep": ["类-角色原画", "类-排版", "题-剑与魔法", "角-男", "角-女", "角-立绘", "物-近战武器", "色-低饱和"]
+  },
+  {
+    "index": 2,
+    "item_id": "MNUJ9IG0MAM9X",
+    "file_path": "D:\\杂项\\素材.library\\images\\MNUJ9IG0MAM9X.info\\Dialyn Zenless Zone Zero.png",
+    "name": "Dialyn Zenless Zone Zero",
+    "old_tags": ["类-角色原画", "类-插画", "题-都市幻想", "题-近未来", "风-米哈游", "氛-日常", "光-漫反射", "镜-全景", "场-室内", "角-女", "角-全身", "角-立绘", "色-低饱和"],
+    "deprecated_found": ["风-米哈游"],
+    "tags_to_remove": ["风-米哈游"],
+    "tags_to_add": ["格-绝区零"],
+    "tags_to_keep": ["类-角色原画", "类-插画", "题-都市幻想", "题-近未来", "氛-日常", "光-漫反射", "镜-全景", "场-室内", "角-女", "角-全身", "角-立绘", "色-低饱和"]
+  },
+  {
+    "index": 3,
+    "item_id": "MNUJ1G4YPBJR1",
+    "file_path": "D:\\杂项\\素材.library\\images\\MNUJ1G4YPBJR1.info\\收藏到 캐릭터_시트.jpg",
+    "name": "收藏到 캐릭터_시트",
+    "old_tags": ["类-角色原画", "类-道具设定", "题-剑与魔法", "风-米哈游", "光-漫反射", "镜-正交", "角-女", "角-三视图", "角-立绘", "物-近战武器", "色-低饱和"],
+    "deprecated_found": ["风-米哈游"],
+    "tags_to_remove": ["风-米哈游"],
+    "tags_to_add": [],
+    "tags_to_keep": ["类-角色原画", "类-道具设定", "题-剑与魔法", "光-漫反射", "镜-正交", "角-女", "角-三视图", "角-立绘", "物-近战武器", "色-低饱和"]
+  },
+  {
+    "index": 4,
+    "item_id": "MNUHREV2T9F9L",
+    "file_path": "D:\\杂项\\素材.library\\images\\MNUHREV2T9F9L.info\\收藏到 zzz.jpg",
+    "name": "收藏到 zzz",
+    "old_tags": ["类-角色原画", "类-道具设定", "题-都市幻想", "题-近未来", "风-米哈游", "光-漫反射", "镜-全景", "角-女", "角-全身", "角-立绘", "角-三视图", "物-近战武器", "色-高饱和"],
+    "deprecated_found": ["风-米哈游"],
+    "tags_to_remove": ["风-米哈游"],
+    "tags_to_add": ["格-绝区零"],
+    "tags_to_keep": ["类-角色原画", "类-道具设定", "题-都市幻想", "题-近未来", "光-漫反射", "镜-全景", "角-女", "角-全身", "角-立绘", "角-三视图", "物-近战武器", "色-高饱和"]
+  },
+  {
+    "index": 5,
+    "item_id": "MNUHQ7F66P94I",
+    "file_path": "D:\\杂项\\素材.library\\images\\MNUHQ7F66P94I.info\\收藏到 compose.jpg",
+    "name": "收藏到 compose",
+    "old_tags": ["类-角色原画", "类-插画", "题-都市幻想", "题-近未来", "风-米哈游", "氛-战斗", "光-漫反射", "镜-中景", "角-女", "角-半身", "色-低饱和"],
+    "deprecated_found": ["风-米哈游"],
+    "tags_to_remove": ["风-米哈游"],
+    "tags_to_add": [],
+    "tags_to_keep": ["类-角色原画", "类-插画", "题-都市幻想", "题-近未来", "氛-战斗", "光-漫反射", "镜-中景", "角-女", "角-半身", "色-低饱和"]
+  },
+  {
+    "index": 6,
+    "item_id": "MNRS25YR7YR4J",
+    "file_path": "D:\\杂项\\素材.library\\images\\MNRS25YR7YR4J.info\\收藏到 WEB_ゲーム風デザイン.png",
+    "name": "收藏到 WEB_ゲーム風デザイン",
+    "old_tags": ["排版", "类-UI", "类-排版", "题-都市幻想", "风-米哈游", "色-高饱和"],
+    "deprecated_found": ["风-米哈游"],
+    "tags_to_remove": ["风-米哈游"],
+    "tags_to_add": [],
+    "tags_to_keep": ["排版", "类-UI", "类-排版", "题-都市幻想", "色-高饱和"]
+  },
+  {
+    "index": 7,
+    "item_id": "MNRJVF2J3P8YQ",
+    "file_path": "D:\\杂项\\素材.library\\images\\MNRJVF2J3P8YQ.info\\收藏到 Illustrations.jpg",
+    "name": "收藏到 Illustrations",
+    "old_tags": ["类-排版", "题-赛博朋克", "题-都市幻想", "风-米哈游", "色-高饱和"],
+    "deprecated_found": ["风-米哈游"],
+    "tags_to_remove": ["风-米哈游"],
+    "tags_to_add": [],
+    "tags_to_keep": ["类-排版", "题-赛博朋克", "题-都市幻想", "色-高饱和"]
+  }
+]
