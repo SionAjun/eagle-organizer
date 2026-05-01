@@ -1,0 +1,106 @@
+# Eagle 素材库自动打标工具
+
+基于 LLM（mimo）的 [Eagle](https://eagle.cool/) 素材库批量打标系统。通过视觉模型自动为图片素材生成结构化标签，写回 Eagle。
+
+## 当前状态
+
+- **词表版本**：v2.3（294 标签 / 18 前缀）
+- **已处理**：420 / 20,378 张（2.06%）
+- **架构版本**：v2.0（config + derived 单一真相源）
+
+## 标签体系
+
+18 个前缀覆盖设计素材的多个维度：
+
+| 前缀 | 说明 | 示例 |
+|------|------|------|
+| 类- | 素材类型 | 角色设定、概念图、UI |
+| 风- | 视觉风格 | 赛博朋克、卡通、写实3D |
+| 格- | 游戏美学锚点 | 光环、死亡搁浅、赛博朋克2077 |
+| 题- | 主题/题材 | 机甲、末日、太空 |
+| 件- | 机械/载具形态 | 铠甲、飞行器、武器 |
+| 载- | 载具子类细分 | 战斗机甲、赛车、飞船 |
+| 域- | 物理活动域 | 陆、空、海、太空 |
+| ... | 共 18 类 | 完整词表见 `config/tags.json` |
+
+## 快速开始
+
+### 1. 环境准备
+
+```bash
+pip install -r requirements.txt
+```
+
+### 2. 配置 API Key
+
+复制 `.env.example` 为 `.env`，填入你的 mimo API Key：
+
+```bash
+cp .env.example .env
+```
+
+```env
+MIMO_API_KEY=your_key_here
+MIMO_BASE_URL=https://token-plan-cn.xiaomimimo.com/v1
+MIMO_MODEL=mimo-v2.5
+```
+
+### 3. 确保 Eagle 运行中
+
+Eagle API 默认地址：`http://localhost:41595/api`
+
+### 4. 运行
+
+```bash
+# 准备下一批待处理素材（默认 20 张）
+python tag_real.py --prepare --limit 20
+
+# 批量打标并写回 Eagle
+python tag_real.py --apply-batch 025 --size 20
+
+# 单张测试（不写回 Eagle）
+python tag_real.py --test-llm <ITEM_ID>
+
+# 重跑失败项
+python tag_real.py --retry-failed 025
+
+# 生成 batch 简报
+python tag_real.py --batch-report 025
+
+# 同步派生文件（STATE.md / HANDOFF.md）
+python tag_real.py --sync
+```
+
+## 项目结构
+
+```
+eagle-organizer/
+├── tag_real.py          # 主脚本
+├── rules_engine.py      # 规则引擎
+├── run.bat              # Windows 快捷运行
+├── config/
+│   ├── tags.json        # 标签词表（v2.3, 294 标签）
+│   ├── rules.json       # 标签规则
+│   ├── workflow.json    # 工作流配置
+│   ├── preferences.json # 偏好设置
+│   ├── exceptions.json  # 异常记录
+│   ├── CHANGELOG.md     # 词表变更日志
+│   └── prompts/         # LLM prompt 模板
+├── derived/             # 自动派生文件
+│   ├── CLAUDE.md
+│   ├── STATE.md
+│   └── HANDOFF.md
+├── archive/             # 历史归档
+└── reports/             # 测试与 batch 报告（git 忽略）
+```
+
+## 关键设计
+
+- **单一真相源**：`config/` 存放所有配置，`derived/` 自动派生
+- **断点恢复**：每 50 张自动检查点，支持从中断处继续
+- **限速与重试**：~80 RPM 限速，429/5xx 指数退避重试
+- **人工抽检**：支持 `--test-llm` 单张测试，结果写入 `reports/` 供审核
+
+## License
+
+Private
