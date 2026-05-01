@@ -1,5 +1,5 @@
 <!-- AUTO-GENERATED FROM /config/. DO NOT EDIT.
-     Last sync: 2026-05-01 18:11:52 from tags.json v2.4 -->
+     Last sync: 2026-05-01 23:18:27 from tags.json v2.4 -->
 
 # Eagle 素材库打标 — Claude Code 启动手册
 
@@ -103,4 +103,4 @@ suggested 累计 count≥3 由用户决定是否升入词表。
 - 一张图只做一次视觉分析
 - 写回前脚本自动合并旧标签
 - 每 50 张自动触发检查点
-- 当前进度：440 / 20378 张
+- 当前进度：960 / 20378 张

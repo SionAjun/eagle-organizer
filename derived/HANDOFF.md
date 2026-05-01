@@ -1,5 +1,5 @@
 <!-- AUTO-GENERATED FROM /config/. DO NOT EDIT.
-     Last sync: 2026-05-01 18:11:52 from tags.json v2.4 -->
+     Last sync: 2026-05-01 23:18:27 from tags.json v2.4 -->
 
 # Eagle 打标项目 — 新对话开场交接文档
 
@@ -10,9 +10,9 @@
 
 ## 当前进度
 
-- 已处理：**440 / 20378** 张（2.16%）
-- 批次号：26
-- 最后 item_id：`MOH9O12F905OG`
+- 已处理：**960 / 20378** 张（4.71%）
+- 批次号：52
+- 最后 item_id：`MM9B9UBR4OCIO`
 
 ---
 
@@ -54,7 +54,7 @@ tags.json v2.4，317 标签 / 19 前缀
 
 ## 待处理清单（不主动 surface）
 
-- suggested_tags.json count≥3 待审：0 个
+- suggested_tags.json count≥3 待审：3 个
 - exceptions.json 累计：1 条
 - 词表外概念建议：读 suggested_tags.json
 
