@@ -18,8 +18,10 @@ import base64
 import json
 import os
 import re
+import threading
 import time
 import urllib.request
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -33,18 +35,20 @@ BASE_DIR            = Path(__file__).parent
 CONFIG_DIR          = BASE_DIR / "config"
 PROMPTS_DIR         = CONFIG_DIR / "prompts"
 DERIVED_DIR         = BASE_DIR / "derived"
-PROGRESS_FILE       = BASE_DIR / "progress.json"
-PENDING_FILE        = BASE_DIR / "pending.json"
-SUGGESTED_FILE      = BASE_DIR / "suggested_tags.json"
+DATA_DIR            = BASE_DIR / "data"
+BATCHES_DIR         = DATA_DIR / "batches"
+
+PROGRESS_FILE       = DATA_DIR / "progress.json"
+PENDING_FILE        = DATA_DIR / "pending.json"
+SUGGESTED_FILE      = DATA_DIR / "suggested_tags.json"
 TAGS_FILE           = CONFIG_DIR / "tags.json"
-BATCH_RESULTS_FILE  = BASE_DIR / "batch_results.json"
 EXCEPTIONS_FILE     = CONFIG_DIR / "exceptions.json"
 STATE_FILE          = DERIVED_DIR / "STATE.md"
-RESUME_FILE         = BASE_DIR / "RESUME.md"
-CHECKPOINT_LOG      = BASE_DIR / "checkpoint_log.md"
-PENDING_REVIEW_FILE = BASE_DIR / "pending_review.md"
+RESUME_FILE         = BASE_DIR / "reports" / "RESUME.md"
+CHECKPOINT_LOG      = DATA_DIR / "checkpoint_log.md"
+PENDING_REVIEW_FILE = DATA_DIR / "pending_review.md"
 HANDOFF_FILE        = DERIVED_DIR / "HANDOFF.md"
-REPORT_FILE         = BASE_DIR / "REPORT.md"
+REPORT_FILE         = BASE_DIR / "reports" / "REPORT.md"
 
 EAGLE_API        = "http://localhost:41595/api"
 REPORTS_DIR      = BASE_DIR / "reports"
@@ -89,18 +93,34 @@ REPLACEMENT_WHITELIST = {
     "风-米哈游": ["格-绝区零"],  # 人工回溯后确认的唯一合法替换目标
 }
 
-REVIEW_QUEUE_FILE        = BASE_DIR / "review_queue.json"
-GE_REVIEW_QUEUE_FILE     = BASE_DIR / "ge_review_queue.json"
-GE_TRIAGE_NEED_FILE      = BASE_DIR / "ge_need.json"
-GE_TRIAGE_SKIP_FILE      = BASE_DIR / "ge_skip.json"
-GE_TRIAGE_UNCERTAIN_FILE = BASE_DIR / "ge_uncertain.json"
-GE_TRIAGE_REPORT_FILE    = BASE_DIR / "REPORT_ge_triage.md"
-REVIEW_WARNINGS_LOG     = BASE_DIR / "review_warnings.log"
-REVIEW_REPORT_FILE      = BASE_DIR / "REPORT_review.md"
-VOCAB_FEEDBACK_FILE     = BASE_DIR / "vocab_feedback.md"
+REVIEW_QUEUE_FILE        = DATA_DIR / "review_queue.json"
+GE_REVIEW_QUEUE_FILE     = DATA_DIR / "ge_review_queue.json"
+GE_TRIAGE_NEED_FILE      = DATA_DIR / "ge_need.json"
+GE_TRIAGE_SKIP_FILE      = DATA_DIR / "ge_skip.json"
+GE_TRIAGE_UNCERTAIN_FILE = DATA_DIR / "ge_uncertain.json"
+GE_TRIAGE_REPORT_FILE    = BASE_DIR / "reports" / "REPORT_ge_triage.md"
+REVIEW_WARNINGS_LOG     = BASE_DIR / "logs" / "review_warnings.log"
+REVIEW_REPORT_FILE      = BASE_DIR / "reports" / "REPORT_review.md"
+VOCAB_FEEDBACK_FILE     = DATA_DIR / "vocab_feedback.md"
 REVIEW_CHECKPOINT_EVERY = 30
 
 KNOWN_PREFIXES = ["类", "题", "风", "格", "版", "氛", "光", "镜", "构", "场", "角", "物", "材", "色", "教", "件", "载", "域", "派"]
+
+
+class RateLimiter:
+    """线程安全的速率限制器，保证 min_interval 秒内最多放行一次。"""
+    def __init__(self, min_interval: float):
+        self._interval = min_interval
+        self._lock = threading.Lock()
+        self._last = 0.0
+
+    def acquire(self):
+        with self._lock:
+            now = time.monotonic()
+            wait = self._interval - (now - self._last)
+            if wait > 0:
+                time.sleep(wait)
+            self._last = time.monotonic()
 
 # 排异规则：检测到某主类标签时，屏蔽不适用的前缀
 # AI 打标时先判断主类，再用 get_filtered_tags() 拿到过滤后词表，根本看不到被屏蔽前缀的选项
@@ -387,7 +407,6 @@ def _extract_tags(raw: str) -> list:
 
 def call_mimo(messages: list, max_retries: int = 3):
     """调用 mimo API，返回 {raw, tags, usage}。429/5xx 指数退避。重试耗尽返回 None。"""
-    time.sleep(0.75)  # 全局限速 ~80 RPM
     client   = OpenAI(api_key=MIMO_API_KEY, base_url=MIMO_BASE_URL)
     last_exc = None
     for attempt in range(max_retries):
@@ -639,19 +658,47 @@ def _classify_failure(e: Exception) -> str:
     return "unknown"
 
 
-def cmd_apply_batch(batch_id: str = "", batch_size: int = 0) -> None:
+def _worker_fn(idx, entry, pending_dict, rate_limiter):
+    """单张处理: eagle_get → rate_limiter → call_mimo。返回 (idx, item_id, result_dict)。"""
+    item_id = entry["item_id"]
+    worker_t0 = time.time()
+
+    try:
+        info = eagle_get(f"/item/info?id={item_id}")
+        item = info.get("data") or info
+        if not isinstance(item, dict) or "id" not in item:
+            item = {**entry, "id": item_id}
+    except Exception:
+        item = {**entry, "id": item_id}
+
+    rate_limiter.acquire()
+    result = call_mimo(build_messages(item))
+
+    if result is None:
+        return (idx, item_id, {"ok": False, "reason": "mimo_exhausted"})
+
+    tags_to_add = result["tags"]
+    elapsed_ms = int((time.time() - worker_t0) * 1000)
+    return (idx, item_id, {
+        "ok":          True,
+        "tags_to_add": tags_to_add,
+        "raw":         result["raw"],
+        "usage":       result["usage"],
+        "elapsed_ms":  elapsed_ms,
+    })
+
+
+def cmd_apply_batch(batch_id: str = "", batch_size: int = 0, workers: int = 5) -> None:
     t0   = time.time()
     prog = ensure_prog_fields(load_json(PROGRESS_FILE, default_prog()))
 
-    # 确定批次号
     if batch_id:
         batch_num = int(batch_id)
     else:
         batch_num = prog.get("batch_counter", 0)
 
-    batch_file = BASE_DIR / f"batch_results_{batch_num:03d}.json"
+    batch_file = BATCHES_DIR / f"batch_results_{batch_num:03d}.json"
 
-    # 加载已有结果（断点恢复）
     if batch_file.exists():
         existing = load_json(batch_file, [])
         if isinstance(existing, list):
@@ -662,13 +709,11 @@ def cmd_apply_batch(batch_id: str = "", batch_size: int = 0) -> None:
     else:
         batch_results = {}
 
-    # 加载 pending
     pending = load_json(PENDING_FILE, [])
     if not pending:
         print("❌ pending.json 为空，请先 --prepare")
         return
 
-    # 限制本批张数
     limit = batch_size if batch_size > 0 else BATCH_SIZE
     pending = pending[:limit]
     total   = len(pending)
@@ -676,101 +721,112 @@ def cmd_apply_batch(batch_id: str = "", batch_size: int = 0) -> None:
     _, all_valid_tags, tag_version = load_tags()
     sdata = load_json(SUGGESTED_FILE, {"version": "1.1", "suggested": {}})
 
-    success_count = 0
-    fail_count    = 0
-    skip_count    = 0
-
+    # 过滤已处理（断点恢复）
+    to_process = []
     for i, entry in enumerate(pending, 1):
         item_id = entry["item_id"]
-
-        # 断点恢复：跳过已处理
         prev = batch_results.get(item_id)
-        if prev:
-            if prev.get("status") == "success":
-                print(f"[{i}/{total}] {item_id} 已成功，跳过")
-                skip_count += 1
-                continue
-            if prev.get("status") == "failed":
-                print(f"[{i}/{total}] {item_id} 已失败，跳过")
-                skip_count += 1
-                continue
-
-        print(f"\n[{i}/{total}] {item_id}")
-
-        # 获取 item 信息（含 id 字段供 resolve_path 使用）
-        try:
-            info = eagle_get(f"/item/info?id={item_id}")
-            item = info.get("data") or info
-            if not isinstance(item, dict) or "id" not in item:
-                item = {**entry, "id": item_id}
-        except Exception:
-            item = {**entry, "id": item_id}
-
-        # 调用 mimo
-        result = call_mimo(build_messages(item))
-
-        if result is None:
-            # 重试耗尽，记录失败
-            prev_attempt = 0
-            if prev and prev.get("status") == "failed":
-                prev_attempt = prev.get("failure_attempt", 0)
-            batch_results[item_id] = {
-                "item_id":           item_id,
-                "status":            "failed",
-                "failure_reason":    "mimo_exhausted",
-                "failure_attempt":   prev_attempt + 1,
-                "processed_at":      datetime.now(timezone.utc).isoformat(),
-            }
-            save_json(batch_file, list(batch_results.values()))
-            fail_count += 1
-            print(f"  ❌ mimo 失败（重试耗尽）")
-            continue
-
-        # 写回 Eagle
-        tags_to_add = result["tags"]
-        suggested   = []  # mimo 返回的 suggested 已在 _extract_tags 中丢弃
-        ok = _apply_one(item_id, tags_to_add, suggested, prog, sdata, all_valid_tags, tag_version,
-                        {e["item_id"]: e for e in pending})
-
-        if ok:
-            batch_results[item_id] = {
-                "item_id":      item_id,
-                "status":       "success",
-                "tags_to_add":  tags_to_add,
-                "raw_response": result["raw"],
-                "usage":        result["usage"],
-                "elapsed_ms":   int((time.time() - t0) * 1000 / i),
-                "processed_at": datetime.now(timezone.utc).isoformat(),
-            }
-            success_count += 1
+        if prev and prev.get("status") in ("success", "failed"):
+            print(f"[{i}/{total}] {item_id} 已处理，跳过")
         else:
-            batch_results[item_id] = {
-                "item_id":         item_id,
-                "status":          "failed",
-                "failure_reason":  "eagle_write_error",
-                "failure_attempt": 1,
-                "processed_at":    datetime.now(timezone.utc).isoformat(),
-            }
-            fail_count += 1
+            to_process.append((i, entry))
 
-        # 每张落盘
-        save_json(batch_file, list(batch_results.values()))
+    if not to_process:
+        print("  所有项均已处理，无需执行")
+        return
 
-        if ok and prog["total_processed"] % CHECKPOINT_EVERY == 0:
-            print(f"\n  [自动检查点] 已达 {prog['total_processed']} 张...")
-            save_json(SUGGESTED_FILE, sdata)
-            run_checkpoint(prog)
+    lock         = threading.Lock()
+    rate_limiter = RateLimiter(0.75)
+    pending_dict = {e["item_id"]: e for e in pending}
+    success_count = 0
+    fail_count    = 0
+    total_usage   = {"prompt_tokens": 0, "completion_tokens": 0, "cached_tokens": 0}
 
+    print(f"\n  启动 {workers} workers，处理 {len(to_process)} 张...\n")
+
+    with ThreadPoolExecutor(max_workers=workers) as executor:
+        futures = {
+            executor.submit(_worker_fn, i, entry, pending_dict, rate_limiter): (i, entry)
+            for i, entry in to_process
+        }
+
+        for future in as_completed(futures):
+            try:
+                idx, item_id, res = future.result()
+            except Exception as e:
+                i_orig, entry_orig = futures[future]
+                item_id = entry_orig["item_id"]
+                print(f"  ❌ [{i_orig}/{total}] {item_id} worker 异常: {e}")
+                with lock:
+                    batch_results[item_id] = {
+                        "item_id": item_id, "status": "failed",
+                        "failure_reason": f"worker_exception: {e}",
+                        "failure_attempt": 1,
+                        "processed_at": datetime.now(timezone.utc).isoformat(),
+                    }
+                fail_count += 1
+                continue
+
+            with lock:
+                if not res["ok"]:
+                    prev = batch_results.get(item_id, {})
+                    prev_att = prev.get("failure_attempt", 0) if prev.get("status") == "failed" else 0
+                    batch_results[item_id] = {
+                        "item_id": item_id, "status": "failed",
+                        "failure_reason": res["reason"],
+                        "failure_attempt": prev_att + 1,
+                        "processed_at": datetime.now(timezone.utc).isoformat(),
+                    }
+                    fail_count += 1
+                    print(f"  ❌ [{idx}/{total}] {item_id} mimo 失败")
+                else:
+                    tags_to_add = res["tags_to_add"]
+                    ok = _apply_one(item_id, tags_to_add, [], prog, sdata,
+                                    all_valid_tags, tag_version, pending_dict)
+                    if ok:
+                        batch_results[item_id] = {
+                            "item_id": item_id, "status": "success",
+                            "tags_to_add": tags_to_add,
+                            "raw_response": res["raw"],
+                            "usage": res["usage"],
+                            "elapsed_ms": res["elapsed_ms"],
+                            "processed_at": datetime.now(timezone.utc).isoformat(),
+                        }
+                        u = res["usage"]
+                        total_usage["prompt_tokens"]     += u.get("prompt_tokens", 0)
+                        total_usage["completion_tokens"] += u.get("completion_tokens", 0)
+                        total_usage["cached_tokens"]     += u.get("cached_tokens", 0)
+                        success_count += 1
+                        print(f"  ✅ [{idx}/{total}] {item_id} | {len(tags_to_add)} tags | {res['elapsed_ms']}ms | "
+                              f"tokens={u.get('prompt_tokens',0)}+{u.get('completion_tokens',0)}(cached={u.get('cached_tokens',0)})")
+                    else:
+                        batch_results[item_id] = {
+                            "item_id": item_id, "status": "failed",
+                            "failure_reason": "eagle_write_error",
+                            "failure_attempt": 1,
+                            "processed_at": datetime.now(timezone.utc).isoformat(),
+                        }
+                        fail_count += 1
+                        print(f"  ❌ [{idx}/{total}] {item_id} Eagle 写回失败")
+
+                if ok and prog["total_processed"] % CHECKPOINT_EVERY == 0:
+                    print(f"\n  [自动检查点] 已达 {prog['total_processed']} 张...")
+                    save_json(SUGGESTED_FILE, sdata)
+                    run_checkpoint(prog)
+
+    # 批结束统一落盘
+    save_json(batch_file, list(batch_results.values()))
     save_json(SUGGESTED_FILE, sdata)
     save_json(PROGRESS_FILE, prog)
 
     elapsed = time.time() - t0
-    avg     = elapsed / total if total else 0
+    avg     = elapsed / (success_count + fail_count) if (success_count + fail_count) else 0
+    skip_count = total - success_count - fail_count
     print(f"\n✅ 批量完成：{success_count} 成功 / {fail_count} 失败 / {skip_count} 跳过（共 {total} 张）")
     print(f"   累计已处理: {prog['total_processed']} 张")
     print(f"   本批耗时: {elapsed:.1f}s（平均 {avg:.1f}s/张）")
+    print(f"   tokens: prompt={total_usage['prompt_tokens']} completion={total_usage['completion_tokens']} cached={total_usage['cached_tokens']}")
 
-    # 归档 pending
     BATCHES_ARCHIVE_DIR.mkdir(parents=True, exist_ok=True)
     if PENDING_FILE.exists():
         try:
@@ -786,7 +842,7 @@ def cmd_apply_batch(batch_id: str = "", batch_size: int = 0) -> None:
 
 # ── --retry-failed ────────────────────────────────────────────────────────────
 def cmd_retry_failed(batch_id: str) -> None:
-    batch_file = BASE_DIR / f"batch_results_{int(batch_id):03d}.json"
+    batch_file = BATCHES_DIR / f"batch_results_{int(batch_id):03d}.json"
     if not batch_file.exists():
         print(f"❌ {batch_file.name} 不存在")
         return
@@ -868,7 +924,7 @@ def cmd_retry_failed(batch_id: str) -> None:
 
 # ── --batch-report ────────────────────────────────────────────────────────────
 def cmd_batch_report(batch_id: str) -> None:
-    batch_file = BASE_DIR / f"batch_results_{int(batch_id):03d}.json"
+    batch_file = BATCHES_DIR / f"batch_results_{int(batch_id):03d}.json"
     if not batch_file.exists():
         print(f"❌ {batch_file.name} 不存在")
         return
@@ -978,14 +1034,9 @@ def cmd_batch_report(batch_id: str) -> None:
 # ── 自动化清理 ────────────────────────────────────────────────────────────────
 # 活跃件白名单：永远不动这些文件
 ACTIVE_ROOT_FILES = {
-    "tag_real.py", "tags.json",
-    "progress.json", "suggested_tags.json", "pending.json",
-    "STATE.md", "RESUME.md", "HANDOFF.md", "REPORT.md",
-    "CHANGELOG.md", "checkpoint_log.md",
-    "pending_review.md", "vocab_feedback.md",
-    "batch_results.json",
-    "PREFIXES.md", "SCAN_REPORT.md",
-    "Eagle打标项目-交接文档v1.md", "Eagle打标项目-交接文档v1.1.md",
+    "tag_real.py", "rules_engine.py", "run.bat",
+    "README.md", "requirements.txt",
+    ".env", ".env.example", ".gitignore",
 }
 
 
@@ -1118,7 +1169,7 @@ def cmd_cleanup(dry_run: bool = False) -> None:
 
     print(f"\n [规则 ②B] 批次完成的 review_* 文件:")
     if dry_run:
-        queue_file = BASE_DIR / "review_queue.json"
+        queue_file = DATA_DIR / "review_queue.json"
         if queue_file.exists():
             queue = load_json(queue_file, [])
             done = sum(1 for e in queue if isinstance(e, dict) and e.get("reviewed", False))
@@ -1146,13 +1197,7 @@ def cmd_cleanup(dry_run: bool = False) -> None:
         name = path.name
         if name in ACTIVE_ROOT_FILES:
             continue
-        if name.startswith("batch_results_") and name.endswith(".json"):
-            continue
-        if name.startswith("pending_") and name.endswith(".json"):
-            continue
         if ".bak" in name:
-            continue
-        if name.startswith("review_"):
             continue
         extras.append(name)
     if extras:
@@ -2244,7 +2289,7 @@ def cmd_ge_apply_batch(num_str: str, dry_run: bool = False) -> None:
     """Apply ge_batch_results_{num_str}.json back to Eagle.
     Items must be in ge_need/uncertain. Empty tags_to_add → reviewed, no write.
     """
-    batch_file = BASE_DIR / f"ge_batch_results_{num_str}.json"
+    batch_file = BATCHES_DIR / f"ge_batch_results_{num_str}.json"
     if not batch_file.exists():
         print(f"❌ 找不到 {batch_file.name}")
         return
@@ -2987,6 +3032,8 @@ def main():
                         help="--apply-batch 本批处理张数（默认 BATCH_SIZE）")
     parser.add_argument("--retry-failed",     type=str, default="", dest="retry_failed",
                         help="重跑指定 batch 中所有失败项（如 024）")
+    parser.add_argument("--workers",          type=int, default=5, dest="workers",
+                        help="--apply-batch 并行 worker 数（默认 5）")
     parser.add_argument("--batch-report",     type=str, default="", dest="batch_report",
                         help="输出指定 batch 的简报到 reports/batch_<id>_report.md")
     args = parser.parse_args()
@@ -3001,7 +3048,7 @@ def main():
         if args.batch and args.batch.startswith("ge_"):
             cmd_ge_apply_batch(args.batch[3:], dry_run=args.dry_run)
         else:
-            cmd_apply_batch(batch_id=args.apply_batch, batch_size=args.batch_size)
+            cmd_apply_batch(batch_id=args.apply_batch, batch_size=args.batch_size, workers=args.workers)
     elif args.checkpoint:
         prog = ensure_prog_fields(load_json(PROGRESS_FILE, default_prog()))
         run_checkpoint(prog, force=True)

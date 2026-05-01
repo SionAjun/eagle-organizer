@@ -3,7 +3,7 @@ from collections import Counter
 
 # Collect all batch files
 batch_files = []
-for d in ['archive/batches', '.']:
+for d in ['data/batches', 'archive/batches', '.']:
     if os.path.isdir(d):
         for f in sorted(os.listdir(d)):
             if f.startswith('batch_results_') and f.endswith('.json'):

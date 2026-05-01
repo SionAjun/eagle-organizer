@@ -1,9 +1,8 @@
 # Secrets
 .env
 
-# Batch processing outputs
-batch_results_*.json
-progress.json
+# Runtime data (progress, batches, suggested tags, etc.)
+data/
 
 # Logs
 logs/
