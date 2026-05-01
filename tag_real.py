@@ -100,7 +100,7 @@ REVIEW_REPORT_FILE      = BASE_DIR / "REPORT_review.md"
 VOCAB_FEEDBACK_FILE     = BASE_DIR / "vocab_feedback.md"
 REVIEW_CHECKPOINT_EVERY = 30
 
-KNOWN_PREFIXES = ["类", "题", "风", "格", "版", "氛", "光", "镜", "构", "场", "角", "物", "材", "色", "教", "件", "载", "域"]
+KNOWN_PREFIXES = ["类", "题", "风", "格", "版", "氛", "光", "镜", "构", "场", "角", "物", "材", "色", "教", "件", "载", "域", "派"]
 
 # 排异规则：检测到某主类标签时，屏蔽不适用的前缀
 # AI 打标时先判断主类，再用 get_filtered_tags() 拿到过滤后词表，根本看不到被屏蔽前缀的选项
@@ -341,6 +341,7 @@ def build_messages(item: dict) -> list:
         + "\n\n" + load_prompt("自检.txt")
         + "\n\n" + load_prompt("反例.txt")
         + "\n\n" + load_prompt("域规则.txt")
+        + "\n\n" + load_prompt("派规则.txt")
         + "\n\n" + render_tag_catalog()
     )
 

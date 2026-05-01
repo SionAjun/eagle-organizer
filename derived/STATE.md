@@ -1,26 +1,26 @@
 <!-- AUTO-GENERATED FROM /config/. DO NOT EDIT.
-     Last sync: 2026-05-01 16:49:11 from tags.json v2.3 -->
+     Last sync: 2026-05-01 18:11:52 from tags.json v2.4 -->
 
 # Eagle 素材库打标签项目 — 当前状态
 
 
 
-> Note: last checkpoint at 400, current total 420
-最后同步：2026-05-01 16:49:11　　进度：420 / 20378 张
+> Note: last checkpoint at 400, current total 440
+最后同步：2026-05-01 18:11:52　　进度：440 / 20378 张
 
 ---
 
 ## 当前进度
 
-- **已处理**：420 / 20378 张（2.06%）
-- **最后 item_id**：`MOIPIU0HZV7O6`
-- **当前批次号**：25
+- **已处理**：440 / 20378 张（2.16%）
+- **最后 item_id**：`MOH9O12F905OG`
+- **当前批次号**：26
 
 ---
 
-## 词表统计（config/tags.json v2.3）
+## 词表统计（config/tags.json v2.4）
 
-- 标签总数：**294 个 / 18 个前缀**
+- 标签总数：**317 个 / 19 个前缀**
 
 | 前缀 | 数量 |
 |------|------|
@@ -42,6 +42,7 @@
 | 件- | 32 |
 | 载- | 24 |
 | 域- | 4 |
+| 派- | 23 |
 
 ---
 

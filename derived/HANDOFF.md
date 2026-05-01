@@ -1,5 +1,5 @@
 <!-- AUTO-GENERATED FROM /config/. DO NOT EDIT.
-     Last sync: 2026-05-01 16:49:11 from tags.json v2.3 -->
+     Last sync: 2026-05-01 18:11:52 from tags.json v2.4 -->
 
 # Eagle 打标项目 — 新对话开场交接文档
 
@@ -10,15 +10,15 @@
 
 ## 当前进度
 
-- 已处理：**420 / 20378** 张（2.06%）
-- 批次号：25
-- 最后 item_id：`MOIPIU0HZV7O6`
+- 已处理：**440 / 20378** 张（2.16%）
+- 批次号：26
+- 最后 item_id：`MOH9O12F905OG`
 
 ---
 
 ## 当前词表版本与近期变更
 
-tags.json v2.3，294 标签 / 18 前缀
+tags.json v2.4，317 标签 / 19 前缀
 
 最近 5 条变更：
 - 2026-04-26  rules.json v2.1.1：阶段 2 重构起点，rules 仅放扁平映射
