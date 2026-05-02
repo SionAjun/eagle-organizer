@@ -62,3 +62,34 @@ def filter_incompatible(tags: list) -> list:
 def normalize_synonyms(tag: str) -> str:
     rules = _load_rules()
     return rules["ge_synonyms"].get(tag, tag)
+
+
+# ───────── 排异：从 rules.json 推导被屏蔽前缀（U2，a1 阶段新接入）─────────
+
+# 模块级缓存：避免每次 _apply_one 都读 rules.json
+_INCOMPAT_CACHE = None
+
+def _get_incompat() -> dict:
+    """读 rules.json/incompatible_prefixes，缓存到模块级变量。
+    返回 {主类: [前缀首字, ...]}（前缀已 strip 掉尾部 -）。
+    """
+    global _INCOMPAT_CACHE
+    if _INCOMPAT_CACHE is None:
+        rules = _load_rules()
+        raw = rules.get("incompatible_prefixes", {})
+        _INCOMPAT_CACHE = {
+            primary: [p.rstrip("-") for p in prefixes]
+            for primary, prefixes in raw.items()
+        }
+    return _INCOMPAT_CACHE
+
+def get_blocked_prefixes_from_tags(tags_to_add: list) -> list:
+    """从已打标签中检测主类，返回应被屏蔽的前缀列表（不含 -，与老函数 API 兼容）。"""
+    incompat = _get_incompat()
+    blocked = []
+    for t in tags_to_add:
+        if t in incompat:
+            for pfx in incompat[t]:
+                if pfx not in blocked:
+                    blocked.append(pfx)
+    return blocked

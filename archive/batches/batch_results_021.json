@@ -1,0 +1,102 @@
+[
+  {
+    "item_id": "MNKMF8J6MMP03",
+    "tags_to_add": ["类-道具设定", "物-零件", "格-绝区零", "题-近未来", "材-金属-光面", "色-暖色主导"],
+    "suggested": []
+  },
+  {
+    "item_id": "MNKLJEGRU7LED",
+    "tags_to_add": ["类-道具设定", "物-电子设备", "题-赛博朋克", "风-半写实", "色-暖色主导"],
+    "suggested": []
+  },
+  {
+    "item_id": "M4LGVXYUUCEEK",
+    "tags_to_add": ["类-道具设定", "物-战术装备", "题-硬科幻", "风-半写实", "材-金属-光面", "色-低饱和"],
+    "suggested": []
+  },
+  {
+    "item_id": "MCGCALJIO8MQ1",
+    "tags_to_add": ["类-道具设定", "物-电子设备", "题-赛博朋克", "风-半写实", "色-暖色主导"],
+    "suggested": []
+  },
+  {
+    "item_id": "MNKLB77XA5XN6",
+    "tags_to_add": ["类-道具设定", "物-电子设备", "题-硬科幻", "风-写实3D", "色-低饱和"],
+    "suggested": ["格-Project Breach（莉莉丝游戏科幻射击项目）"]
+  },
+  {
+    "item_id": "MNKLB2T7RXEAO",
+    "tags_to_add": ["类-道具设定", "物-零件", "题-硬科幻", "风-写实3D", "色-暖色主导"],
+    "suggested": []
+  },
+  {
+    "item_id": "MC94MC6VXIYGU",
+    "tags_to_add": ["类-道具设定", "物-摩托", "题-近未来", "风-写实3D", "材-金属-光面", "色-冷色主导"],
+    "suggested": []
+  },
+  {
+    "item_id": "MNKKDWV0G3D84",
+    "tags_to_add": ["类-教程", "题-硬科幻", "教-流程"],
+    "suggested": []
+  },
+  {
+    "item_id": "MNKKD66SZWN2R",
+    "tags_to_add": ["类-道具设定", "物-电子设备", "题-军事", "风-写实3D", "材-塑料-磨砂", "色-低饱和"],
+    "suggested": []
+  },
+  {
+    "item_id": "MNKGA0CAEECQT",
+    "tags_to_add": ["类-道具设定", "物-枪械", "题-赛博朋克", "风-半写实", "材-金属-光面", "色-低饱和"],
+    "suggested": []
+  },
+  {
+    "item_id": "MNJ7N5QJW1GHU",
+    "tags_to_add": ["类-道具设定", "物-零件", "格-绝区零", "题-近未来", "材-金属-光面", "色-暖色主导"],
+    "suggested": []
+  },
+  {
+    "item_id": "MNGA689CTIBQ7",
+    "tags_to_add": ["类-道具设定", "物-载具", "题-硬科幻", "风-半写实", "色-低饱和"],
+    "suggested": []
+  },
+  {
+    "item_id": "MNJ5JKQ2E7XH7",
+    "tags_to_add": ["类-角色原画", "角-女", "角-全身", "题-黑暗奇幻", "风-日系", "格-明日方舟", "氛-神秘", "色-低饱和"],
+    "suggested": []
+  },
+  {
+    "item_id": "MNJ5J04UM9ZKE",
+    "tags_to_add": ["类-道具设定", "物-机甲", "题-硬科幻", "风-半写实", "格-装甲核心6", "色-低饱和"],
+    "suggested": []
+  },
+  {
+    "item_id": "MNJ3K6R981J5I",
+    "tags_to_add": ["类-道具设定", "物-载具", "题-近未来", "风-写实3D", "色-暖色主导"],
+    "suggested": []
+  },
+  {
+    "item_id": "MNJ39XQO7WH50",
+    "tags_to_add": ["类-道具设定", "物-载具", "题-硬科幻", "风-写实3D", "色-冷色主导"],
+    "suggested": []
+  },
+  {
+    "item_id": "MNJ34X70HDEWI",
+    "tags_to_add": ["类-摄影", "类-实景参考", "物-零件", "材-金属-光面", "材-柔性线缆", "色-暖色主导"],
+    "suggested": []
+  },
+  {
+    "item_id": "MESNRGRF1YQNB",
+    "tags_to_add": ["类-实景参考", "物-零件", "材-金属-光面", "材-柔性线缆", "色-暖色主导"],
+    "suggested": []
+  },
+  {
+    "item_id": "MNJ24DEIMBUJT",
+    "tags_to_add": ["类-道具设定", "物-电子设备", "题-赛博朋克", "风-写实3D", "材-金属-光面", "色-低饱和"],
+    "suggested": ["格-Blade Runner（银翼杀手2049赛博朋克经典设计）"]
+  },
+  {
+    "item_id": "MNJ18UQ6OS1KS",
+    "tags_to_add": ["类-实景参考", "材-碳纤维", "色-低饱和"],
+    "suggested": []
+  }
+]

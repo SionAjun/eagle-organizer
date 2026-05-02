@@ -1,0 +1,102 @@
+[
+  {
+    "item_id": "MOEKD1BT31393",
+    "tags_to_add": ["类-排版", "格-失落星船马拉松", "版-网格", "色-冷暖对比"],
+    "suggested": []
+  },
+  {
+    "item_id": "MOEJBIEN37A90",
+    "tags_to_add": ["类-像素画", "色-黑白"],
+    "suggested": []
+  },
+  {
+    "item_id": "MOECZ2LFXFUAR",
+    "tags_to_add": ["类-道具设定", "风-卡通", "色-高饱和"],
+    "suggested": ["格-Splatoon（任天堂涂色射击游戏，二次元都市题材）"]
+  },
+  {
+    "item_id": "MNND914XBPIL3",
+    "tags_to_add": ["类-游戏截图", "镜-鸟瞰", "风-卡渲", "色-高饱和"],
+    "suggested": []
+  },
+  {
+    "item_id": "MNHG5YQAPEEWY",
+    "tags_to_add": ["类-场景原画", "格-失落星船马拉松", "镜-鸟瞰", "题-硬科幻", "场-实验室", "色-冷色主导", "风-写实3D"],
+    "suggested": []
+  },
+  {
+    "item_id": "MNND37QDWX3WW",
+    "tags_to_add": ["类-游戏截图", "场-城市", "风-卡渲", "色-高饱和"],
+    "suggested": []
+  },
+  {
+    "item_id": "MNND2NEDZL2QK",
+    "tags_to_add": ["类-道具设定", "题-功能主义", "材-塑料-光面", "色-低饱和"],
+    "suggested": []
+  },
+  {
+    "item_id": "MNNCZWNDXDRPF",
+    "tags_to_add": ["类-概念图", "物-载具", "题-工业设计", "风-写实3D", "材-金属-烤漆", "色-暖色主导"],
+    "suggested": []
+  },
+  {
+    "item_id": "MJZXIOJZQK2D2",
+    "tags_to_add": ["类-插画", "题-都市幻想", "风-日系", "色-高饱和", "镜-鸟瞰"],
+    "suggested": []
+  },
+  {
+    "item_id": "MNNBUM0QD47OR",
+    "tags_to_add": ["类-摄影", "类-实景参考", "题-现代"],
+    "suggested": []
+  },
+  {
+    "item_id": "MNM28P95QAWLF",
+    "tags_to_add": ["类-实景参考", "色-低饱和"],
+    "suggested": []
+  },
+  {
+    "item_id": "MNM26W0S62O95",
+    "tags_to_add": ["类-摄影", "类-实景参考", "题-现代", "色-暖色主导"],
+    "suggested": []
+  },
+  {
+    "item_id": "MNM24LAX0D19T",
+    "tags_to_add": ["类-摄影", "类-实景参考", "物-建筑", "色-低饱和"],
+    "suggested": []
+  },
+  {
+    "item_id": "MNM230K5NH145",
+    "tags_to_add": ["类-摄影", "类-实景参考", "物-建筑", "色-低饱和"],
+    "suggested": []
+  },
+  {
+    "item_id": "MNM1G00TDYJSJ",
+    "tags_to_add": ["类-道具设定", "物-枪械", "题-赛博朋克", "风-半写实", "材-塑料-磨砂", "色-暖色主导"],
+    "suggested": []
+  },
+  {
+    "item_id": "MNM1FHG8FUCUX",
+    "tags_to_add": ["类-游戏截图", "题-近未来", "风-卡渲", "色-高饱和", "镜-俯视"],
+    "suggested": ["格-Hi-Fi Rush（Tango Gameworks音律动作游戏）"]
+  },
+  {
+    "item_id": "MNM1DBDYTIY5W",
+    "tags_to_add": ["类-排版", "版-网格", "色-黑白"],
+    "suggested": ["格-DOOM（id Software科幻射击游戏，UAC企业设定）"]
+  },
+  {
+    "item_id": "MJZXYMCQ5NHMJ",
+    "tags_to_add": ["类-插画", "题-近未来", "氛-孤独", "场-城市", "色-冷色主导", "风-日系", "镜-鸟瞰"],
+    "suggested": []
+  },
+  {
+    "item_id": "MNM1BAXW7US3K",
+    "tags_to_add": ["类-概念图", "类-3D", "物-建筑", "风-写实3D", "色-冷色主导", "题-高科技"],
+    "suggested": []
+  },
+  {
+    "item_id": "MNM168DEGK2NJ",
+    "tags_to_add": ["类-道具设定", "类-拆解图", "物-载具", "题-硬科幻", "风-写实3D", "色-冷色主导"],
+    "suggested": []
+  }
+]

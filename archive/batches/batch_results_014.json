@@ -1,0 +1,102 @@
+[
+  {
+    "item_id": "MOCYVUT3W66YU",
+    "tags_to_add": ["类-实景参考", "题-工业设计", "物-主机箱", "材-塑料-光面"],
+    "suggested": []
+  },
+  {
+    "item_id": "MNQAHTSXYU1O7",
+    "tags_to_add": ["类-道具设定", "题-赛博朋克", "风-Artstation", "物-配饰", "材-塑料-磨砂", "格-赛博朋克2077"],
+    "suggested": []
+  },
+  {
+    "item_id": "MNQ9WI8Q2QP8M",
+    "tags_to_add": ["类-道具设定", "题-赛博朋克", "风-Artstation", "物-电子设备", "材-金属-烤漆", "格-赛博朋克2077"],
+    "suggested": []
+  },
+  {
+    "item_id": "MNQ9OWEGN6E7H",
+    "tags_to_add": ["类-道具设定", "类-概念图", "题-近未来", "风-卡渲", "物-电子设备", "色-高饱和", "格-绝区零"],
+    "suggested": []
+  },
+  {
+    "item_id": "MNQ9OU86ELWBW",
+    "tags_to_add": ["类-道具设定", "题-近未来", "风-半写实", "物-战术装备", "物-电子设备"],
+    "suggested": []
+  },
+  {
+    "item_id": "MNQ9ON6RTCCMX",
+    "tags_to_add": ["类-道具设定", "类-概念图", "题-复古未来", "风-半写实", "物-电子设备", "格-极乐迪斯科"],
+    "suggested": []
+  },
+  {
+    "item_id": "MNQ8SWUH2QTZ8",
+    "tags_to_add": ["类-道具设定", "类-概念图", "题-近未来", "题-复古未来", "风-卡渲", "物-电子设备", "格-极乐迪斯科"],
+    "suggested": []
+  },
+  {
+    "item_id": "MNQ8PZSAI435W",
+    "tags_to_add": ["类-道具设定", "类-概念图", "题-近未来", "风-半写实", "物-战术装备", "格-绝区零"],
+    "suggested": []
+  },
+  {
+    "item_id": "MNQ8PRIRDCF43",
+    "tags_to_add": ["类-道具设定", "题-硬科幻", "风-写实3D", "物-电子设备"],
+    "suggested": ["格-战争机器"]
+  },
+  {
+    "item_id": "MNQ7JEHB3J5AV",
+    "tags_to_add": ["类-道具设定", "题-近未来", "风-Artstation", "物-枪械", "材-金属-烤漆"],
+    "suggested": []
+  },
+  {
+    "item_id": "MNQ7IZLOYYTKP",
+    "tags_to_add": ["类-游戏截图", "场-街道", "氛-日常", "光-白天"],
+    "suggested": []
+  },
+  {
+    "item_id": "MNQ7C6ABZWP87",
+    "tags_to_add": ["类-实景参考", "类-拆解图", "题-工业设计", "物-零件"],
+    "suggested": []
+  },
+  {
+    "item_id": "MNQ6JYNJB31PP",
+    "tags_to_add": ["类-概念图", "类-手绘", "题-硬科幻", "题-航天航空", "物-飞船", "色-黑白"],
+    "suggested": []
+  },
+  {
+    "item_id": "MNQ6FY8XO4I10",
+    "tags_to_add": ["类-道具设定", "类-概念图", "题-近未来", "风-卡渲", "物-战术装备", "色-高饱和", "格-绝区零"],
+    "suggested": []
+  },
+  {
+    "item_id": "MNQ65KIV54WW9",
+    "tags_to_add": ["类-UI", "风-卡通", "色-高饱和"],
+    "suggested": []
+  },
+  {
+    "item_id": "MNQ65CZ7ZE1GC",
+    "tags_to_add": ["类-道具设定", "类-概念图", "题-近未来", "风-卡渲", "物-载具", "角-机器人", "格-明日方舟"],
+    "suggested": []
+  },
+  {
+    "item_id": "MNQ659D42O66W",
+    "tags_to_add": ["类-插画", "题-近未来", "题-都市幻想", "风-卡渲", "角-女", "角-机器人", "物-载具", "色-高饱和", "格-绝区零"],
+    "suggested": []
+  },
+  {
+    "item_id": "MNQ5UMA5XTAW9",
+    "tags_to_add": ["类-概念图", "类-手绘", "题-机甲", "物-机甲", "角-机甲"],
+    "suggested": []
+  },
+  {
+    "item_id": "MNQ5UA8NCXLEP",
+    "tags_to_add": ["类-排版", "版-散点", "色-高对比", "色-暖色主导"],
+    "suggested": []
+  },
+  {
+    "item_id": "MNQ5U25AUMHHM",
+    "tags_to_add": ["类-排版", "版-散点", "色-低饱和"],
+    "suggested": []
+  }
+]

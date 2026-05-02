@@ -8,3 +8,10 @@
 - 2026-04-24  tags.json v2.0.2：色暖色主导/冷色主导补回
 - 2026-04-24  tags.json v2.0.1：13 前缀全量对账
 - 2026-04-23  tags.json v2.0：兽前缀废除，5 个迁入角
+
+## 2026-05-03 — a1-1: incompatible_prefixes 真相迁移
+
+- 以 tag_real.py 顶部 INCOMPATIBLE_PREFIXES 为真相，重写 config/rules.json 的 incompatible_prefixes 字段
+- 此前两处不一致：rules.json 是早期设想（4 前缀 / 3 类目），tag_real.py 是实际生效版本（8 前缀 / 5 类目，已经过 580 张图实证）
+- 砍掉 rules.json 里孤立的 "类-实景参考" 规则（从未生效过，且与用户实际打标习惯冲突——实景参考图需要保留光/镜/氛/场标签）
+- 本次仅同步配置文件，不改动运行时逻辑；接通由 a1-2 完成

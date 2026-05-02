@@ -547,6 +547,14 @@ def _apply_one(item_id: str, tags_to_add: list, suggested_raw: list,
 
     # 排异规则校验：如果打了主类标签，检查是否有被屏蔽前缀下的标签混入
     blocked_pfx = get_blocked_prefixes_from_tags(tags_to_add)
+    # a1-2 双轨并行校验（确认新路径与老路径等价后才会切换）
+    import rules_engine as _re
+    _new_blocked = _re.get_blocked_prefixes_from_tags(tags_to_add)
+    if set(_new_blocked) != set(blocked_pfx):
+        raise AssertionError(
+            f"[a1-2 双轨不一致] tags={tags_to_add} | "
+            f"老硬编码={sorted(blocked_pfx)} | 新rules.json={sorted(_new_blocked)}"
+        )
     if blocked_pfx:
         violations = [t for t in in_vocab if any(t.startswith(p + "-") for p in blocked_pfx)]
         if violations:

@@ -1,5 +1,5 @@
 <!-- AUTO-GENERATED FROM /config/. DO NOT EDIT.
-     Last sync: 2026-05-01 23:18:27 from tags.json v2.4 -->
+     Last sync: 2026-05-03 02:40:41 from tags.json v2.4 -->
 
 # Eagle 打标项目 — 新对话开场交接文档
 
@@ -10,9 +10,9 @@
 
 ## 当前进度
 
-- 已处理：**960 / 20378** 张（4.71%）
-- 批次号：52
-- 最后 item_id：`MM9B9UBR4OCIO`
+- 已处理：**965 / 20378** 张（4.74%）
+- 批次号：54
+- 最后 item_id：`MI60JEBZ9GMGW`
 
 ---
 
@@ -21,11 +21,11 @@
 tags.json v2.4，317 标签 / 19 前缀
 
 最近 5 条变更：
-- 2026-04-26  rules.json v2.1.1：阶段 2 重构起点，rules 仅放扁平映射
-- 2026-04-25  tags.json v2.1：新增格-/版- 前缀，227 标签 / 15 前缀
-- 2026-04-24  tags.json v2.0.2：色暖色主导/冷色主导补回
-- 2026-04-24  tags.json v2.0.1：13 前缀全量对账
 - 2026-04-23  tags.json v2.0：兽前缀废除，5 个迁入角
+- 以 tag_real.py 顶部 INCOMPATIBLE_PREFIXES 为真相，重写 config/rules.json 的 incompatible_prefixes 字段
+- 此前两处不一致：rules.json 是早期设想（4 前缀 / 3 类目），tag_real.py 是实际生效版本（8 前缀 / 5 类目，已经过 580 张图实证）
+- 砍掉 rules.json 里孤立的 "类-实景参考" 规则（从未生效过，且与用户实际打标习惯冲突——实景参考图需要保留光/镜/氛/场标签）
+- 本次仅同步配置文件，不改动运行时逻辑；接通由 a1-2 完成
 
 ---
 

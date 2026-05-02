@@ -1,0 +1,102 @@
+[
+  {
+    "item_id": "MOD6FO8WQN45Z",
+    "tags_to_add": ["类-角色原画", "题-二次元", "风-卡渲", "角-女", "角-立绘", "色-高饱和"],
+    "suggested": []
+  },
+  {
+    "item_id": "MOD66TR39M3QW",
+    "tags_to_add": ["类-角色原画", "题-二次元", "风-卡渲", "角-女", "角-立绘"],
+    "suggested": []
+  },
+  {
+    "item_id": "MOD64QGOW9M65",
+    "tags_to_add": ["类-实景参考", "题-工业设计", "物-零件"],
+    "suggested": []
+  },
+  {
+    "item_id": "MOD0BJPVJE3UV",
+    "tags_to_add": ["类-道具设定", "题-近未来", "风-半写实", "物-摩托", "镜-正交", "色-高饱和"],
+    "suggested": []
+  },
+  {
+    "item_id": "MOCZ4WMWXEFX1",
+    "tags_to_add": ["类-排版", "版-不对称", "色-暖色主导"],
+    "suggested": ["氛-复古"]
+  },
+  {
+    "item_id": "MOCZ4Q87HGU27",
+    "tags_to_add": ["类-排版", "版-网格", "色-高对比"],
+    "suggested": []
+  },
+  {
+    "item_id": "MOCZ2XXAHLHHQ",
+    "tags_to_add": ["类-道具设定", "题-近未来", "风-卡渲", "物-电子设备", "氛-温馨", "色-暖色主导", "格-绝区零"],
+    "suggested": []
+  },
+  {
+    "item_id": "MOCZ21995U7KJ",
+    "tags_to_add": ["类-道具设定", "类-概念图", "题-现代", "风-卡渲", "物-载具", "氛-温馨"],
+    "suggested": []
+  },
+  {
+    "item_id": "MOCZ1XHYKYGZ3",
+    "tags_to_add": ["类-场景原画", "类-3D", "题-现代", "场-街道", "氛-荒凉", "光-白天", "风-写实3D"],
+    "suggested": []
+  },
+  {
+    "item_id": "MOCZ1WOPTD9VV",
+    "tags_to_add": ["类-场景原画", "题-都市幻想", "风-吉卜力", "场-街道", "氛-温馨", "光-白天", "物-载具"],
+    "suggested": []
+  },
+  {
+    "item_id": "MOCZ1VDL54EW2",
+    "tags_to_add": ["类-场景原画", "类-3D", "题-现代", "场-街道", "氛-日常", "光-白天", "风-写实3D"],
+    "suggested": []
+  },
+  {
+    "item_id": "MOCZ1TBGW93OB",
+    "tags_to_add": ["类-场景原画", "类-3D", "题-都市幻想", "场-城市", "氛-日常", "光-白天", "风-卡渲", "格-绝区零"],
+    "suggested": []
+  },
+  {
+    "item_id": "MOCZ1RPMPLUXK",
+    "tags_to_add": ["类-场景原画", "题-剑与魔法", "氛-宏大", "镜-鸟瞰", "光-白天"],
+    "suggested": []
+  },
+  {
+    "item_id": "MOCZ1QZ95FWUB",
+    "tags_to_add": ["类-场景原画", "题-硬科幻", "场-实验室", "氛-压抑", "风-半写实", "光-漫反射"],
+    "suggested": ["格-Concord"]
+  },
+  {
+    "item_id": "MOCZ1PDITPPX0",
+    "tags_to_add": ["类-道具设定", "类-概念图", "题-硬科幻", "物-载具", "风-半写实", "氛-宏大", "光-漫反射"],
+    "suggested": ["格-Concord"]
+  },
+  {
+    "item_id": "MOCZ1NV39U9D1",
+    "tags_to_add": ["类-游戏截图", "场-城市", "色-冷暖对比", "色-高饱和", "镜-鸟瞰"],
+    "suggested": ["格-Splatoon"]
+  },
+  {
+    "item_id": "MOCZ1J4BAF4L2",
+    "tags_to_add": ["类-插画", "题-近未来", "题-都市幻想", "风-卡渲", "角-女", "场-废墟", "光-白天", "色-高饱和", "格-绝区零"],
+    "suggested": []
+  },
+  {
+    "item_id": "MOCZ1F7D2VQRY",
+    "tags_to_add": ["类-场景原画", "类-3D", "题-现代", "场-街道", "氛-荒凉", "光-白天", "风-写实3D"],
+    "suggested": []
+  },
+  {
+    "item_id": "MOCZ19PIWS9ZB",
+    "tags_to_add": ["类-UI", "版-杂志式", "格-绝区零", "色-冷色主导"],
+    "suggested": []
+  },
+  {
+    "item_id": "MOCYVXX3HJZ7R",
+    "tags_to_add": ["类-UI", "版-网格", "色-黑白", "题-复古未来", "格-极乐迪斯科"],
+    "suggested": []
+  }
+]
