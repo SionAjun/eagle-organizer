@@ -58,12 +58,6 @@ def filter_incompatible(tags: list) -> list:
     return [t for t in tags if not any(t.startswith(p) for p in blocked_prefixes)]
 
 
-# ───────── 同义词归一 ─────────
-def normalize_synonyms(tag: str) -> str:
-    rules = _load_rules()
-    return rules["ge_synonyms"].get(tag, tag)
-
-
 # ───────── 排异：从 rules.json 推导被屏蔽前缀（U2，a1 阶段新接入）─────────
 
 # 模块级缓存：避免每次 _apply_one 都读 rules.json
@@ -93,3 +87,48 @@ def get_blocked_prefixes_from_tags(tags_to_add: list) -> list:
                 if pfx not in blocked:
                     blocked.append(pfx)
     return blocked
+
+
+# ───────── 词表前缀过滤器（钩子，未接入主流程）─────────
+# 设计用途：build_messages 阶段按主类裁剪注入 prompt 的词表，降低 token 开销，提升标签准确度。
+# 当前未启用——审计显示词表 294 标签下 cached 命中率 76.6%，单阶段流程经济性更优。
+#
+# 激活触发条件（任一）：
+#   • 词表突破 ~380 标签
+#   • cached 命中率掉到 60% 以下
+#   • 平均 prompt_tokens 较基线涨 40%+
+#   • P2（按词表组合查图）/P3（Obsidian 集成）项目 kickoff
+#   • 全自动跑完 20378 张后启动 stage-1 激活专项
+#
+# 激活时需配套改造：
+#   - build_messages 拆 stage1 + stage2
+#   - prompts/ 拆 system_stage1.txt + system_stage2.txt
+#   - 多线程批处理改两阶段顺序调用
+#   - stage-1 主类误判的退化兜底逻辑
+
+def filter_tags_by_primary(primary_class_tag: str, tags_by_prefix: dict) -> dict:
+    """按主类排除不适用前缀，返回过滤后的词表（按前缀分组）。"""
+    incompat = _get_incompat()
+    blocked = set(incompat.get(primary_class_tag, []))
+    if not blocked:
+        return tags_by_prefix
+    return {pfx: lst for pfx, lst in tags_by_prefix.items()
+            if pfx.rstrip("-") not in blocked}
+
+
+# ───────── 已知前缀（从 tags.json 自动派生）─────────
+# 取代 tag_real.py 顶部硬编码 KNOWN_PREFIXES。新增前缀只需在 tags.json 加一组，无需改代码。
+
+_KNOWN_PREFIXES_CACHE = None
+
+def get_known_prefixes() -> list:
+    """返回 tags.json 里所有前缀（按 dict 出现顺序，不带 - 后缀）。
+    第一次调用读文件并缓存，后续直接返回。
+    """
+    global _KNOWN_PREFIXES_CACHE
+    if _KNOWN_PREFIXES_CACHE is None:
+        from pathlib import Path
+        p = Path(__file__).parent / "config" / "tags.json"
+        d = json.loads(p.read_text(encoding="utf-8"))
+        _KNOWN_PREFIXES_CACHE = [k.rstrip("-") for k in d.get("tags", {}).keys()]
+    return _KNOWN_PREFIXES_CACHE

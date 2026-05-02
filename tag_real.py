@@ -104,9 +104,6 @@ REVIEW_REPORT_FILE      = BASE_DIR / "reports" / "REPORT_review.md"
 VOCAB_FEEDBACK_FILE     = DATA_DIR / "vocab_feedback.md"
 REVIEW_CHECKPOINT_EVERY = 30
 
-KNOWN_PREFIXES = ["类", "题", "风", "格", "版", "氛", "光", "镜", "构", "场", "角", "物", "材", "色", "教", "件", "载", "域", "派"]
-
-
 class RateLimiter:
     """线程安全的速率限制器，保证 min_interval 秒内最多放行一次。"""
     def __init__(self, min_interval: float):
@@ -121,35 +118,6 @@ class RateLimiter:
             if wait > 0:
                 time.sleep(wait)
             self._last = time.monotonic()
-
-# 排异规则：检测到某主类标签时，屏蔽不适用的前缀
-# AI 打标时先判断主类，再用 get_filtered_tags() 拿到过滤后词表，根本看不到被屏蔽前缀的选项
-INCOMPATIBLE_PREFIXES = {
-    "类-UI":     ["镜", "光", "氛", "场", "构", "件", "载", "域"],
-    "类-排版":   ["镜", "光", "氛", "场", "件", "载", "域"],
-    "类-教程":   ["氛"],
-    "类-拆解图": ["氛", "光"],
-    "类-像素画": ["材"],  # 光前缀对像素画仍有意义，保留
-}
-
-
-def get_filtered_tags(primary_class_tag: str, tags_by_prefix: dict) -> dict:
-    """返回排除不适用前缀后的词表（按前缀分组）。"""
-    blocked = set(INCOMPATIBLE_PREFIXES.get(primary_class_tag, []))
-    if not blocked:
-        return tags_by_prefix
-    return {pfx: lst for pfx, lst in tags_by_prefix.items() if pfx not in blocked}
-
-
-def get_blocked_prefixes_from_tags(tags_to_add: list) -> list:
-    """从已打标签中检测主类，返回应被屏蔽的前缀列表（供 apply 阶段校验用）。"""
-    blocked = []
-    for t in tags_to_add:
-        if t in INCOMPATIBLE_PREFIXES:
-            for pfx in INCOMPATIBLE_PREFIXES[t]:
-                if pfx not in blocked:
-                    blocked.append(pfx)
-    return blocked
 
 # ── Eagle API（绕过系统代理） ──────────────────────────────────────────────────
 _opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
@@ -546,15 +514,8 @@ def _apply_one(item_id: str, tags_to_add: list, suggested_raw: list,
     prog["round_tag_in_vocab"] = prog.get("round_tag_in_vocab", 0) + len(in_vocab)
 
     # 排异规则校验：如果打了主类标签，检查是否有被屏蔽前缀下的标签混入
-    blocked_pfx = get_blocked_prefixes_from_tags(tags_to_add)
-    # a1-2 双轨并行校验（确认新路径与老路径等价后才会切换）
     import rules_engine as _re
-    _new_blocked = _re.get_blocked_prefixes_from_tags(tags_to_add)
-    if set(_new_blocked) != set(blocked_pfx):
-        raise AssertionError(
-            f"[a1-2 双轨不一致] tags={tags_to_add} | "
-            f"老硬编码={sorted(blocked_pfx)} | 新rules.json={sorted(_new_blocked)}"
-        )
+    blocked_pfx = _re.get_blocked_prefixes_from_tags(tags_to_add)
     if blocked_pfx:
         violations = [t for t in in_vocab if any(t.startswith(p + "-") for p in blocked_pfx)]
         if violations:
@@ -1237,6 +1198,7 @@ def archive_old_records(prog: dict) -> None:
 
 # ── REPORT.md ─────────────────────────────────────────────────────────────────
 def write_report(prog: dict) -> None:
+    import rules_engine as _re
     now     = datetime.now()
     now_str = now.strftime("%Y-%m-%d %H:%M")
 
@@ -1277,11 +1239,11 @@ def write_report(prog: dict) -> None:
     # 未使用前缀
     used_pfx = set()
     for t in tag_counter:
-        for pfx in KNOWN_PREFIXES:
+        for pfx in _re.get_known_prefixes():
             if t.startswith(pfx + "-"):
                 used_pfx.add(pfx)
                 break
-    unused_pfx = [p for p in KNOWN_PREFIXES if p not in used_pfx]
+    unused_pfx = [p for p in _re.get_known_prefixes() if p not in used_pfx]
     unused_str = str(unused_pfx) if unused_pfx else "（全部前缀均有使用）"
 
     # suggested 统计
