@@ -331,6 +331,7 @@ def build_messages(item: dict) -> list:
         + "\n\n" + load_prompt("反例.txt")
         + "\n\n" + load_prompt("域规则.txt")
         + "\n\n" + load_prompt("派规则.txt")
+        + "\n\n" + load_prompt("dimensions.txt")
         + "\n\n" + render_tag_catalog()
     )
 
@@ -3060,6 +3061,10 @@ def main():
         cmd_batch_report(args.batch_report)
     elif args.sample_baseline:
         from scripts.sample_human_baseline import main as sample_main
+        argv = ["sample_human_baseline.py"]
+        if args.focus:
+            argv += ["--focus", args.focus]
+        sys.argv = argv
         sample_main()
     elif args.sync_baseline:
         from scripts.baseline_sync import main as sync_main

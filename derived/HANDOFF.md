@@ -1,5 +1,5 @@
 <!-- AUTO-GENERATED FROM /config/. DO NOT EDIT.
-     Last sync: 2026-05-03 02:40:41 from tags.json v2.4 -->
+     Last sync: 2026-05-04 15:00:00 from tags.json v2.4 -->
 
 # Eagle 打标项目 — 新对话开场交接文档
 
@@ -10,9 +10,11 @@
 
 ## 当前进度
 
-- 已处理：**965 / 20378** 张（4.74%）
-- 批次号：54
-- 最后 item_id：`MI60JEBZ9GMGW`
+- 已处理：**970 / 20378** 张（4.76%）
+- 批次号：55
+- 最后 item_id：`MON605ZTVACYZ`
+- 人工基线：baseline_001（派-）+ baseline_002（构-），index.jsonl 累计 20 条
+- 洞察总账：`data/baselines/insights.md`（6 大类，主线 1 评审核心输入）
 
 ---
 

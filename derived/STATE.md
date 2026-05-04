@@ -1,26 +1,26 @@
 <!-- AUTO-GENERATED FROM /config/. DO NOT EDIT.
-     Last sync: 2026-05-03 02:40:41 from tags.json v2.4 -->
+     Last sync: 2026-05-04 18:00:00 from tags.json v2.5 -->
 
 # Eagle 素材库打标签项目 — 当前状态
 
 
 
-> Note: last checkpoint at 950, current total 965
-最后同步：2026-05-03 02:40:41　　进度：965 / 20378 张
+> Note: last checkpoint at 950, current total 970
+最后同步：2026-05-04 18:00:00　　进度：970 / 20378 张
 
 ---
 
 ## 当前进度
 
-- **已处理**：965 / 20378 张（4.74%）
-- **最后 item_id**：`MI60JEBZ9GMGW`
-- **当前批次号**：54
+- **已处理**：970 / 20378 张（4.76%）
+- **最后 item_id**：`MON605ZTVACYZ`
+- **当前批次号**：55
 
 ---
 
-## 词表统计（config/tags.json v2.4）
+## 词表统计（config/tags.json v2.5）
 
-- 标签总数：**317 个 / 19 个前缀**
+- 标签总数：**366 个 / 23 个前缀**
 
 | 前缀 | 数量 |
 |------|------|
@@ -34,8 +34,8 @@
 | 镜- | 15 |
 | 构- | 10 |
 | 场- | 16 |
-| 角- | 18 |
-| 物- | 15 |
+| 角- | 23 |
+| 物- | 14 |
 | 材- | 24 |
 | 色- | 12 |
 | 教- | 6 |
@@ -43,6 +43,10 @@
 | 载- | 24 |
 | 域- | 4 |
 | 派- | 23 |
+| 代- | 14 |
+| 姿- | 7 |
+| 服- | 14 |
+| 职- | 10 |
 
 ---
 
@@ -60,12 +64,22 @@
 
 ---
 
+## 人工基线系统
+
+- **baseline_001**：focus=派-，好1/部分7/坏2（index.jsonl 累计 20 条）
+- **baseline_002**：focus=构-，好8/部分2/坏0
+- **insights.md**：6 大类洞察（A-F），主线 1 评审核心输入
+- 模板 v2：无"整体"行，overall 自动推导
+
+---
+
 ## 下一步待办
 
-1. `python tag_real.py --prepare --limit 20`
-2. 读全部图，输出 JSON 写入 batch_results_NNN.json
-3. `python tag_real.py --apply-batch`
-4. 每 50 张自动检查点
+1. 主线 1：评审 insights.md 中的系统性问题，决策词表 v2.5 演进
+2. `python tag_real.py --prepare --limit 20`
+3. 读全部图，输出 JSON 写入 batch_results_NNN.json
+4. `python tag_real.py --apply-batch`
+5. 每 50 张自动检查点
 
 ---
 
