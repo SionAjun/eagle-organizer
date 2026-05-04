@@ -1,10 +1,13 @@
 {
-  "version": "2.3.0",
+  "version": "2.5.1",
   "naming_conventions": {
     "格-": "尽量用中文官方译名，无法翻译或无通用译名时才保留原文。例：格-星空（Starfield）、格-喷射战士（Splatoon）、格-毁灭战士（DOOM）、格-完美音浪（Hi-Fi Rush）、格-银翼杀手（Blade Runner）"
   },
   "synonyms": {
-    "物-摩托": "载-摩托"
+    "物-摩托": "载-摩托",
+    "角-战士": "职-战士",
+    "角-平民": "职-平民",
+    "物-飞船": "载-飞船"
   },
   "incompatible_prefixes": {
     "类-UI": [

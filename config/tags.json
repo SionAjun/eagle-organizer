@@ -1,6 +1,16 @@
 {
-  "version": "2.5",
+  "version": "2.5.1",
   "changelog": [
+    {
+      "version": "2.5.1",
+      "date": "2026-05-04",
+      "changes": [
+        "删除 4 标签:角-战士/角-平民/题-战斗/物-飞船(前缀重叠裁决)",
+        "角-战士→职-战士,角-平民→职-平民,物-飞船→载-飞船(同义改写)",
+        "题-战斗 直接删除(脏数据清理,不加同义)",
+        "合计 362 标签,23 个前缀"
+      ]
+    },
     {
       "version": "2.5",
       "date": "2026-05-04",
@@ -436,15 +446,6 @@
         ],
         "experimental": false,
         "hit_count": 7,
-        "scope_count": 570
-      },
-      {
-        "name": "题-战斗",
-        "applies_to": [
-          "全图"
-        ],
-        "experimental": false,
-        "hit_count": 4,
         "scope_count": 570
       },
       {
@@ -1609,24 +1610,6 @@
         "scope_count": 102
       },
       {
-        "name": "角-战士",
-        "applies_to": [
-          "角色"
-        ],
-        "experimental": false,
-        "hit_count": 8,
-        "scope_count": 102
-      },
-      {
-        "name": "角-平民",
-        "applies_to": [
-          "角色"
-        ],
-        "experimental": false,
-        "hit_count": 4,
-        "scope_count": 102
-      },
-      {
         "name": "角-BOSS",
         "applies_to": [
           "角色"
@@ -1822,19 +1805,6 @@
         ],
         "experimental": false,
         "hit_count": 116,
-        "scope_count": 489
-      },
-      {
-        "name": "物-飞船",
-        "applies_to": [
-          "机械",
-          "载具",
-          "武器",
-          "道具",
-          "装备"
-        ],
-        "experimental": false,
-        "hit_count": 4,
         "scope_count": 489
       },
       {
