@@ -18,6 +18,7 @@ import base64
 import json
 import os
 import re
+import sys
 import threading
 import time
 import urllib.request
@@ -3006,6 +3007,12 @@ def main():
                         help="--apply-batch 并行 worker 数（默认 5）")
     parser.add_argument("--batch-report",     type=str, default="", dest="batch_report",
                         help="输出指定 batch 的简报到 reports/batch_<id>_report.md")
+    parser.add_argument("--sample-baseline",  action="store_true", dest="sample_baseline",
+                        help="生成人工基线抽样 (md + jsonl)")
+    parser.add_argument("--sync-baseline",    type=str, default="", dest="sync_baseline",
+                        help="回写第 NNN 批人工基线判定到 jsonl + index.jsonl")
+    parser.add_argument("--focus",            type=str, default="", dest="focus",
+                        help="--sample-baseline 的重点关注前缀, 如 派- (默认自动轮换)")
     args = parser.parse_args()
 
     if args.prepare:
@@ -3051,6 +3058,13 @@ def main():
         cmd_retry_failed(args.retry_failed)
     elif args.batch_report:
         cmd_batch_report(args.batch_report)
+    elif args.sample_baseline:
+        from scripts.sample_human_baseline import main as sample_main
+        sample_main()
+    elif args.sync_baseline:
+        from scripts.baseline_sync import main as sync_main
+        sys.argv = ["baseline_sync.py", args.sync_baseline]
+        sync_main()
     else:
         parser.print_help()
 
