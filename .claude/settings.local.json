@@ -28,7 +28,9 @@
       "Bash(sed 's/.json//')",
       "Bash(md5sum config/tags.json config/rules.json)",
       "Bash(md5 config/tags.json config/rules.json)",
-      "Bash(pip freeze *)"
+      "Bash(pip freeze *)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:api-docs.deepseek.com)"
     ]
   }
 }

@@ -133,7 +133,6 @@ def render_md(batch_id: int, items: list, focus: str) -> str:
         lines.append("")
         lines.append(f"**自动标签**: {tags_str}")
         lines.append("")
-        lines.append("- **整体**: 好 / 部分 / 坏")
         lines.append("- **错标**: ")
         lines.append("- **漏标**: ")
         lines.append("- **备注**: ")

@@ -8,6 +8,21 @@ from pathlib import Path
 BASELINES_DIR = Path("data/baselines")
 
 
+def derive_overall(wrong_tags: list) -> str:
+    """根据错标自动推 overall:
+    - wrong_tags 数量为 0 → "好"
+    - wrong_tags 数量 1-2, 且不含 "类-*" 前缀 → "部分"
+    - wrong_tags 数量 >= 3, 或含任一 "类-*" 前缀 → "坏"
+    """
+    if len(wrong_tags) == 0:
+        return "好"
+    if any(t.startswith("类-") for t in wrong_tags):
+        return "坏"
+    if len(wrong_tags) >= 3:
+        return "坏"
+    return "部分"
+
+
 def parse_md(md_path: Path) -> dict:
     """解析 md, 返回 {item_id: judgment} 字典"""
     text = md_path.read_text(encoding="utf-8")
@@ -17,52 +32,38 @@ def parse_md(md_path: Path) -> dict:
     blocks = re.split(r"^### #\d+", text, flags=re.MULTILINE)
 
     # 第一块是头部, 跳过; 后续每块对应一张图
-    # 从标题行提取 item_id (从 [打开](eagle://item/XXX) 中)
     header_pattern = re.compile(r"^\[打开\]\(eagle://item/(\w+)\)", re.MULTILINE)
 
     for block in blocks[1:]:
-        # 提取 item_id
         m_id = header_pattern.search(block)
         if not m_id:
             continue
         item_id = m_id.group(1)
-
-        # 解析 整体
-        overall_match = re.search(r"^\-\s*\*\*整体\*\*:[ \t]*(.*?)$", block, re.MULTILINE)
-        overall = None
-        if overall_match:
-            val = overall_match.group(1).strip()
-            # 如果还是 "好 / 部分 / 坏" 原样, 视为未填
-            if val in ("好 / 部分 / 坏", ""):
-                overall = None
-            elif "好" in val:
-                overall = "好"
-            elif "部分" in val:
-                overall = "部分"
-            elif "坏" in val:
-                overall = "坏"
 
         # 解析 错标
         wrong_match = re.search(r"^\-\s*\*\*错标\*\*:[ \t]*(.*?)$", block, re.MULTILINE)
         wrong_tags = []
         if wrong_match:
             val = wrong_match.group(1).strip()
-            if val:
-                wrong_tags = [t.strip() for t in re.split(r"[,/]", val) if t.strip()]
+            if val and val != "无":
+                wrong_tags = [t.strip() for t in re.split(r"[/,]", val) if t.strip()]
 
         # 解析 漏标
         missing_match = re.search(r"^\-\s*\*\*漏标\*\*:[ \t]*(.*?)$", block, re.MULTILINE)
         missing_tags = []
         if missing_match:
             val = missing_match.group(1).strip()
-            if val:
-                missing_tags = [t.strip() for t in re.split(r"[,/]", val) if t.strip()]
+            if val and val != "无":
+                missing_tags = [t.strip() for t in re.split(r"[/,]", val) if t.strip()]
 
         # 解析 备注
         note_match = re.search(r"^\-\s*\*\*备注\*\*:[ \t]*(.*?)$", block, re.MULTILINE)
         note = ""
         if note_match:
             note = note_match.group(1).strip()
+
+        # 自动推 overall
+        overall = derive_overall(wrong_tags)
 
         results[item_id] = {
             "overall": overall,
@@ -87,7 +88,9 @@ def merge_jsonl(jsonl_path: Path, judgments: dict) -> tuple:
             item_id = rec.get("item_id", "")
             if item_id in judgments:
                 rec["judgment"] = judgments[item_id]
-                if judgments[item_id]["overall"] is not None:
+                # 错标/漏标/备注 任一非空即视为已填
+                j = judgments[item_id]
+                if j["wrong_tags"] or j["missing_tags"] or j["note"]:
                     filled += 1
             records.append(rec)
     return records, filled
@@ -117,13 +120,11 @@ def append_to_index(records: list):
                 except json.JSONDecodeError:
                     pass
 
-    # 用新版替换旧版
     for rec in records:
         sid = rec.get("sample_id", "")
         if sid:
             existing[sid] = rec
 
-    # 写回 (保持插入顺序: 先旧后新)
     with open(index_path, "w", encoding="utf-8") as f:
         for rec in existing.values():
             f.write(json.dumps(rec, ensure_ascii=False) + "\n")
@@ -163,10 +164,19 @@ def main():
     # 报告
     total = len(records)
     empty = total - filled
+
+    # overall 分布
+    overall_dist = {"好": 0, "部分": 0, "坏": 0}
+    for rec in records:
+        ov = rec.get("judgment", {}).get("overall")
+        if ov in overall_dist:
+            overall_dist[ov] += 1
+
     print(f"\n--- 报告 ---")
     print(f"本批 {total} 条样本")
-    print(f"已填 {filled} 条 (overall 非 null)")
+    print(f"已填 {filled} 条 (错标/漏标/备注 任一非空)")
     print(f"空 {empty} 条")
+    print(f"overall 分布: 好 {overall_dist['好']} 条 / 部分 {overall_dist['部分']} 条 / 坏 {overall_dist['坏']} 条")
     print(f"index.jsonl 累计 {total_in_index} 条")
 
 
