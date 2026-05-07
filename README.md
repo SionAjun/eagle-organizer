@@ -76,25 +76,70 @@ python tag_real.py --batch-report 054
 python tag_real.py --sync
 ```
 
+## 启动与停止
+
+- **启动**：双击 `run.bat`（独立 cmd 窗口，不要从 Claude Code 启动）
+- **停止**：在 cmd 窗口按 `Ctrl+C`；或紧急情况双击 `kill_all.bat`
+- **重启电脑后**：直接双击 `run.bat` 即可，run.bat 会自动清理失效的 `data/run.lock`
+- **单实例保护**：run.bat 启动时写入 PID 到 `data/run.lock`，已有循环在跑时会拒绝启动
+
+## 异常处理
+
+### exceptions.json
+
+超时或异常的 item 会写入 `data/exceptions.json`，schema：
+
+```json
+{
+  "id": "item_id",
+  "reason": "mimo_timeout",
+  "timestamp": "2026-05-07T13:50:56Z",
+  "batch": 2974,
+  "extra": {}
+}
+```
+
+### reason 取值
+
+| reason | 说明 |
+|--------|------|
+| `mimo_timeout` | mimo API 单任务超时（90s），Pool 重建后跳过该项 |
+| `mimo_error` | mimo API 返回异常（非超时） |
+| `vocab_mismatch` | mimo 返回的标签不在词表中 |
+| `eagle_api_error` | Eagle API 写回失败 |
+| `other` | 其他未分类异常 |
+
+### 容错机制
+
+- 单张图超时不影响整个 batch，超时项写入 exceptions.json 后跳过，Pool 重建继续处理剩余项
+- 历史问题与修复方案详见 [docs/BUG_LEDGER.md](docs/BUG_LEDGER.md)
+
 ## 项目结构
 
 ```
 eagle-organizer/
 ├── tag_real.py          # 主脚本
 ├── rules_engine.py      # 规则引擎
-├── run.bat              # Windows 快捷运行
+├── run.bat              # 循环启动器（带 PID 锁）
+├── kill_all.bat         # 紧急停止（杀进程树）
 ├── config/
-│   ├── tags.json        # 标签词表（v2.5, 366 标签）
+│   ├── tags.json        # 标签词表（v2.5, 367 标签）
 │   ├── rules.json       # 标签规则
 │   ├── workflow.json    # 工作流配置
 │   ├── preferences.json # 偏好设置
-│   ├── exceptions.json  # 异常记录
 │   ├── CHANGELOG.md     # 词表变更日志
 │   └── prompts/         # LLM prompt 模板
+├── data/                # 运行时数据（git 忽略）
+│   ├── progress.json    # 进度与断点
+│   ├── exceptions.json  # 异常记录
+│   ├── pending.json     # 当前批次待处理
+│   └── batches/         # batch 结果归档
 ├── derived/             # 自动派生文件
 │   ├── CLAUDE.md
 │   ├── STATE.md
 │   └── HANDOFF.md
+├── docs/
+│   └── BUG_LEDGER.md    # BUG 台账
 ├── archive/             # 历史归档
 └── reports/             # 测试与 batch 报告（git 忽略）
 ```

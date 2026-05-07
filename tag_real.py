@@ -16,13 +16,13 @@ Eagle 素材库真实打标脚本
 import argparse
 import base64
 import json
+import multiprocessing
 import os
 import re
 import sys
 import threading
 import time
 import urllib.request
-from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -43,7 +43,7 @@ PROGRESS_FILE       = DATA_DIR / "progress.json"
 PENDING_FILE        = DATA_DIR / "pending.json"
 SUGGESTED_FILE      = DATA_DIR / "suggested_tags.json"
 TAGS_FILE           = CONFIG_DIR / "tags.json"
-EXCEPTIONS_FILE     = CONFIG_DIR / "exceptions.json"
+EXCEPTIONS_FILE     = DATA_DIR / "exceptions.json"
 STATE_FILE          = DERIVED_DIR / "STATE.md"
 RESUME_FILE         = BASE_DIR / "reports" / "RESUME.md"
 CHECKPOINT_LOG      = DATA_DIR / "checkpoint_log.md"
@@ -61,12 +61,18 @@ MIMO_TEMPERATURE = 0.3
 MIMO_TOP_P       = 0.95
 
 LIB_PATH         = Path("D:/杂项/素材.library")
-PAGE_LIMIT       = 1000
+PAGE_LIMIT       = 25000  # Eagle API offset 分页失效，需单次大 limit 拉全量
 PROTECTION_HOURS = 24
-LIBRARY_TOTAL    = 20378
+LIBRARY_TOTAL    = 20605
 CHECKPOINT_EVERY      = 50
 COMPRESS_AFTER        = 10   # 检查点超过此数时压缩旧记录
 BATCH_SIZE            = 20
+REJECT_TAG            = "mimo_拒绝"
+MAX_REJECT_COUNT      = 5    # mimo_exhausted 连续失败 >= 此数则永久跳过
+UNSUPPORTED_FORMATS   = {
+    "svg": "件-svg图标", "zip": "件-zip", "mp4": "件-mp4",
+    "url": "件-url", "bmp": "件-bmp",
+}
 RECORDS_KEEP_RECENT   = 50
 RECORDS_ARCHIVE_EVERY = 100
 RECORDS_ARCHIVE_DIR   = BASE_DIR / "archive" / "records"
@@ -119,6 +125,17 @@ class RateLimiter:
             if wait > 0:
                 time.sleep(wait)
             self._last = time.monotonic()
+
+# ── multiprocessing pool worker ──────────────────────────────────────────────
+_worker_rate_limiter = None  # 每个 worker 进程独立初始化
+
+def _init_worker():
+    global _worker_rate_limiter
+    _worker_rate_limiter = RateLimiter(0.75)
+
+def _pool_worker_fn(idx, entry):
+    """顶层可 pickle 的 worker，供 multiprocessing.Pool 使用。"""
+    return _worker_fn(idx, entry, {}, _worker_rate_limiter)
 
 # ── Eagle API（绕过系统代理） ──────────────────────────────────────────────────
 _opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
@@ -271,27 +288,16 @@ def ensure_prog_fields(prog: dict) -> dict:
             prog[k] = v
     return prog
 
-# ── 分页拉取 ──────────────────────────────────────────────────────────────────
+# ── 全量拉取（Eagle API offset 分页失效，用大 limit 单次拉取）──
 def iter_items():
-    offset, empty_streak = 0, 0
-    while True:
-        try:
-            data = eagle_get(f"/item/list?limit={PAGE_LIMIT}&offset={offset}").get("data", [])
-        except Exception as e:
-            print(f"  [警告] 分页请求异常 offset={offset}: {e}")
-            empty_streak += 1
-            if empty_streak >= 2:
-                break
-            offset += PAGE_LIMIT
-            continue
-        if not data:
-            empty_streak += 1
-            if empty_streak >= 2:
-                break
-        else:
-            empty_streak = 0
-            yield from data
-        offset += PAGE_LIMIT
+    try:
+        data = eagle_get(f"/item/list?limit={PAGE_LIMIT}&offset=0").get("data", [])
+    except Exception as e:
+        print(f"  [警告] 拉取 items 异常: {e}")
+        data = []
+    if not data:
+        print("  [警告] 未获取到任何 items")
+    yield from data
 
 # ── mimo LLM 调用 ─────────────────────────────────────────────────────────────
 _MIME_MAP = {
@@ -377,7 +383,7 @@ def _extract_tags(raw: str) -> list:
 
 def call_mimo(messages: list, max_retries: int = 3):
     """调用 mimo API，返回 {raw, tags, usage}。429/5xx 指数退避。重试耗尽返回 None。"""
-    client   = OpenAI(api_key=MIMO_API_KEY, base_url=MIMO_BASE_URL)
+    client   = OpenAI(api_key=MIMO_API_KEY, base_url=MIMO_BASE_URL, timeout=60.0)
     last_exc = None
     for attempt in range(max_retries):
         try:
@@ -386,6 +392,7 @@ def call_mimo(messages: list, max_retries: int = 3):
                 messages=messages,
                 temperature=MIMO_TEMPERATURE,
                 top_p=MIMO_TOP_P,
+                timeout=60,
             )
             raw    = resp.choices[0].message.content or ""
             usage  = resp.usage
@@ -445,10 +452,21 @@ def cmd_prepare(limit: int) -> None:
     skip_protected = 0
     skip_1970      = 0
 
+    skip_format = 0
     for item in iter_items():
         item_id = item["id"]
         if item_id in processed_set:
             skip_already += 1
+            continue
+        ext = item.get("ext", "").lower()
+        if ext in UNSUPPORTED_FORMATS:
+            tag = UNSUPPORTED_FORMATS[ext]
+            _tag_unsupported_format(item_id, tag)
+            if item_id not in prog["processed_ids"]:
+                prog["processed_ids"].append(item_id)
+                prog["total_processed"] = prog.get("total_processed", 0) + 1
+            processed_set.add(item_id)
+            skip_format += 1
             continue
         if is_protected(item):
             skip_protected += 1
@@ -489,13 +507,14 @@ def cmd_prepare(limit: int) -> None:
             break
 
     prog["prepare_skip_stats"]["already_processed"] = skip_already
+    prog["prepare_skip_stats"]["format_skipped"]    = skip_format
     prog["prepare_skip_stats"]["protected_24h"]     = skip_protected
     prog["prepare_skip_stats"]["time_missing_1970"] = skip_1970
     save_json(PROGRESS_FILE, prog)
     save_json(PENDING_FILE, pending)
 
     print(f"\n✅ pending.json 已保存（{len(pending)} 条）")
-    print(f"   跳过已处理: {skip_already} | 24h保护: {skip_protected} | 1970时间: {skip_1970}")
+    print(f"   跳过已处理: {skip_already} | 格式跳过: {skip_format} | 24h保护: {skip_protected} | 1970时间: {skip_1970}")
     print(f"\n下一步（批量模式）：")
     print(f"  1. 一次读取全部 {len(pending)} 张图，输出 JSON 写入 batch_results_{batch_num_str}.json")
     print(f"  2. python tag_real.py --apply-batch")
@@ -659,6 +678,51 @@ def _worker_fn(idx, entry, pending_dict, rate_limiter):
     })
 
 
+def _scan_rejected_items() -> set:
+    """扫描所有 batch_results，返回 mimo_exhausted 失败 >= MAX_REJECT_COUNT 次的 item_id 集合"""
+    rejected = {}
+    for f in sorted(BATCHES_DIR.glob("batch_results_*.json")):
+        for entry in load_json(f, []):
+            if entry.get("failure_reason") == "mimo_exhausted":
+                iid = entry["item_id"]
+                rejected[iid] = rejected.get(iid, 0) + 1
+    return {iid for iid, cnt in rejected.items() if cnt >= MAX_REJECT_COUNT}
+
+
+def _tag_rejected_item(item_id: str) -> bool:
+    """给被 mimo 拒绝的 item 打 mimo_拒绝 标签"""
+    try:
+        info     = eagle_get(f"/item/info?id={item_id}")
+        old_tags = info.get("data", {}).get("tags", [])
+    except Exception:
+        old_tags = []
+    if REJECT_TAG in old_tags:
+        return True
+    merged = old_tags + [REJECT_TAG]
+    try:
+        resp = eagle_post("/item/update", {"id": item_id, "tags": merged})
+        return resp.get("status") == "success"
+    except Exception:
+        return False
+
+
+def _tag_unsupported_format(item_id: str, tag: str) -> bool:
+    """给不支持的格式打对应标签"""
+    try:
+        info     = eagle_get(f"/item/info?id={item_id}")
+        old_tags = info.get("data", {}).get("tags", [])
+    except Exception:
+        old_tags = []
+    if tag in old_tags:
+        return True
+    merged = old_tags + [tag]
+    try:
+        resp = eagle_post("/item/update", {"id": item_id, "tags": merged})
+        return resp.get("status") == "success"
+    except Exception:
+        return False
+
+
 def cmd_apply_batch(batch_id: str = "", batch_size: int = 0, workers: int = 5) -> None:
     t0   = time.time()
     prog = ensure_prog_fields(load_json(PROGRESS_FILE, default_prog()))
@@ -702,88 +766,173 @@ def cmd_apply_batch(batch_id: str = "", batch_size: int = 0, workers: int = 5) -
         else:
             to_process.append((i, entry))
 
+    # 过滤不支持的格式（svg/zip/mp4 等）
+    final_process = []
+    skip_format = 0
+    for i, entry in to_process:
+        ext = entry.get("ext", "").lower()
+        if ext in UNSUPPORTED_FORMATS:
+            tag = UNSUPPORTED_FORMATS[ext]
+            item_id = entry["item_id"]
+            tagged = _tag_unsupported_format(item_id, tag)
+            if item_id not in prog["processed_ids"]:
+                prog["processed_ids"].append(item_id)
+                prog["total_processed"] = prog.get("total_processed", 0) + 1
+            batch_results[item_id] = {
+                "item_id": item_id, "status": "skipped_format",
+                "failure_reason": f"unsupported_format:{ext}",
+                "processed_at": datetime.now(timezone.utc).isoformat(),
+            }
+            skip_format += 1
+            print(f"  📁 [{i}/{total}] {item_id} 格式不支持({ext})，已标记 {tag}{'✅' if tagged else '❌'}")
+        else:
+            final_process.append((i, entry))
+    if skip_format:
+        print(f"  [格式跳过] {skip_format} 个不支持的格式")
+    to_process = final_process
+
+    # 过滤 mimo 拒绝黑名单（mimo_exhausted >= MAX_REJECT_COUNT 次）
+    rejected_ids = _scan_rejected_items()
+    if rejected_ids:
+        final_process = []
+        skip_rejected = 0
+        for i, entry in to_process:
+            item_id = entry["item_id"]
+            if item_id in rejected_ids:
+                tagged = _tag_rejected_item(item_id)
+                if item_id not in prog["processed_ids"]:
+                    prog["processed_ids"].append(item_id)
+                    prog["total_processed"] = prog.get("total_processed", 0) + 1
+                batch_results[item_id] = {
+                    "item_id": item_id, "status": "skipped_rejected",
+                    "failure_reason": "mimo_exhausted_permanent",
+                    "processed_at": datetime.now(timezone.utc).isoformat(),
+                }
+                skip_rejected += 1
+                print(f"  🚫 [{i}/{total}] {item_id} mimo 拒绝黑名单，已标记 {REJECT_TAG}{'✅' if tagged else '❌'}")
+            else:
+                final_process.append((i, entry))
+        if skip_rejected:
+            print(f"  [黑名单] 跳过 {skip_rejected} 个被 mimo 拒绝的 item")
+        to_process = final_process
+
     if not to_process:
         print("  所有项均已处理，无需执行")
         return
 
     lock         = threading.Lock()
-    rate_limiter = RateLimiter(0.75)
     pending_dict = {e["item_id"]: e for e in pending}
     success_count = 0
     fail_count    = 0
     total_usage   = {"prompt_tokens": 0, "completion_tokens": 0, "cached_tokens": 0}
+    POOL_TIMEOUT  = 90  # 单任务超时秒数
 
-    print(f"\n  启动 {workers} workers，处理 {len(to_process)} 张...\n")
+    print(f"\n  启动 Pool({workers})，处理 {len(to_process)} 张（单任务超时 {POOL_TIMEOUT}s）...\n")
 
-    with ThreadPoolExecutor(max_workers=workers) as executor:
-        futures = {
-            executor.submit(_worker_fn, i, entry, pending_dict, rate_limiter): (i, entry)
-            for i, entry in to_process
-        }
-
-        for future in as_completed(futures):
-            try:
-                idx, item_id, res = future.result()
-            except Exception as e:
-                i_orig, entry_orig = futures[future]
-                item_id = entry_orig["item_id"]
-                print(f"  ❌ [{i_orig}/{total}] {item_id} worker 异常: {e}")
-                with lock:
-                    batch_results[item_id] = {
-                        "item_id": item_id, "status": "failed",
-                        "failure_reason": f"worker_exception: {e}",
-                        "failure_attempt": 1,
-                        "processed_at": datetime.now(timezone.utc).isoformat(),
-                    }
+    def _process_result(idx, item_id, res):
+        """处理一个成功的 worker 返回值。返回 ok(bool)。"""
+        nonlocal success_count, fail_count
+        if not res["ok"]:
+            prev = batch_results.get(item_id, {})
+            prev_att = prev.get("failure_attempt", 0) if prev.get("status") == "failed" else 0
+            batch_results[item_id] = {
+                "item_id": item_id, "status": "failed",
+                "failure_reason": res["reason"],
+                "failure_attempt": prev_att + 1,
+                "processed_at": datetime.now(timezone.utc).isoformat(),
+            }
+            fail_count += 1
+            print(f"  ❌ [{idx}/{total}] {item_id} mimo 失败")
+            return False
+        else:
+            tags_to_add = res["tags_to_add"]
+            ok = _apply_one(item_id, tags_to_add, [], prog, sdata,
+                            all_valid_tags, tag_version, pending_dict)
+            if ok:
+                batch_results[item_id] = {
+                    "item_id": item_id, "status": "success",
+                    "tags_to_add": tags_to_add,
+                    "raw_response": res["raw"],
+                    "usage": res["usage"],
+                    "elapsed_ms": res["elapsed_ms"],
+                    "processed_at": datetime.now(timezone.utc).isoformat(),
+                }
+                u = res["usage"]
+                total_usage["prompt_tokens"]     += u.get("prompt_tokens", 0)
+                total_usage["completion_tokens"] += u.get("completion_tokens", 0)
+                total_usage["cached_tokens"]     += u.get("cached_tokens", 0)
+                success_count += 1
+                print(f"  ✅ [{idx}/{total}] {item_id} | {len(tags_to_add)} tags | {res['elapsed_ms']}ms | "
+                      f"tokens={u.get('prompt_tokens',0)}+{u.get('completion_tokens',0)}(cached={u.get('cached_tokens',0)})")
+            else:
+                batch_results[item_id] = {
+                    "item_id": item_id, "status": "failed",
+                    "failure_reason": "eagle_write_error",
+                    "failure_attempt": 1,
+                    "processed_at": datetime.now(timezone.utc).isoformat(),
+                }
                 fail_count += 1
-                continue
+                print(f"  ❌ [{idx}/{total}] {item_id} Eagle 写回失败")
+            if ok and prog["total_processed"] % CHECKPOINT_EVERY == 0:
+                print(f"\n  [自动检查点] 已达 {prog['total_processed']} 张...")
+                save_json(SUGGESTED_FILE, sdata)
+                run_checkpoint(prog)
+            return ok
 
-            with lock:
-                if not res["ok"]:
-                    prev = batch_results.get(item_id, {})
-                    prev_att = prev.get("failure_attempt", 0) if prev.get("status") == "failed" else 0
-                    batch_results[item_id] = {
-                        "item_id": item_id, "status": "failed",
-                        "failure_reason": res["reason"],
-                        "failure_attempt": prev_att + 1,
-                        "processed_at": datetime.now(timezone.utc).isoformat(),
-                    }
-                    fail_count += 1
-                    print(f"  ❌ [{idx}/{total}] {item_id} mimo 失败")
-                else:
-                    tags_to_add = res["tags_to_add"]
-                    ok = _apply_one(item_id, tags_to_add, [], prog, sdata,
-                                    all_valid_tags, tag_version, pending_dict)
-                    if ok:
-                        batch_results[item_id] = {
-                            "item_id": item_id, "status": "success",
-                            "tags_to_add": tags_to_add,
-                            "raw_response": res["raw"],
-                            "usage": res["usage"],
-                            "elapsed_ms": res["elapsed_ms"],
-                            "processed_at": datetime.now(timezone.utc).isoformat(),
-                        }
-                        u = res["usage"]
-                        total_usage["prompt_tokens"]     += u.get("prompt_tokens", 0)
-                        total_usage["completion_tokens"] += u.get("completion_tokens", 0)
-                        total_usage["cached_tokens"]     += u.get("cached_tokens", 0)
-                        success_count += 1
-                        print(f"  ✅ [{idx}/{total}] {item_id} | {len(tags_to_add)} tags | {res['elapsed_ms']}ms | "
-                              f"tokens={u.get('prompt_tokens',0)}+{u.get('completion_tokens',0)}(cached={u.get('cached_tokens',0)})")
-                    else:
-                        batch_results[item_id] = {
-                            "item_id": item_id, "status": "failed",
-                            "failure_reason": "eagle_write_error",
-                            "failure_attempt": 1,
-                            "processed_at": datetime.now(timezone.utc).isoformat(),
-                        }
-                        fail_count += 1
-                        print(f"  ❌ [{idx}/{total}] {item_id} Eagle 写回失败")
+    remaining = list(to_process)  # [(idx, entry), ...]
+    while remaining:
+        pool = multiprocessing.Pool(processes=workers, initializer=_init_worker)
+        handles = []  # [(future, idx, entry), ...]
+        for idx, entry in remaining:
+            h = pool.apply_async(_pool_worker_fn, (idx, entry))
+            handles.append((h, idx, entry))
+        remaining = []
 
-                if ok and prog["total_processed"] % CHECKPOINT_EVERY == 0:
-                    print(f"\n  [自动检查点] 已达 {prog['total_processed']} 张...")
-                    save_json(SUGGESTED_FILE, sdata)
-                    run_checkpoint(prog)
+        for h, idx, entry in handles:
+            item_id = entry["item_id"]
+            try:
+                r_idx, r_iid, res = h.get(timeout=POOL_TIMEOUT)
+                _process_result(idx, item_id, res)
+            except multiprocessing.TimeoutError:
+                print(f"  ⏰ [{idx}/{total}] {item_id} 超时({POOL_TIMEOUT}s)，重建 Pool...")
+                _append_timeout_exception(item_id, batch_num, reason="mimo_timeout")
+                batch_results[item_id] = {
+                    "item_id": item_id, "status": "failed",
+                    "failure_reason": "mimo_timeout",
+                    "failure_attempt": 1,
+                    "processed_at": datetime.now(timezone.utc).isoformat(),
+                }
+                fail_count += 1
+                # 收集尚未 get 的剩余项
+                for h2, idx2, entry2 in handles:
+                    if h2 is h:
+                        break
+                    if not h2.ready():
+                        remaining.append((idx2, entry2))
+                # 后面的 handle 也需要重新提交（pool 已 terminate）
+                found = False
+                for h2, idx2, entry2 in handles:
+                    if found and not h2.ready():
+                        remaining.append((idx2, entry2))
+                    if h2 is h:
+                        found = True
+                pool.terminate()
+                pool.join()
+                break  # 跳出 for handles，外层 while 会用新 pool 处理 remaining
+            except Exception as e:
+                print(f"  ❌ [{idx}/{total}] {item_id} worker 异常: {e}")
+                _append_timeout_exception(item_id, batch_num, reason="mimo_error")
+                batch_results[item_id] = {
+                    "item_id": item_id, "status": "failed",
+                    "failure_reason": f"worker_exception: {e}",
+                    "failure_attempt": 1,
+                    "processed_at": datetime.now(timezone.utc).isoformat(),
+                }
+                fail_count += 1
+        else:
+            # for 正常结束（无 break）→ 关闭 pool
+            pool.close()
+            pool.join()
 
     # 批结束统一落盘
     save_json(batch_file, list(batch_results.values()))
@@ -2945,6 +3094,18 @@ def cmd_handoff_snapshot() -> None:
 
 
 # ── exceptions.json 写入 ──────────────────────────────────────────────────────
+def _append_timeout_exception(item_id: str, batch_num: int, reason: str = "mimo_timeout"):
+    """将超时/异常条目追加到 exceptions.json。"""
+    exc = load_json(EXCEPTIONS_FILE, [])
+    exc.append({
+        "id":        item_id,
+        "reason":    reason,
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "batch":     batch_num,
+        "extra":     {},
+    })
+    save_json(EXCEPTIONS_FILE, exc)
+
 def _append_exceptions(batch_results: list, batch_id: int) -> int:
     exc = load_json(EXCEPTIONS_FILE, [])
     added = 0
@@ -2952,10 +3113,11 @@ def _append_exceptions(batch_results: list, batch_id: int) -> int:
     for item in batch_results:
         if not item.get("tags_to_add"):
             exc.append({
-                "item_id":  item.get("item_id", ""),
-                "reason":   item.get("exception_reason", "极度模糊 / 占位图 / 无法归入现有体系"),
-                "batch_id": batch_id,
-                "ts":       now_iso,
+                "id":        item.get("item_id", ""),
+                "reason":    item.get("exception_reason", "vocab_mismatch"),
+                "timestamp": now_iso,
+                "batch":     batch_id,
+                "extra":     {},
             })
             added += 1
     if added:
