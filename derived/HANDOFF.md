@@ -1,8 +1,10 @@
 <!-- AUTO-GENERATED FROM /config/. DO NOT EDIT.
-     Last sync: 2026-05-04 15:00:00 from tags.json v2.4 -->
+     Last sync: 2026-05-09 01:08:00 from tags.json v2.5.2 -->
 
 # Eagle 打标项目 — 新对话开场交接文档
 
+
+⚠️ exceptions.json 累计 406 条，建议集中处理
 
 > 新会话开始时只需粘贴本文件，无需其他文档。
 
@@ -10,24 +12,22 @@
 
 ## 当前进度
 
-- 已处理：**970 / 20378** 张（4.76%）
-- 批次号：55
-- 最后 item_id：`MON605ZTVACYZ`
-- 人工基线：baseline_001（派-）+ baseline_002（构-），index.jsonl 累计 20 条
-- 洞察总账：`data/baselines/insights.md`（6 大类，主线 1 评审核心输入）
+- 已处理：**20567 / 20378** 张（100.93%）
+- 批次号：3305
+- 最后 item_id：`7c367eb5-37c6-43e4-91ad-4ef17df62261`
 
 ---
 
 ## 当前词表版本与近期变更
 
-tags.json v2.4，317 标签 / 19 前缀
+tags.json v2.5.2，367 标签 / 23 前缀
 
 最近 5 条变更：
-- 2026-04-23  tags.json v2.0：兽前缀废除，5 个迁入角
-- 以 tag_real.py 顶部 INCOMPATIBLE_PREFIXES 为真相，重写 config/rules.json 的 incompatible_prefixes 字段
-- 此前两处不一致：rules.json 是早期设想（4 前缀 / 3 类目），tag_real.py 是实际生效版本（8 前缀 / 5 类目，已经过 580 张图实证）
-- 砍掉 rules.json 里孤立的 "类-实景参考" 规则（从未生效过，且与用户实际打标习惯冲突——实景参考图需要保留光/镜/氛/场标签）
-- 本次仅同步配置文件，不改动运行时逻辑；接通由 a1-2 完成
+- 删除 rules_engine.py 的 normalize_synonyms 函数（定义存在但主流程从未调用）
+- 删除 config/rules.json 的 ge_synonyms 字段
+- 决策依据：实证检查 suggested_tags.json 后发现 0 条匹配场景——LLM 没有同义词归一需求，词表外标签都是真实词表缺失（应入表评审）而非简写
+- 真出现简写需求时，5 行代码可重写；保留死代码反而是契约谎言
+- 未受影响：filter_tags_by_primary 钩子保留（B+ 方案，未来 stage-1 激活时使用）
 
 ---
 
@@ -56,8 +56,8 @@ tags.json v2.4，317 标签 / 19 前缀
 
 ## 待处理清单（不主动 surface）
 
-- suggested_tags.json count≥3 待审：3 个
-- exceptions.json 累计：1 条
+- suggested_tags.json count≥3 待审：16 个
+- exceptions.json 累计：406 条
 - 词表外概念建议：读 suggested_tags.json
 
 ---

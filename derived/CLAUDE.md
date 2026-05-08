@@ -1,14 +1,16 @@
 <!-- AUTO-GENERATED FROM /config/. DO NOT EDIT.
-     Last sync: 2026-05-03 03:09:06 from tags.json v2.4 -->
+     Last sync: 2026-05-09 01:08:00 from tags.json v2.5.2 -->
 
 # Eagle 素材库打标 — Claude Code 启动手册
 
+
+⚠️ exceptions.json 累计 406 条，建议集中处理
 
 ## 项目身份
 
 - 用户角色：概念设计师 / 游戏美术
 - 打标意图：翻图为偷美学，不是研究 UI 功能
-- 词表版本：tags.json v2.5，366 个标签，23 个前缀
+- 词表版本：tags.json v2.5.2，367 个标签，23 个前缀
 - 库总量：20378 张
 
 ## 启动顺序（固定）
@@ -89,7 +91,7 @@ suggested 累计 count≥3 由用户决定是否升入词表。
 ## 异常上报
 
 无法归类时：tags_to_add 留空 []，不在正文写长篇解释。
-脚本自动写入 exceptions.json（当前 1 条）。
+脚本自动写入 exceptions.json（当前 406 条）。
 ⚠️ exceptions.json 累计 ≥ 20 条时强制停机。
 
 ## 输出格式
@@ -103,16 +105,4 @@ suggested 累计 count≥3 由用户决定是否升入词表。
 - 一张图只做一次视觉分析
 - 写回前脚本自动合并旧标签
 - 每 50 张自动触发检查点
-- 当前进度：970 / 20378 张
-
-## 人工基线流程
-
-```bash
-python tag_real.py --sample-baseline --focus 构-   # 抽样 10 张，生成 md + jsonl
-# 人工填写 data/baselines/baseline_NNN.md（错标/漏标/备注）
-python tag_real.py --sync-baseline 002             # 解析 md → 回写 jsonl → index.jsonl
-```
-
-- 模板 v2：无"整体"行，overall 由脚本自动推导（0错→好，1-2错无类-*→部分，≥3或含类-*→坏）
-- 洞察沉淀：`data/baselines/insights.md`，每次 sync 后人工补充
-- focus 轮换：派- → 氛- → 件- → 材- → 镜- → 构-（自动检测 index.jsonl 上次前缀）
+- 当前进度：20567 / 20378 张

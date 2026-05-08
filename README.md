@@ -4,9 +4,9 @@
 
 ## 当前状态
 
-- **词表版本**：v2.5（366 标签 / 23 前缀）
-- **已处理**：970 / 20,378 张（4.76%）
-- **架构版本**：v2.0 + a1 阶段完成（rules.json 单一真相源，前缀从 tags.json 自动派生）
+- **词表版本**：v2.5.2（367 标签 / 23 前缀）
+- **已处理**：20,567 / 20,605 张（99.82%）— 全库首轮打标完成
+- **架构版本**：v2.1 + a1 阶段完成（rules.json 单一真相源，前缀从 tags.json 自动派生）
 
 ## 标签体系
 
@@ -84,6 +84,15 @@ python tag_real.py --sync
 - **重启电脑后**：直接双击 `run.bat` 即可，run.bat 会自动清理失效的 `data/run.lock`
 - **单实例保护**：run.bat 启动时写入 PID 到 `data/run.lock`，已有循环在跑时会拒绝启动
 
+> **为什么用 `run.bat` 而不是 Claude Code 启动？**
+> run.bat 在独立 cmd 窗口运行，Claude Code 退出后循环不受影响。Claude Code 的 `run_in_background` 会在会话结束时终止子进程。
+>
+> **`run_loop.py` 是什么？**
+> `run_loop.py` 是 Python 版循环，额外提供 300s 单批超时保护（mimo API 卡死时自动跳过）。如果遇到 mimo 频繁挂起，可以用 `python run_loop.py` 替代 `run.bat`。
+>
+> **`data/run.lock` 机制：**
+> lock 文件内写入 PID。启动时检测 lock 是否存在 → 存在则检查该 PID 是否还在运行 → 还在运行则拒绝启动（防重复）；PID 已失效则自动删除 lock 并启动。进程异常退出时 lock 可能残留，重启 run.bat 会自动处理。
+
 ## 异常处理
 
 ### exceptions.json
@@ -114,6 +123,19 @@ python tag_real.py --sync
 
 - 单张图超时不影响整个 batch，超时项写入 exceptions.json 后跳过，Pool 重建继续处理剩余项
 - 历史问题与修复方案详见 [docs/BUG_LEDGER.md](docs/BUG_LEDGER.md)
+
+> **mimo_error vs mimo_timeout：**
+> - `mimo_timeout`：请求发出但 90s 内无响应，通常是中国区 API 节点波动。线程池会重建并继续处理下一张。
+> - `mimo_error`：API 返回了非超时错误（如内容安全过滤拒绝、JSON 解析失败）。部分图片因敏感内容会被 mimo 拒绝（返回统一拒绝码，非额度问题）。
+>
+> **vocab_mismatch 的处理：**
+> mimo 有时返回词表中不存在的标签。脚本会自动过滤掉这些标签，只保留词表内有效标签写入 Eagle。不会导致打标失败，只是该标签被丢弃。
+>
+> **mimo_拒绝 黑名单机制：**
+> 连续失败 5 次以上的 item 会被标记为 `mimo_拒绝` 并永久跳过，避免反复消耗 API 额度。这些通常是 mimo 内容安全过滤拒绝的图片。
+>
+> **exceptions.json 的生命周期：**
+> 跑批过程中 exceptions.json 会持续累积。当累计 ≥ 20 条时脚本会强制停机（防止无限重试）。确认无实质问题后可手动清空（`echo [] > data/exceptions.json`）继续跑批。跑批完成后建议检查并清理。
 
 ## 项目结构
 
@@ -152,6 +174,18 @@ eagle-organizer/
 - **断点恢复**：每 50 张自动检查点，支持从中断处继续
 - **限速与重试**：~80 RPM 限速，429/5xx 指数退避重试
 - **人工抽检**：支持 `--test-llm` 单张测试，结果写入 `reports/` 供审核
+
+> **为什么用 mimo 而不是其他 LLM？**
+> mimo 是小米推出的视觉模型，对中文设计素材的理解较好，且国内节点延迟低。通过 OpenAI 兼容 API 接入（`MIMO_BASE_URL`），可替换为其他兼容 API 的模型。
+>
+> **`--sync` 做了什么？**
+> 读取 `config/tags.json` + `data/progress.json` + `data/exceptions.json` 等运行时数据，自动生成/更新 `derived/` 下的 CLAUDE.md、STATE.md、HANDOFF.md。这些文件是新对话的上下文入口，确保 Claude Code 新会话能快速了解项目状态。
+>
+> **suggested_tags 机制：**
+> LLM 打标时遇到词表中没有的概念，会写入 `suggested_tags.json` 并计数。当某个建议标签累计出现 ≥ 3 次，说明该概念在素材中反复出现，值得人工评审是否升入正式词表（`config/tags.json`）。这是词表扩展的主要数据驱动方式。
+>
+> **24h 保护：**
+> 新入库的素材（modificationTime 在 24 小时内）会被跳过，等素材元数据稳定后再处理。避免处理尚未完成导入的素材。
 
 ## License
 
