@@ -79,6 +79,7 @@ python tag_real.py --sync
 ## 启动与停止
 
 - **启动**：双击 `run.bat`（独立 cmd 窗口，不要从 Claude Code 启动）
+- **启动2**：启动Claude code后让模型启动run_loop.py
 - **停止**：在 cmd 窗口按 `Ctrl+C`；或紧急情况双击 `kill_all.bat`
 - **重启电脑后**：直接双击 `run.bat` 即可，run.bat 会自动清理失效的 `data/run.lock`
 - **单实例保护**：run.bat 启动时写入 PID 到 `data/run.lock`，已有循环在跑时会拒绝启动
