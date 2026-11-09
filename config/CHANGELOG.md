@@ -1,5 +1,29 @@
 # 词表 / 规则变更日志
 
+## 2026-08-12 — 打标模式切换：mimo API 停用，改为 agent 视觉模式
+
+- mimo API key 过期且不续费（实测 `GET /v1/models` 返回 401 `Invalid API Key`），200 张批次全部
+  `AuthenticationError` → `mimo_exhausted`，0 成功；`--apply-batch` 仍打印"✅ 批量完成"并归档 pending，迷惑性极强
+- 新增 `--apply-agent <结果文件>`：把 agent 读图产出的标签写回 Eagle，不调任何 LLM API，复用
+  `_apply_one` 的词表校验 / 排异 / 旧标签合并 / 检查点逻辑
+- 新增 `scripts/make_previews.py`：把 pending 素材压成长边 640px 预览图（单张读图成本约 1.6k → 500 token）
+- 新增 `scripts/validate_agent_tags.py`：写回前校验词表合法性 + 排异冲突，并对前缀写错给出提示
+  （首次使用即拦下 `镜-全身` / `镜-半身`，正确前缀是 `角-`）
+- `derived/` 三份模板同步改写为 agent 模式入口，已知坑追加第 7 条
+- 拉黑债务处理：坏 key 产生的 `batch_results_3315.json`（200 条 mimo_exhausted）移到
+  `archive/batches/batch_results_3315.auth_failed.json`，避免累计触发 `MAX_REJECT_COUNT=5` 的
+  `mimo_拒绝` 永久跳过
+- `--apply-agent` 归档 pending 时兼容目标已存在的情况（本轮 pending 由归档恢复而来）
+- 本轮成果：批次 3315/3316 共 200 张 agent 打标写回，平均 10 标签/张，进度 20727 → 20927
+
+## 2026-05-12 — 运行态修复：缺文件异常收束 + 规则文档对齐
+
+- workflow.json 的 library_total 从 20378 修正为 20605，`derived/` 同步后进度为 20568 / 20605
+- 新增 `file_missing` 处理路径：prepare/apply-batch 在读图前识别源文件缺失，写入 processed/exception/batch_result，避免坏 item 无限重试
+- 当前坏 item `LDB3BJU429160`（Crystal.jpg）已标记为 `file_missing`，pending 从 20 条降至 19 条，331 条重复异常合并为 1 条
+- prompts/格.txt、prompts/自检.txt、prompts/排异.txt、prompts/反例.txt 对齐 v2.5.2 词表与 rules_engine.py，移除旧规则中的 `格-原神`、`题-科幻`、`类-机械设定` 等非法候选
+- 新增缺文件回归测试：`python scripts/test_missing_file_handling.py`
+
 ## 2026-05-04 — v2.5.1: 前缀重叠裁决
 
 - 删除 4 标签: 角-战士/角-平民/题-战斗/物-飞船（前缀重叠裁决，职-/载- 为语义更准确的前缀）

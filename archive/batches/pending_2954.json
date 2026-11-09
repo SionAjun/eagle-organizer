@@ -1,0 +1,354 @@
+[
+  {
+    "index": 1,
+    "item_id": "LDB3BJU429160",
+    "name": "Crystal",
+    "ext": "jpg",
+    "file_path": "D:\\杂项\\素材.library\\images\\LDB3BJU429160.info\\Crystal.jpg",
+    "existing_tags": [],
+    "modificationTime": 1674616322092
+  },
+  {
+    "index": 2,
+    "item_id": "LC8GZOBK709H0",
+    "name": "CardL1418",
+    "ext": "png",
+    "file_path": "D:\\杂项\\素材.library\\images\\LC8GZOBK709H0.info\\CardL1418.png",
+    "existing_tags": [
+      "类-道具设定",
+      "题-硬科幻",
+      "风-写实3D",
+      "材-金属-光面",
+      "色-高对比",
+      "构-对角线",
+      "镜-特写",
+      "光-边缘光",
+      "物-近战武器"
+    ],
+    "modificationTime": 1672281107651
+  },
+  {
+    "index": 3,
+    "item_id": "LC8GZOBKWMCWH",
+    "name": "CardL1419",
+    "ext": "png",
+    "file_path": "D:\\杂项\\素材.library\\images\\LC8GZOBKWMCWH.info\\CardL1419.png",
+    "existing_tags": [
+      "类-道具设定",
+      "题-剑与魔法",
+      "风-写实3D",
+      "材-金属-光面",
+      "色-暖色主导",
+      "构-对角线",
+      "镜-特写",
+      "光-高反差",
+      "物-近战武器",
+      "件-硬表面",
+      "域-陆"
+    ],
+    "modificationTime": 1672281107609
+  },
+  {
+    "index": 4,
+    "item_id": "LC8GZOBKOT8G7",
+    "name": "CardL1420",
+    "ext": "png",
+    "file_path": "D:\\杂项\\素材.library\\images\\LC8GZOBKOT8G7.info\\CardL1420.png",
+    "existing_tags": [
+      "类-道具设定",
+      "题-高科技",
+      "风-写实3D",
+      "材-金属-光面",
+      "材-发光体",
+      "色-冷色主导",
+      "构-对角线",
+      "镜-特写",
+      "光-自发光",
+      "物-近战武器",
+      "域-陆",
+      "件-硬表面",
+      "件-发光元件"
+    ],
+    "modificationTime": 1672281107603
+  },
+  {
+    "index": 5,
+    "item_id": "LC8GZOBK6OY5Z",
+    "name": "CardL1421",
+    "ext": "png",
+    "file_path": "D:\\杂项\\素材.library\\images\\LC8GZOBK6OY5Z.info\\CardL1421.png",
+    "existing_tags": [
+      "类-道具设定",
+      "题-剑与魔法",
+      "风-半写实",
+      "材-金属-光面",
+      "材-发光体",
+      "色-冷色主导",
+      "构-中心",
+      "镜-特写",
+      "光-自发光",
+      "氛-神秘",
+      "物-近战武器",
+      "件-发光元件"
+    ],
+    "modificationTime": 1672281107466
+  },
+  {
+    "index": 6,
+    "item_id": "LC8GZOBK6PK8W",
+    "name": "CardL1422",
+    "ext": "png",
+    "file_path": "D:\\杂项\\素材.library\\images\\LC8GZOBK6PK8W.info\\CardL1422.png",
+    "existing_tags": [
+      "类-道具设定",
+      "题-剑与魔法",
+      "风-卡通",
+      "材-金属-光面",
+      "色-高对比",
+      "构-中心",
+      "镜-特写",
+      "光-侧光",
+      "物-近战武器",
+      "件-硬表面"
+    ],
+    "modificationTime": 1672281107425
+  },
+  {
+    "index": 7,
+    "item_id": "LC8GZOBKY041F",
+    "name": "CardL1423",
+    "ext": "png",
+    "file_path": "D:\\杂项\\素材.library\\images\\LC8GZOBKY041F.info\\CardL1423.png",
+    "existing_tags": [
+      "类-道具设定",
+      "题-剑与魔法",
+      "风-厚涂",
+      "材-金属-光面",
+      "色-冷暖对比",
+      "构-中心",
+      "镜-特写",
+      "光-高反差",
+      "物-近战武器"
+    ],
+    "modificationTime": 1672281107194
+  },
+  {
+    "index": 8,
+    "item_id": "LC8GZOBKS6RIN",
+    "name": "CardL1424",
+    "ext": "png",
+    "file_path": "D:\\杂项\\素材.library\\images\\LC8GZOBKS6RIN.info\\CardL1424.png",
+    "existing_tags": [
+      "类-道具设定",
+      "题-剑与魔法",
+      "风-卡通",
+      "镜-特写",
+      "构-中心",
+      "物-近战武器",
+      "件-发光元件",
+      "件-硬表面",
+      "色-冷暖对比",
+      "材-金属-光面",
+      "材-发光体"
+    ],
+    "modificationTime": 1672281106982
+  },
+  {
+    "index": 9,
+    "item_id": "LC8GZOBK0KT34",
+    "name": "CardL1425",
+    "ext": "png",
+    "file_path": "D:\\杂项\\素材.library\\images\\LC8GZOBK0KT34.info\\CardL1425.png",
+    "existing_tags": [
+      "类-道具设定",
+      "题-剑与魔法",
+      "风-半写实",
+      "镜-特写",
+      "构-对角线",
+      "材-金属-光面",
+      "材-玻璃-清透",
+      "色-高饱和"
+    ],
+    "modificationTime": 1672281106785
+  },
+  {
+    "index": 10,
+    "item_id": "LC8GZOBKBIKB3",
+    "name": "CardL1432",
+    "ext": "png",
+    "file_path": "D:\\杂项\\素材.library\\images\\LC8GZOBKBIKB3.info\\CardL1432.png",
+    "existing_tags": [
+      "类-道具设定",
+      "题-中世纪",
+      "风-半写实",
+      "材-金属-光面",
+      "色-高对比",
+      "构-对角线",
+      "镜-中景",
+      "光-高反差",
+      "物-近战武器"
+    ],
+    "modificationTime": 1672281106663
+  },
+  {
+    "index": 11,
+    "item_id": "LC8GZOBKRUHGJ",
+    "name": "CardL1433",
+    "ext": "png",
+    "file_path": "D:\\杂项\\素材.library\\images\\LC8GZOBKRUHGJ.info\\CardL1433.png",
+    "existing_tags": [
+      "类-道具设定",
+      "题-剑与魔法",
+      "风-半写实",
+      "材-金属-光面",
+      "材-布料-皮革",
+      "色-高对比",
+      "构-对角线",
+      "镜-正交",
+      "光-漫反射",
+      "氛-极简",
+      "物-近战武器",
+      "件-硬表面"
+    ],
+    "modificationTime": 1672281106615
+  },
+  {
+    "index": 12,
+    "item_id": "LC8GZOBK41WK1",
+    "name": "CardL1434",
+    "ext": "png",
+    "file_path": "D:\\杂项\\素材.library\\images\\LC8GZOBK41WK1.info\\CardL1434.png",
+    "existing_tags": [
+      "类-道具设定",
+      "题-剑与魔法",
+      "风-半写实",
+      "材-金属-光面",
+      "色-冷暖对比",
+      "构-对角线",
+      "镜-特写",
+      "光-高反差",
+      "氛-极简",
+      "物-近战武器",
+      "域-陆"
+    ],
+    "modificationTime": 1672281106610
+  },
+  {
+    "index": 13,
+    "item_id": "LC8GZOBK8K0X7",
+    "name": "CardL1435",
+    "ext": "png",
+    "file_path": "D:\\杂项\\素材.library\\images\\LC8GZOBK8K0X7.info\\CardL1435.png",
+    "existing_tags": [
+      "类-道具设定",
+      "题-剑与魔法",
+      "风-半写实",
+      "镜-特写",
+      "物-近战武器",
+      "材-金属-光面",
+      "材-布料-皮革",
+      "氛-神秘",
+      "光-侧光",
+      "构-对角线"
+    ],
+    "modificationTime": 1672281106455
+  },
+  {
+    "index": 14,
+    "item_id": "LC8GZOBKSCNQA",
+    "name": "CardL1436",
+    "ext": "png",
+    "file_path": "D:\\杂项\\素材.library\\images\\LC8GZOBKSCNQA.info\\CardL1436.png",
+    "existing_tags": [
+      "类-道具设定",
+      "题-剑与魔法",
+      "风-卡通",
+      "材-金属-光面",
+      "色-冷暖对比",
+      "构-中心",
+      "镜-特写",
+      "光-自发光",
+      "氛-神秘",
+      "物-近战武器",
+      "件-发光元件"
+    ],
+    "modificationTime": 1672281106383
+  },
+  {
+    "index": 15,
+    "item_id": "LC8GZOBKADMCK",
+    "name": "CardL1437",
+    "ext": "png",
+    "file_path": "D:\\杂项\\素材.library\\images\\LC8GZOBKADMCK.info\\CardL1437.png",
+    "existing_tags": [
+      "类-道具设定",
+      "题-黑暗奇幻",
+      "风-卡通",
+      "氛-神秘",
+      "光-自发光",
+      "镜-特写",
+      "构-中心",
+      "物-配饰",
+      "材-金属-光面",
+      "材-布料-普通",
+      "色-高对比",
+      "件-发光元件"
+    ],
+    "modificationTime": 1672281106286
+  },
+  {
+    "index": 16,
+    "item_id": "LC8GZOBKAXXMD",
+    "name": "CardL1438",
+    "ext": "png",
+    "file_path": "D:\\杂项\\素材.library\\images\\LC8GZOBKAXXMD.info\\CardL1438.png",
+    "existing_tags": [
+      "类-道具设定",
+      "风-卡通",
+      "镜-特写",
+      "构-对角线",
+      "物-近战武器",
+      "材-金属-光面",
+      "色-冷暖对比",
+      "色-高饱和",
+      "代-日式"
+    ],
+    "modificationTime": 1672281106245
+  },
+  {
+    "index": 17,
+    "item_id": "LC8GZOBK8COQ2",
+    "name": "CardL1439",
+    "ext": "png",
+    "file_path": "D:\\杂项\\素材.library\\images\\LC8GZOBK8COQ2.info\\CardL1439.png",
+    "existing_tags": [],
+    "modificationTime": 1672281106092
+  },
+  {
+    "index": 18,
+    "item_id": "LC8GZOBKQ5I4U",
+    "name": "CardL1442",
+    "ext": "png",
+    "file_path": "D:\\杂项\\素材.library\\images\\LC8GZOBKQ5I4U.info\\CardL1442.png",
+    "existing_tags": [],
+    "modificationTime": 1672281106048
+  },
+  {
+    "index": 19,
+    "item_id": "LC8GZOBK787PS",
+    "name": "CardL1443",
+    "ext": "png",
+    "file_path": "D:\\杂项\\素材.library\\images\\LC8GZOBK787PS.info\\CardL1443.png",
+    "existing_tags": [],
+    "modificationTime": 1672281105905
+  },
+  {
+    "index": 20,
+    "item_id": "LC8GZOBKKO9SD",
+    "name": "CardL1472",
+    "ext": "png",
+    "file_path": "D:\\杂项\\素材.library\\images\\LC8GZOBKKO9SD.info\\CardL1472.png",
+    "existing_tags": [],
+    "modificationTime": 1672281105845
+  }
+]

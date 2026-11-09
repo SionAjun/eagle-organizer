@@ -288,6 +288,60 @@ def ensure_prog_fields(prog: dict) -> dict:
             prog[k] = v
     return prog
 
+
+def append_exception(item_id: str, batch_num: int, reason: str, extra: dict = None,
+                     dedupe: bool = False) -> None:
+    """Append a runtime exception, optionally keeping one active row per item/reason."""
+    exc = load_json(EXCEPTIONS_FILE, [])
+    extra = extra or {}
+    now_iso = datetime.now(timezone.utc).isoformat()
+    if dedupe:
+        for row in exc:
+            if row.get("id") == item_id and row.get("reason") == reason:
+                row["timestamp"] = now_iso
+                row["batch"] = batch_num
+                row["extra"] = {**row.get("extra", {}), **extra}
+                row["extra"]["seen_count"] = row["extra"].get("seen_count", 1) + 1
+                save_json(EXCEPTIONS_FILE, exc)
+                return
+    exc.append({
+        "id":        item_id,
+        "reason":    reason,
+        "timestamp": now_iso,
+        "batch":     batch_num,
+        "extra":     extra,
+    })
+    save_json(EXCEPTIONS_FILE, exc)
+
+
+def mark_exception_processed(prog: dict, item_id: str, tag_version: str,
+                             reason: str, extra: dict = None) -> bool:
+    """Mark an item as handled when it cannot be visually processed."""
+    extra = extra or {}
+    if item_id in prog.get("processed_ids", []):
+        return False
+    now_iso = datetime.now(timezone.utc).isoformat()
+    prog["processed_ids"].append(item_id)
+    prog["total_processed"] = prog.get("total_processed", 0) + 1
+    prog.setdefault("records", []).append({
+        "item_id":          item_id,
+        "tags_added":       [],
+        "tag_version":      tag_version,
+        "processed_at":     now_iso,
+        "exception_reason": reason,
+        "extra":            extra,
+    })
+    prog.setdefault("tag_version_used", {})[item_id] = tag_version
+    prog["last_run_time"] = now_iso
+    return True
+
+
+def pending_entry_path(entry: dict) -> Path:
+    if entry.get("file_path"):
+        return Path(entry["file_path"])
+    item = {**entry, "id": entry["item_id"]}
+    return resolve_path(item)
+
 # ── 全量拉取（Eagle API offset 分页失效，用大 limit 单次拉取）──
 def iter_items():
     try:
@@ -437,9 +491,10 @@ def cmd_prepare(limit: int) -> None:
         print(f"  [初始化] batch_counter 从 total_processed 推算为 {prog['batch_counter']}")
     prog["batch_counter"] = prog.get("batch_counter", 0) + 1
     batch_num_str = f"{prog['batch_counter']:03d}"
+    tag_version = _current_tags_version()
 
     # 每次 prepare 重置本轮统计
-    prog["prepare_skip_stats"]      = {"already_processed": 0, "protected_24h": 0, "time_missing_1970": 0}
+    prog["prepare_skip_stats"]      = {"already_processed": 0, "protected_24h": 0, "time_missing_1970": 0, "file_missing": 0}
     prog["apply_error_stats"]       = {"api_error": 0, "read_fail": 0}
     prog["round_tag_input"]         = 0
     prog["round_tag_in_vocab"]      = 0
@@ -451,6 +506,7 @@ def cmd_prepare(limit: int) -> None:
     skip_already   = 0
     skip_protected = 0
     skip_1970      = 0
+    skip_missing   = 0
 
     skip_format = 0
     for item in iter_items():
@@ -476,8 +532,20 @@ def cmd_prepare(limit: int) -> None:
         if mod_ms < 1000:
             skip_1970 += 1
 
-        scanned   += 1
         file_path  = resolve_path(item)
+        if not file_path.exists():
+            extra = {"path": str(file_path)}
+            append_exception(item_id, prog["batch_counter"], "file_missing", extra=extra, dedupe=True)
+            mark_exception_processed(prog, item_id, tag_version, "file_missing", extra=extra)
+            processed_set.add(item_id)
+            skip_missing += 1
+            print(f"\n[文件缺失] item_id: {item_id}")
+            print(f"      文件名: {item.get('name', '')}.{item.get('ext', '')}")
+            print(f"      路径缺失: {file_path}")
+            print("      已标记为 file_missing，跳过视觉打标")
+            continue
+
+        scanned += 1
 
         try:
             info     = eagle_get(f"/item/info?id={item_id}")
@@ -510,11 +578,12 @@ def cmd_prepare(limit: int) -> None:
     prog["prepare_skip_stats"]["format_skipped"]    = skip_format
     prog["prepare_skip_stats"]["protected_24h"]     = skip_protected
     prog["prepare_skip_stats"]["time_missing_1970"] = skip_1970
+    prog["prepare_skip_stats"]["file_missing"]      = skip_missing
     save_json(PROGRESS_FILE, prog)
     save_json(PENDING_FILE, pending)
 
     print(f"\n✅ pending.json 已保存（{len(pending)} 条）")
-    print(f"   跳过已处理: {skip_already} | 格式跳过: {skip_format} | 24h保护: {skip_protected} | 1970时间: {skip_1970}")
+    print(f"   跳过已处理: {skip_already} | 格式跳过: {skip_format} | 文件缺失: {skip_missing} | 24h保护: {skip_protected} | 1970时间: {skip_1970}")
     print(f"\n下一步（批量模式）：")
     print(f"  1. 一次读取全部 {len(pending)} 张图，输出 JSON 写入 batch_results_{batch_num_str}.json")
     print(f"  2. python tag_real.py --apply-batch")
@@ -816,7 +885,34 @@ def cmd_apply_batch(batch_id: str = "", batch_size: int = 0, workers: int = 5) -
             print(f"  [黑名单] 跳过 {skip_rejected} 个被 mimo 拒绝的 item")
         to_process = final_process
 
+    # 过滤源文件缺失的 Eagle 条目，避免同一坏引用无限进入 mimo/Pool
+    final_process = []
+    skip_missing = 0
+    for i, entry in to_process:
+        item_id = entry["item_id"]
+        file_path = pending_entry_path(entry)
+        if not file_path.exists():
+            extra = {"path": str(file_path)}
+            append_exception(item_id, batch_num, "file_missing", extra=extra, dedupe=True)
+            mark_exception_processed(prog, item_id, tag_version, "file_missing", extra=extra)
+            batch_results[item_id] = {
+                "item_id": item_id, "status": "skipped_missing_file",
+                "failure_reason": "file_missing",
+                "file_path": str(file_path),
+                "processed_at": datetime.now(timezone.utc).isoformat(),
+            }
+            skip_missing += 1
+            print(f"  🧩 [{i}/{total}] {item_id} 源文件缺失，已标记 file_missing")
+        else:
+            final_process.append((i, entry))
+    if skip_missing:
+        print(f"  [文件缺失] 跳过 {skip_missing} 个源文件不存在的 item")
+    to_process = final_process
+
     if not to_process:
+        save_json(batch_file, list(batch_results.values()))
+        save_json(SUGGESTED_FILE, sdata)
+        save_json(PROGRESS_FILE, prog)
         print("  所有项均已处理，无需执行")
         return
 
@@ -957,6 +1053,149 @@ def cmd_apply_batch(batch_id: str = "", batch_size: int = 0, workers: int = 5) -
             print(f"  [归档] pending.json 归档失败: {e}")
 
     _cleanup_dry_run_hint()
+    cmd_sync()
+
+
+# ── --apply-agent（agent 视觉模式，不走 mimo） ─────────────────────────────────
+def cmd_apply_agent(result_path: str) -> None:
+    """把 agent（Claude）读图产出的标签结果写回 Eagle。
+
+    mimo API 已停用（额度到期，不续费），视觉打标由 agent 直接完成。
+    输入文件格式与 mimo 模式的输出契约一致：
+      [{"item_id": "...", "tags_to_add": ["类-概念图", ...], "suggested": ["..."]}]
+
+    与 --apply-batch 的区别：不调任何 LLM API，只做词表校验 + 排异 + 写回 Eagle。
+    """
+    t0 = time.time()
+    src = Path(result_path)
+    if not src.is_absolute():
+        src = BASE_DIR / result_path
+    if not src.exists():
+        print(f"❌ 结果文件不存在: {src}")
+        return
+
+    entries = load_json(src, [])
+    if not isinstance(entries, list) or not entries:
+        print(f"❌ {src.name} 不是非空 JSON 数组")
+        return
+
+    pending        = load_json(PENDING_FILE, [])
+    pending_lookup = {e["item_id"]: e for e in pending}
+    if not pending_lookup:
+        print("⚠️  pending.json 为空，跳过「必须在 pending 内」校验（按 item_id 直接写回）")
+
+    prog      = ensure_prog_fields(load_json(PROGRESS_FILE, default_prog()))
+    batch_num = prog.get("batch_counter", 0)
+    batch_file = BATCHES_DIR / f"batch_results_{batch_num:03d}.json"
+    if batch_file.exists():
+        existing = load_json(batch_file, [])
+        batch_results = {r["item_id"]: r for r in existing if "item_id" in r} \
+                        if isinstance(existing, list) else existing
+        print(f"  读取 {batch_file.name}（已有 {len(batch_results)} 条）")
+    else:
+        batch_results = {}
+
+    _, all_valid_tags, tag_version = load_tags()
+    sdata = load_json(SUGGESTED_FILE, {"version": "1.1", "suggested": {}})
+
+    total    = len(entries)
+    ok_cnt   = 0
+    fail_cnt = 0
+    skip_cnt = 0
+    empty_ids = []
+
+    print(f"\n  [agent 模式] 写回 {total} 条结果（无 LLM 调用）...\n")
+
+    for i, e in enumerate(entries, 1):
+        item_id = e.get("item_id", "")
+        if not item_id:
+            print(f"  ⚠️ [{i}/{total}] 缺 item_id，跳过")
+            skip_cnt += 1
+            continue
+        if pending_lookup and item_id not in pending_lookup:
+            print(f"  ⚠️ [{i}/{total}] {item_id} 不在 pending.json，跳过")
+            skip_cnt += 1
+            continue
+
+        prev = batch_results.get(item_id)
+        if prev and prev.get("status") == "success":
+            print(f"  [{i}/{total}] {item_id} 已写回，跳过")
+            skip_cnt += 1
+            continue
+
+        tags_to_add   = e.get("tags_to_add", []) or []
+        suggested_raw = e.get("suggested", []) or []
+
+        if not tags_to_add:
+            # 无法归类 → 异常台账，不写回 Eagle，也不记为已处理
+            append_exception(item_id, batch_num, "agent_unclassified",
+                             extra={"note": e.get("note", "")}, dedupe=True)
+            batch_results[item_id] = {
+                "item_id": item_id, "status": "failed",
+                "failure_reason": "agent_unclassified",
+                "failure_attempt": 1,
+                "processed_at": datetime.now(timezone.utc).isoformat(),
+            }
+            empty_ids.append(item_id)
+            fail_cnt += 1
+            print(f"  ⚠️ [{i}/{total}] {item_id} tags_to_add 为空 → agent_unclassified")
+            continue
+
+        applied = _apply_one(item_id, tags_to_add, suggested_raw, prog, sdata,
+                             all_valid_tags, tag_version, pending_lookup)
+        if applied:
+            batch_results[item_id] = {
+                "item_id": item_id, "status": "success",
+                "tags_to_add": tags_to_add,
+                "source": "agent",
+                "processed_at": datetime.now(timezone.utc).isoformat(),
+            }
+            ok_cnt += 1
+            if prog["total_processed"] % CHECKPOINT_EVERY == 0:
+                print(f"\n  [自动检查点] 已达 {prog['total_processed']} 张...")
+                save_json(SUGGESTED_FILE, sdata)
+                run_checkpoint(prog)
+        else:
+            batch_results[item_id] = {
+                "item_id": item_id, "status": "failed",
+                "failure_reason": "eagle_write_error",
+                "failure_attempt": (prev or {}).get("failure_attempt", 0) + 1,
+                "source": "agent",
+                "processed_at": datetime.now(timezone.utc).isoformat(),
+            }
+            fail_cnt += 1
+
+    save_json(batch_file, list(batch_results.values()))
+    save_json(SUGGESTED_FILE, sdata)
+    save_json(PROGRESS_FILE, prog)
+
+    elapsed = time.time() - t0
+    print(f"\n✅ agent 写回完成：{ok_cnt} 成功 / {fail_cnt} 失败 / {skip_cnt} 跳过（共 {total} 条）")
+    print(f"   累计已处理: {prog['total_processed']} 张　耗时 {elapsed:.1f}s")
+    if empty_ids:
+        print(f"   ⚠️ 未归类（已入 exceptions.json）: {empty_ids}")
+
+    # pending 全部覆盖到了才归档，否则留着让 agent 继续补
+    done_ids   = {iid for iid, r in batch_results.items() if r.get("status") == "success"}
+    remain_ids = [e["item_id"] for e in pending if e["item_id"] not in done_ids]
+    if pending and not remain_ids:
+        BATCHES_ARCHIVE_DIR.mkdir(parents=True, exist_ok=True)
+        dst = BATCHES_ARCHIVE_DIR / f"pending_{batch_num:03d}.json"
+        try:
+            if dst.exists():
+                # 归档已存在（例如本轮 pending 就是从归档恢复的）：内容一致则直接删工作副本
+                same = load_json(dst, None) == pending
+                PENDING_FILE.unlink()
+                print(f"  [归档] archive/batches/{dst.name} 已存在"
+                      f"（内容{'一致' if same else '不一致，保留归档版'}），删除 data/pending.json")
+            else:
+                PENDING_FILE.rename(dst)
+                print(f"  [归档] pending.json → archive/batches/{dst.name}")
+        except Exception as ex:
+            print(f"  [归档] pending.json 归档失败: {ex}")
+    elif remain_ids:
+        print(f"  [保留] pending.json 还剩 {len(remain_ids)} 条未写回，暂不归档")
+
     cmd_sync()
 
 
@@ -2206,28 +2445,22 @@ def _triage_one(tags: set, ban_tags: list) -> tuple:
         return ("need", "R2", ["格-绝区零", "格-控制", "格-VA-11 HALL-A"], None, None)
     # R3
     if "题-剑与魔法" in tags and ("角-立绘" in tags or "类-角色原画" in tags):
-        return ("need", "R3", ["格-原神", "格-塞尔达王国之泪", "格-魂系"], None, None)
+        return ("need", "R3", ["格-塞尔达王国之泪", "格-魂系"], None, None)
     # R4
-    if "题-科幻" in tags and ("物-机甲" in tags or "类-机械设定" in tags):
+    if "题-硬科幻" in tags and ("物-机甲" in tags or "类-道具设定" in tags):
         return ("need", "R4", ["格-装甲核心6", "格-质量效应", "格-异形:隔离", "格-命运2"], None, None)
-    # R5（修订：加入题-后启示录）
-    if "题-末世" in tags or "题-废土" in tags or "题-后启示录" in tags:
+    # R5
+    if "题-末日废土" in tags:
         return ("need", "R5", ["格-辐射系列", "格-逃离塔科夫", "格-死亡搁浅"], None, None)
     # R6
-    if "题-恐怖" in tags or "氛-诡异" in tags:
+    if "氛-诡异" in tags or "氛-恐怖" in tags:
         return ("need", "R6", ["格-异形:隔离", "格-控制", "格-雨世界"], None, None)
     # R7
-    if "风-像素" in tags or "风-2D横版" in tags:
-        return ("need", "R7", ["格-Hades", "格-雨世界", "格-VA-11 HALL-A"], None, None)
-    # R8
-    if "题-奇幻" in tags:
-        return ("need", "R8", ["格-原神", "格-塞尔达王国之泪", "格-魂系", "格-Hades"], None, None)
-    # R9
     if "题-复古未来" in tags:
-        return ("need", "R9", ["格-辐射系列", "格-极乐迪斯科", "格-VA-11 HALL-A"], None, None)
-    # R10
+        return ("need", "R7", ["格-辐射系列", "格-极乐迪斯科", "格-VA-11 HALL-A"], None, None)
+    # R8
     if "风-日系" in tags:
-        return ("need", "R10", ["格-明日方舟", "格-原神", "格-绝区零"], None, None)
+        return ("need", "R8", ["格-明日方舟", "格-绝区零"], None, None)
     # fallback
     return ("uncertain", None, None, None, None)
 
@@ -2282,7 +2515,7 @@ def cmd_triage(dry_run: bool = False) -> None:
     print(f" skip:      {len(skip_list)} 条（无需补）")
     print(f" uncertain: {len(uncertain_list)} 条（兜底看图）")
     print(f"\n 规则命中分布:")
-    for rule_key in ["S1", "S2", "S3", "S4", "U1", "R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9", "R10"]:
+    for rule_key in ["S1", "S2", "S3", "S4", "U1", "R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8"]:
         cnt = rule_counts.get(rule_key, 0)
         if cnt:
             print(f"   {rule_key:4s}: {cnt}")
@@ -2325,7 +2558,7 @@ def _write_ge_triage_report(
             skip_samples[r] = e
 
     need_sample_md = ""
-    for rule_key in ["U1", "R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9", "R10"]:
+    for rule_key in ["U1", "R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8"]:
         if rule_key in need_samples:
             e    = need_samples[rule_key]
             cands = e.get("candidates_ge") or e.get("candidates_ban") or []
@@ -2350,7 +2583,7 @@ def _write_ge_triage_report(
             )
 
     rule_dist_rows = ""
-    for rule_key in ["S1", "S2", "S3", "S4", "U1", "R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9", "R10"]:
+    for rule_key in ["S1", "S2", "S3", "S4", "U1", "R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8"]:
         cnt = rule_counts.get(rule_key, 0)
         rule_dist_rows += f"| {rule_key} | {cnt} |\n"
     rule_dist_rows += f"| uncertain (兜底) | {rule_counts.get(None, 0)} |\n"
@@ -2392,12 +2625,12 @@ def _write_ge_triage_report(
 
 ## 四、边界情况说明
 
-- **判定顺序**：S1→S2→S3→S4→U1→R1→R2→R3→R4→R5→R6→R7→R8→R9→R10→uncertain，命中即停
-- **R3 vs R8**：题-奇幻 且含"剑与魔法+角色"条件 → R3 先命中；仅含 题-奇幻 → R8
+- **判定顺序**：S1→S2→S3→S4→U1→R1→R2→R3→R4→R5→R6→R7→R8→uncertain，命中即停
+- **R3**：题-剑与魔法 且含"角色原画/立绘"条件 → 格-塞尔达王国之泪 / 格-魂系
 - **S4**：类-游戏截图 → skip，游戏截图本身已隐含游戏归属，无需补 格-
-- **R5 修订**：加入 题-后启示录 触发条件
-- **R9**：题-复古未来 → 格-辐射系列 / 格-极乐迪斯科 / 格-VA-11 HALL-A
-- **R10**：风-日系 → 格-明日方舟 / 格-原神 / 格-绝区零
+- **R5**：题-末日废土 → 格-辐射系列 / 格-逃离塔科夫 / 格-死亡搁浅
+- **R7**：题-复古未来 → 格-辐射系列 / 格-极乐迪斯科 / 格-VA-11 HALL-A
+- **R8**：风-日系 → 格-明日方舟 / 格-绝区零
 - **U1 互斥**：含 类-UI/排版 的图只判 版-，不判 格-（UI 图游戏归属模糊）
 - **uncertain 含义**：未命中任何规则，需 Claude 看图后自由选 格- 或确认无需补
 - **image_path**：当前全部为 null，需后续 --ge-prepare 步骤填充后才能看图
@@ -2715,7 +2948,7 @@ def cmd_sync() -> None:
     if changelog_path.exists():
         lines = changelog_path.read_text(encoding="utf-8").splitlines()
         entries = [l for l in lines if l.startswith("- ")]
-        changelog_tail = "\n".join(entries[-5:])
+        changelog_tail = "\n".join(entries[:5])
 
     tags_ver    = tags_data.get("version", "unknown")
     tags_by_pfx = tags_data.get("tags", {})
@@ -2769,7 +3002,12 @@ def cmd_sync() -> None:
 2. 读 `config/tags.json`（完整词表）
 3. 读 `progress.json`（已处理 ID，打标时跳过）
 4. 读 `suggested_tags.json`（待审建议标签，先展示给用户）
-5. 按用户指示继续批量流程（prepare → 读图输出 JSON → apply-batch）
+5. 按用户指示继续批量流程（agent 视觉模式：prepare → make_previews → agent 读图输出 JSON
+   → validate_agent_tags → apply-agent）
+
+⚠️ **mimo API 已于 2026-08-12 停用**（额度过期、不续费）。`--apply-batch` / `run.bat` /
+`run_loop.py` 会全批 AuthenticationError 空转，看着像跑完实际 0 成功 —— 不要再用。
+视觉打标由 agent（你）直接读图完成。
 
 ## 标签选择优先级
 
@@ -2786,8 +3024,12 @@ def cmd_sync() -> None:
 
 ## 排异规则
 
-- 类-UI / 类-排版 / 类-实景参考：屏蔽 光/镜/氛/场 前缀
-- 类-UI / 类-排版：放行 格-/版-
+- 类-UI：屏蔽 镜/光/氛/场/构/件/载/域，放行 格-/版-
+- 类-排版：屏蔽 镜/光/氛/场/件/载/域，放行 格-/版-
+- 类-教程：屏蔽 氛-
+- 类-拆解图：屏蔽 氛-/光-
+- 类-像素画：屏蔽 材-
+- 类-实景参考：不屏蔽 光/镜/氛/场，但跳过 格- 补全
 
 ## 格- 候选缩窄规则（v2.1 词表，rules_engine.py / candidates_for_ge）
 
@@ -2838,7 +3080,7 @@ suggested 累计 count≥3 由用户决定是否升入词表。
 
 无法归类时：tags_to_add 留空 []，不在正文写长篇解释。
 脚本自动写入 exceptions.json（当前 {exc_count} 条）。
-⚠️ exceptions.json 累计 ≥ 20 条时强制停机。
+⚠️ exceptions.json 累计 ≥ 20 条时需要集中处理，避免同一异常反复消耗批次。
 
 ## 输出格式
 
@@ -2910,12 +3152,14 @@ suggested 累计 count≥3 由用户决定是否升入词表。
 
 ---
 
-## 下一步待办
+## 下一步待办（agent 视觉模式，mimo API 已停用）
 
-1. `python tag_real.py --prepare --limit {batch_size}`
-2. 读全部图，输出 JSON 写入 batch_results_NNN.json
-3. `python tag_real.py --apply-batch`
-4. 每 {chk_every} 张自动检查点
+1. `python tag_real.py --prepare --limit 200`
+2. `python scripts/make_previews.py <预览目录>`
+3. agent 读图，输出结果 JSON（可分片，每片 20 条）
+4. `python scripts/validate_agent_tags.py <结果文件>`
+5. `python tag_real.py --apply-agent <结果文件>`
+6. 每 {chk_every} 张自动检查点
 
 ---
 
@@ -2977,6 +3221,9 @@ tags.json v{tags_ver}，{total_tags} 标签 / {prefix_cnt} 前缀
 4. orderBy=-CREATEDATE 排序反了 → 去掉 orderBy
 5. btime=0 老素材 → 改用 modificationTime
 6. /api/v2/ 端点不存在 → 用 /api/ 前缀
+7. **mimo API 已停用**（2026-08-12 起）→ key 过期且不续费，`--apply-batch` 全批返回
+   AuthenticationError → mimo_exhausted，看着像"跑完了"实际 0 成功。视觉打标改由
+   agent 自己读图，走 `--apply-agent`，不要再启动 run.bat / run_loop.py
 
 ---
 
@@ -2988,19 +3235,27 @@ tags.json v{tags_ver}，{total_tags} 标签 / {prefix_cnt} 前缀
 
 ---
 
-## 下一步入口
+## 下一步入口（agent 视觉模式 — mimo 已停用，勿走 --apply-batch）
 
 ```bash
-python tag_real.py --prepare --limit {batch_size}
-# 读图，输出 batch_results_NNN.json
-python tag_real.py --apply-batch
+# 1. 取待处理素材（一次可取 200）
+python tag_real.py --prepare --limit 200
+
+# 2. 生成降采样预览图（长边 640px，省 token）
+python scripts/make_previews.py <预览目录>
+
+# 3. agent 自己读 <预览目录> 里的图，按词表输出结果 JSON：
+#    [{{"item_id": "...", "tags_to_add": ["类-概念图", ...], "suggested": ["..."]}}]
+
+# 4. 写回前先校验词表 + 排异（挡住前缀写错这类问题）
+python scripts/validate_agent_tags.py <结果文件>
+
+# 5. 写回 Eagle（不调任何 LLM API）
+python tag_real.py --apply-agent <结果文件>
 ```
 
-或用 run.bat：
-```
-run prepare {batch_size}
-run apply
-```
+结果文件可以分片（每片 20 条），`--apply-agent` 可重复调用，
+pending 全部写回后才会自动归档。
 """
 
     (DERIVED_DIR / "HANDOFF.md").write_text(handoff_md, encoding="utf-8")
@@ -3096,15 +3351,7 @@ def cmd_handoff_snapshot() -> None:
 # ── exceptions.json 写入 ──────────────────────────────────────────────────────
 def _append_timeout_exception(item_id: str, batch_num: int, reason: str = "mimo_timeout"):
     """将超时/异常条目追加到 exceptions.json。"""
-    exc = load_json(EXCEPTIONS_FILE, [])
-    exc.append({
-        "id":        item_id,
-        "reason":    reason,
-        "timestamp": datetime.now(timezone.utc).isoformat(),
-        "batch":     batch_num,
-        "extra":     {},
-    })
-    save_json(EXCEPTIONS_FILE, exc)
+    append_exception(item_id, batch_num, reason)
 
 def _append_exceptions(batch_results: list, batch_id: int) -> int:
     exc = load_json(EXCEPTIONS_FILE, [])
@@ -3132,6 +3379,8 @@ def main():
     parser.add_argument("--apply",              action="store_true", help="单张模式：写回 Eagle")
     parser.add_argument("--apply-batch",        nargs="?", const="", default=None, dest="apply_batch",
                         help="批量模式：接通 mimo 打标 + 写回 Eagle（可选 batch_id）")
+    parser.add_argument("--apply-agent",        type=str, default="", dest="apply_agent",
+                        help="agent 视觉模式：写回 agent 产出的标签结果 JSON（不调 LLM API）")
     parser.add_argument("--checkpoint",         action="store_true", help="手动触发检查点")
     parser.add_argument("--build-review-queue", action="store_true", dest="build_review_queue",
                         help="扫 progress.json，生成 review_queue.json（一次性）")
@@ -3189,6 +3438,8 @@ def main():
             cmd_ge_apply_batch(args.batch[3:], dry_run=args.dry_run)
         else:
             cmd_apply_batch(batch_id=args.apply_batch, batch_size=args.batch_size, workers=args.workers)
+    elif args.apply_agent:
+        cmd_apply_agent(args.apply_agent)
     elif args.checkpoint:
         prog = ensure_prog_fields(load_json(PROGRESS_FILE, default_prog()))
         run_checkpoint(prog, force=True)

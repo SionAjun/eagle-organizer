@@ -1,10 +1,10 @@
 <!-- AUTO-GENERATED FROM /config/. DO NOT EDIT.
-     Last sync: 2026-05-09 01:08:00 from tags.json v2.5.2 -->
+     Last sync: 2026-08-15 13:41:32 from tags.json v2.5.2 -->
 
 # Eagle 打标项目 — 新对话开场交接文档
 
 
-⚠️ exceptions.json 累计 406 条，建议集中处理
+⚠️ exceptions.json 累计 78 条，建议集中处理
 
 > 新会话开始时只需粘贴本文件，无需其他文档。
 
@@ -12,9 +12,9 @@
 
 ## 当前进度
 
-- 已处理：**20567 / 20378** 张（100.93%）
-- 批次号：3305
-- 最后 item_id：`7c367eb5-37c6-43e4-91ad-4ef17df62261`
+- 已处理：**21818 / 20605** 张（105.89%）
+- 批次号：3320
+- 最后 item_id：`MP8IULGWIWFFZ`
 
 ---
 
@@ -23,11 +23,11 @@
 tags.json v2.5.2，367 标签 / 23 前缀
 
 最近 5 条变更：
-- 删除 rules_engine.py 的 normalize_synonyms 函数（定义存在但主流程从未调用）
-- 删除 config/rules.json 的 ge_synonyms 字段
-- 决策依据：实证检查 suggested_tags.json 后发现 0 条匹配场景——LLM 没有同义词归一需求，词表外标签都是真实词表缺失（应入表评审）而非简写
-- 真出现简写需求时，5 行代码可重写；保留死代码反而是契约谎言
-- 未受影响：filter_tags_by_primary 钩子保留（B+ 方案，未来 stage-1 激活时使用）
+- mimo API key 过期且不续费（实测 `GET /v1/models` 返回 401 `Invalid API Key`），200 张批次全部
+- 新增 `--apply-agent <结果文件>`：把 agent 读图产出的标签写回 Eagle，不调任何 LLM API，复用
+- 新增 `scripts/make_previews.py`：把 pending 素材压成长边 640px 预览图（单张读图成本约 1.6k → 500 token）
+- 新增 `scripts/validate_agent_tags.py`：写回前校验词表合法性 + 排异冲突，并对前缀写错给出提示
+- `derived/` 三份模板同步改写为 agent 模式入口，已知坑追加第 7 条
 
 ---
 
@@ -51,27 +51,38 @@ tags.json v2.5.2，367 标签 / 23 前缀
 4. orderBy=-CREATEDATE 排序反了 → 去掉 orderBy
 5. btime=0 老素材 → 改用 modificationTime
 6. /api/v2/ 端点不存在 → 用 /api/ 前缀
+7. **mimo API 已停用**（2026-08-12 起）→ key 过期且不续费，`--apply-batch` 全批返回
+   AuthenticationError → mimo_exhausted，看着像"跑完了"实际 0 成功。视觉打标改由
+   agent 自己读图，走 `--apply-agent`，不要再启动 run.bat / run_loop.py
 
 ---
 
 ## 待处理清单（不主动 surface）
 
-- suggested_tags.json count≥3 待审：16 个
-- exceptions.json 累计：406 条
+- suggested_tags.json count≥3 待审：18 个
+- exceptions.json 累计：78 条
 - 词表外概念建议：读 suggested_tags.json
 
 ---
 
-## 下一步入口
+## 下一步入口（agent 视觉模式 — mimo 已停用，勿走 --apply-batch）
 
 ```bash
-python tag_real.py --prepare --limit 20
-# 读图，输出 batch_results_NNN.json
-python tag_real.py --apply-batch
+# 1. 取待处理素材（一次可取 200）
+python tag_real.py --prepare --limit 200
+
+# 2. 生成降采样预览图（长边 640px，省 token）
+python scripts/make_previews.py <预览目录>
+
+# 3. agent 自己读 <预览目录> 里的图，按词表输出结果 JSON：
+#    [{"item_id": "...", "tags_to_add": ["类-概念图", ...], "suggested": ["..."]}]
+
+# 4. 写回前先校验词表 + 排异（挡住前缀写错这类问题）
+python scripts/validate_agent_tags.py <结果文件>
+
+# 5. 写回 Eagle（不调任何 LLM API）
+python tag_real.py --apply-agent <结果文件>
 ```
 
-或用 run.bat：
-```
-run prepare 20
-run apply
-```
+结果文件可以分片（每片 20 条），`--apply-agent` 可重复调用，
+pending 全部写回后才会自动归档。

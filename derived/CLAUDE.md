@@ -1,17 +1,17 @@
 <!-- AUTO-GENERATED FROM /config/. DO NOT EDIT.
-     Last sync: 2026-05-09 01:08:00 from tags.json v2.5.2 -->
+     Last sync: 2026-08-15 13:41:32 from tags.json v2.5.2 -->
 
 # Eagle 素材库打标 — Claude Code 启动手册
 
 
-⚠️ exceptions.json 累计 406 条，建议集中处理
+⚠️ exceptions.json 累计 78 条，建议集中处理
 
 ## 项目身份
 
 - 用户角色：概念设计师 / 游戏美术
 - 打标意图：翻图为偷美学，不是研究 UI 功能
 - 词表版本：tags.json v2.5.2，367 个标签，23 个前缀
-- 库总量：20378 张
+- 库总量：20605 张
 
 ## 启动顺序（固定）
 
@@ -19,7 +19,12 @@
 2. 读 `config/tags.json`（完整词表）
 3. 读 `progress.json`（已处理 ID，打标时跳过）
 4. 读 `suggested_tags.json`（待审建议标签，先展示给用户）
-5. 按用户指示继续批量流程（prepare → 读图输出 JSON → apply-batch）
+5. 按用户指示继续批量流程（agent 视觉模式：prepare → make_previews → agent 读图输出 JSON
+   → validate_agent_tags → apply-agent）
+
+⚠️ **mimo API 已于 2026-08-12 停用**（额度过期、不续费）。`--apply-batch` / `run.bat` /
+`run_loop.py` 会全批 AuthenticationError 空转，看着像跑完实际 0 成功 —— 不要再用。
+视觉打标由 agent（你）直接读图完成。
 
 ## 标签选择优先级
 
@@ -36,8 +41,12 @@
 
 ## 排异规则
 
-- 类-UI / 类-排版 / 类-实景参考：屏蔽 光/镜/氛/场 前缀
-- 类-UI / 类-排版：放行 格-/版-
+- 类-UI：屏蔽 镜/光/氛/场/构/件/载/域，放行 格-/版-
+- 类-排版：屏蔽 镜/光/氛/场/件/载/域，放行 格-/版-
+- 类-教程：屏蔽 氛-
+- 类-拆解图：屏蔽 氛-/光-
+- 类-像素画：屏蔽 材-
+- 类-实景参考：不屏蔽 光/镜/氛/场，但跳过 格- 补全
 
 ## 格- 候选缩窄规则（v2.1 词表，rules_engine.py / candidates_for_ge）
 
@@ -91,8 +100,8 @@ suggested 累计 count≥3 由用户决定是否升入词表。
 ## 异常上报
 
 无法归类时：tags_to_add 留空 []，不在正文写长篇解释。
-脚本自动写入 exceptions.json（当前 406 条）。
-⚠️ exceptions.json 累计 ≥ 20 条时强制停机。
+脚本自动写入 exceptions.json（当前 78 条）。
+⚠️ exceptions.json 累计 ≥ 20 条时需要集中处理，避免同一异常反复消耗批次。
 
 ## 输出格式
 
@@ -105,4 +114,4 @@ suggested 累计 count≥3 由用户决定是否升入词表。
 - 一张图只做一次视觉分析
 - 写回前脚本自动合并旧标签
 - 每 50 张自动触发检查点
-- 当前进度：20567 / 20378 张
+- 当前进度：21818 / 20605 张

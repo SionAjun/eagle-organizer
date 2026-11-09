@@ -1,0 +1,1402 @@
+[
+  {
+    "item_id": "MP8J92NVK66GK",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:30:27.310329+00:00"
+  },
+  {
+    "item_id": "MQV3U8WIGP8U4",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:30:29.029932+00:00"
+  },
+  {
+    "item_id": "MQ9LQRMZV3XXR",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:30:29.163845+00:00"
+  },
+  {
+    "item_id": "MSKL8GI1NQQRP",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:30:29.163845+00:00"
+  },
+  {
+    "item_id": "MSKL8EZLJVON0",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:30:29.163845+00:00"
+  },
+  {
+    "item_id": "MSKHRWVAXNGED",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:30:31.516919+00:00"
+  },
+  {
+    "item_id": "MSKHQI9M4494A",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:30:34.037293+00:00"
+  },
+  {
+    "item_id": "MSKHPUL6R22WS",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:30:34.037293+00:00"
+  },
+  {
+    "item_id": "MSKHPRTE7CDWB",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:30:36.710809+00:00"
+  },
+  {
+    "item_id": "MSK48FY9632YO",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:30:36.710809+00:00"
+  },
+  {
+    "item_id": "MSK3WGFPG8DRC",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:30:36.710809+00:00"
+  },
+  {
+    "item_id": "MSK3W81A5G3YT",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:30:37.265013+00:00"
+  },
+  {
+    "item_id": "MSK3W2MRY5IB9",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:30:39.891179+00:00"
+  },
+  {
+    "item_id": "MSK2Y7U5FPOKR",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:30:39.891179+00:00"
+  },
+  {
+    "item_id": "MSK2XPBT6C490",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:30:40.880535+00:00"
+  },
+  {
+    "item_id": "MS0OCG4W5QE3O",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:30:41.631637+00:00"
+  },
+  {
+    "item_id": "MS0OC8K5CU9KQ",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:30:41.631637+00:00"
+  },
+  {
+    "item_id": "MS0NXC85IASMZ",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:30:42.051282+00:00"
+  },
+  {
+    "item_id": "MS0NX8RXXXH1X",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:30:43.691198+00:00"
+  },
+  {
+    "item_id": "MS0K2AF7XS12F",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:30:46.065150+00:00"
+  },
+  {
+    "item_id": "MS0K26VBBSDA8",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:30:46.065150+00:00"
+  },
+  {
+    "item_id": "MS0K1GOE7MPH5",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:30:46.065150+00:00"
+  },
+  {
+    "item_id": "MS0K12KNY1PZ0",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:30:46.065150+00:00"
+  },
+  {
+    "item_id": "MS0K0RBD8PASQ",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:30:47.604669+00:00"
+  },
+  {
+    "item_id": "MS0JZ2GAEJC39",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:30:51.204432+00:00"
+  },
+  {
+    "item_id": "MS0JYO4EJEZ4P",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:30:51.204432+00:00"
+  },
+  {
+    "item_id": "MS0JY42IX3ASD",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:30:51.204432+00:00"
+  },
+  {
+    "item_id": "MS0JXVDE71RGK",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:30:51.204432+00:00"
+  },
+  {
+    "item_id": "MS0IV16VK202L",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:30:52.534071+00:00"
+  },
+  {
+    "item_id": "MS0IMXWMF25RI",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:30:55.190189+00:00"
+  },
+  {
+    "item_id": "MS0IGUTKY5SGQ",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:30:55.190189+00:00"
+  },
+  {
+    "item_id": "MS0IDDI5QNYQD",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:30:55.190189+00:00"
+  },
+  {
+    "item_id": "MS0ICZNTS9L0O",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:30:55.225100+00:00"
+  },
+  {
+    "item_id": "MS0IA5OED6OAL",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:30:57.363394+00:00"
+  },
+  {
+    "item_id": "MS0FEQBZZSJ1P",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:30:59.698976+00:00"
+  },
+  {
+    "item_id": "MQ584Q1L99UUN",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:30:59.698976+00:00"
+  },
+  {
+    "item_id": "MS0E4TELFHB4U",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:00.061409+00:00"
+  },
+  {
+    "item_id": "MS0DEO5N9QV06",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:00.061409+00:00"
+  },
+  {
+    "item_id": "MS0DEGUF4QXCY",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:01.526613+00:00"
+  },
+  {
+    "item_id": "MRXQRNRW4Q6ET",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:03.061664+00:00"
+  },
+  {
+    "item_id": "MRXQPZHFZIYYX",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:04.523157+00:00"
+  },
+  {
+    "item_id": "MRXQP1STS2E51",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:04.523157+00:00"
+  },
+  {
+    "item_id": "MRXQOFN99YP7O",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:05.670816+00:00"
+  },
+  {
+    "item_id": "MRXQNWSZX1F25",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:07.013373+00:00"
+  },
+  {
+    "item_id": "MP2QLOI6H5YQ6",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:20.521512+00:00"
+  },
+  {
+    "item_id": "MRXQMR6KCHFL9",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:20.521512+00:00"
+  },
+  {
+    "item_id": "MRXQMPDSL9N5N",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:20.521512+00:00"
+  },
+  {
+    "item_id": "MRXQMIIF984GU",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:20.521512+00:00"
+  },
+  {
+    "item_id": "MRXPKMX4ODFZE",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:20.521512+00:00"
+  },
+  {
+    "item_id": "MPLDKNJZHB9XM",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:20.521512+00:00"
+  },
+  {
+    "item_id": "MRXP0TWL6Q28V",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:20.521512+00:00"
+  },
+  {
+    "item_id": "MRXP0RV9NUZOI",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:20.521512+00:00"
+  },
+  {
+    "item_id": "MRWBR457DPKAX",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:20.521512+00:00"
+  },
+  {
+    "item_id": "MRW5L0CK6UHDE",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:20.521512+00:00"
+  },
+  {
+    "item_id": "MRW5KYHUGJ6Y0",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:20.521512+00:00"
+  },
+  {
+    "item_id": "MRW5KX38SRT21",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:20.521512+00:00"
+  },
+  {
+    "item_id": "MRW5KTNBAZ02Z",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:21.342383+00:00"
+  },
+  {
+    "item_id": "MRW5KTLZEVXO0",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:25.907182+00:00"
+  },
+  {
+    "item_id": "MRW5JOT26HM9Q",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:25.907182+00:00"
+  },
+  {
+    "item_id": "MPIGA5UUAYAI5",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:25.907182+00:00"
+  },
+  {
+    "item_id": "MRVPVGEIVXNYI",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:26.979781+00:00"
+  },
+  {
+    "item_id": "MRVPVCCF4CZDY",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:26.979781+00:00"
+  },
+  {
+    "item_id": "MRVNO2IGIRVZ3",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:30.309374+00:00"
+  },
+  {
+    "item_id": "MRVNNRA2WU0LZ",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:31.494131+00:00"
+  },
+  {
+    "item_id": "MRVNN00GZASNE",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:31.495186+00:00"
+  },
+  {
+    "item_id": "MRUXETV7UN1PI",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:31.495186+00:00"
+  },
+  {
+    "item_id": "MRNSGXM68PCF3",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:33.291346+00:00"
+  },
+  {
+    "item_id": "MRUU7OOE1JVL8",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:33.736550+00:00"
+  },
+  {
+    "item_id": "MRUU4WD259ZGK",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:34.147324+00:00"
+  },
+  {
+    "item_id": "MRUU49Q2YSAYA",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:35.062116+00:00"
+  },
+  {
+    "item_id": "MRUU3UATKX6CL",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:36.280515+00:00"
+  },
+  {
+    "item_id": "MRUU0OIHELJJH",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:37.044099+00:00"
+  },
+  {
+    "item_id": "MRUU0GJ54XU6V",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:38.795432+00:00"
+  },
+  {
+    "item_id": "MRUTKASW7594M",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:38.795432+00:00"
+  },
+  {
+    "item_id": "MRTL81Y4QA745",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:39.159550+00:00"
+  },
+  {
+    "item_id": "MRTL1MZX2TQH9",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:44.355903+00:00"
+  },
+  {
+    "item_id": "MRTKCZOU2AMG1",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:44.355903+00:00"
+  },
+  {
+    "item_id": "MRTKGI08MH7KW",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:46.884203+00:00"
+  },
+  {
+    "item_id": "MRTKGG9SHXFK5",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:47.526242+00:00"
+  },
+  {
+    "item_id": "MRTKGEL4NJNIC",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:50.523978+00:00"
+  },
+  {
+    "item_id": "MRTKDBKECDMCF",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:50.523978+00:00"
+  },
+  {
+    "item_id": "MRTKD3G5G8O05",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:50.523978+00:00"
+  },
+  {
+    "item_id": "MRTKCSEWU9JSM",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:50.523978+00:00"
+  },
+  {
+    "item_id": "MRTK2AGGMNLOJ",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:56.148325+00:00"
+  },
+  {
+    "item_id": "MRTD1E6T21Q9D",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:56.148325+00:00"
+  },
+  {
+    "item_id": "MRTD0ORBOTYRY",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:56.148325+00:00"
+  },
+  {
+    "item_id": "MRTBJXBNVJPT4",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:56.148325+00:00"
+  },
+  {
+    "item_id": "MRQO47ALOS7TV",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:56.148325+00:00"
+  },
+  {
+    "item_id": "MRQO4LTQ920N5",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:56.161596+00:00"
+  },
+  {
+    "item_id": "MRQO4BTACGS3N",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:57.653828+00:00"
+  },
+  {
+    "item_id": "MRQNEBBVPEJMY",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:57.853277+00:00"
+  },
+  {
+    "item_id": "MRQNDQUUEPTIY",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:31:58.661438+00:00"
+  },
+  {
+    "item_id": "MRQNDPSXGOXOU",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:32:10.843341+00:00"
+  },
+  {
+    "item_id": "MRQNDE7GL3A0W",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:32:10.843341+00:00"
+  },
+  {
+    "item_id": "MRQND4INNLA96",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:32:10.843341+00:00"
+  },
+  {
+    "item_id": "MRQJNOEW2658C",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:32:10.843341+00:00"
+  },
+  {
+    "item_id": "MRQJLAWS2GNYA",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:32:10.843341+00:00"
+  },
+  {
+    "item_id": "MRQJKTX50R9P2",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:32:10.843341+00:00"
+  },
+  {
+    "item_id": "MRQJEU8YJHF1R",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:32:10.843341+00:00"
+  },
+  {
+    "item_id": "MRQJBM0TGKB0Z",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:32:10.843341+00:00"
+  },
+  {
+    "item_id": "MRQIT6FW177U4",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:32:10.843341+00:00"
+  },
+  {
+    "item_id": "MRQIGHGCLMV35",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:32:11.531331+00:00"
+  },
+  {
+    "item_id": "MRQI4T6D7S18C",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:32:12.845465+00:00"
+  },
+  {
+    "item_id": "MRQHN50S35U5J",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:32:13.540971+00:00"
+  },
+  {
+    "item_id": "MRQH8XAZLWEQ9",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:32:15.666296+00:00"
+  },
+  {
+    "item_id": "MRQGN19KA875M",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:32:20.076849+00:00"
+  },
+  {
+    "item_id": "MRQGWE9BXUOZ8",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:32:20.078371+00:00"
+  },
+  {
+    "item_id": "MRQG95QPL2UHC",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:32:20.078371+00:00"
+  },
+  {
+    "item_id": "MRQG7F0P6LQ4A",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:32:20.078371+00:00"
+  },
+  {
+    "item_id": "MRQG78J60H6BM",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:32:20.296191+00:00"
+  },
+  {
+    "item_id": "MRP86E2HGUAP2",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:32:20.296191+00:00"
+  },
+  {
+    "item_id": "MRP867NH34NHV",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:32:20.296191+00:00"
+  },
+  {
+    "item_id": "MRP865GHAF18I",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:32:37.358769+00:00"
+  },
+  {
+    "item_id": "MQKCIL5HJ9CG5",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:32:37.358769+00:00"
+  },
+  {
+    "item_id": "MRP86JSKSJFDS",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:32:37.358769+00:00"
+  },
+  {
+    "item_id": "MRP86JSK4IMZN",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:32:37.358769+00:00"
+  },
+  {
+    "item_id": "MRP6IPLF1GNBP",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:32:37.358769+00:00"
+  },
+  {
+    "item_id": "MRP6GVTERDU7G",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:32:37.358769+00:00"
+  },
+  {
+    "item_id": "MRP6GPHB0LNA6",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:32:37.358769+00:00"
+  },
+  {
+    "item_id": "MRP6G8IBXDYSD",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:32:37.358769+00:00"
+  },
+  {
+    "item_id": "MRNT60HCS4OUZ",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:32:37.358769+00:00"
+  },
+  {
+    "item_id": "MRNSXVTHE0QW0",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:32:37.358769+00:00"
+  },
+  {
+    "item_id": "MRNSJETAFVKNE",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:32:37.358769+00:00"
+  },
+  {
+    "item_id": "MRNSJA66U876R",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:32:37.358769+00:00"
+  },
+  {
+    "item_id": "MRNSJ7C466Z97",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:32:37.358769+00:00"
+  },
+  {
+    "item_id": "MRNSHII2HY90B",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:32:37.358769+00:00"
+  },
+  {
+    "item_id": "MRNSGQIU5GXKT",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:32:37.358769+00:00"
+  },
+  {
+    "item_id": "MRNSG95LAA4F5",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:32:38.853005+00:00"
+  },
+  {
+    "item_id": "MRNS5V8JV8KDQ",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:32:40.691274+00:00"
+  },
+  {
+    "item_id": "MRNQY3Q5ECNMS",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:32:44.178631+00:00"
+  },
+  {
+    "item_id": "MRNQXFH1YUIMB",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:32:44.178631+00:00"
+  },
+  {
+    "item_id": "MRNQUBXWLIRKV",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:32:44.178631+00:00"
+  },
+  {
+    "item_id": "MQV0PPRS24ZRS",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:32:44.178631+00:00"
+  },
+  {
+    "item_id": "MRNQSS30L0OU8",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:32:46.848169+00:00"
+  },
+  {
+    "item_id": "MPE6CMXWZQAEF",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:32:48.158283+00:00"
+  },
+  {
+    "item_id": "MRNQIC1RLQKNS",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:32:48.158283+00:00"
+  },
+  {
+    "item_id": "MRNQH88E8SWMI",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:32:51.549980+00:00"
+  },
+  {
+    "item_id": "MRNOFUU305FDT",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:32:51.549980+00:00"
+  },
+  {
+    "item_id": "MRNOFMSKP6CPB",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:32:52.486454+00:00"
+  },
+  {
+    "item_id": "MRNMU0EEWR1YW",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:32:52.486454+00:00"
+  },
+  {
+    "item_id": "MRNMSPY0NI9R2",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:32:52.486454+00:00"
+  },
+  {
+    "item_id": "MRLF45WY1G7XY",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:32:53.420009+00:00"
+  },
+  {
+    "item_id": "MRMETHBI0IBUF",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:32:55.422171+00:00"
+  },
+  {
+    "item_id": "MQIC48VEY7L97",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:32:56.284266+00:00"
+  },
+  {
+    "item_id": "MRKUJGYUTRJZE",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:32:56.437260+00:00"
+  },
+  {
+    "item_id": "MRKUJ251ZFOIA",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:32:57.438362+00:00"
+  },
+  {
+    "item_id": "MRKUDTRA9RS23",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:32:58.551154+00:00"
+  },
+  {
+    "item_id": "MRKUCKI1XP3KJ",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:33:01.187412+00:00"
+  },
+  {
+    "item_id": "MRKUBDOAUOVVQ",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:33:02.180719+00:00"
+  },
+  {
+    "item_id": "MRKUAJUXQFRPY",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:33:03.451709+00:00"
+  },
+  {
+    "item_id": "MRKU98ZE18N5X",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:33:03.451709+00:00"
+  },
+  {
+    "item_id": "MRKU75Y46M0OO",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:33:03.451709+00:00"
+  },
+  {
+    "item_id": "MRKU502N96LML",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:33:07.221208+00:00"
+  },
+  {
+    "item_id": "MRKU4YT9N7YZE",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:33:07.221208+00:00"
+  },
+  {
+    "item_id": "MRKU4I124S3GA",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:33:10.399247+00:00"
+  },
+  {
+    "item_id": "MRKU4H7VNXW7Z",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:33:10.876173+00:00"
+  },
+  {
+    "item_id": "MRKU3HQ0GGVXB",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:33:10.876173+00:00"
+  },
+  {
+    "item_id": "MRKU3CPXBQA6E",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:33:10.876173+00:00"
+  },
+  {
+    "item_id": "MRKU37ZDGY367",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:33:13.066619+00:00"
+  },
+  {
+    "item_id": "MRKU2IGVKB108",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:33:13.066619+00:00"
+  },
+  {
+    "item_id": "MRKTNN6ST4AC0",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:33:17.191138+00:00"
+  },
+  {
+    "item_id": "MRKTKVZO80H7C",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:33:17.191138+00:00"
+  },
+  {
+    "item_id": "MRKTHW4CITELN",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:33:20.106709+00:00"
+  },
+  {
+    "item_id": "MRKTHQTPW5QSB",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:33:20.106709+00:00"
+  },
+  {
+    "item_id": "MRKTFS95RIUER",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:33:20.106709+00:00"
+  },
+  {
+    "item_id": "MRKTFODFRYXOG",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:33:20.106709+00:00"
+  },
+  {
+    "item_id": "MRKTFLF2309HQ",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:33:21.855542+00:00"
+  },
+  {
+    "item_id": "MRKTF1ED5ED4X",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:33:21.855542+00:00"
+  },
+  {
+    "item_id": "MRKSG0GKPUXXH",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:33:23.009440+00:00"
+  },
+  {
+    "item_id": "MRKSDYHM63Y9C",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:33:23.527963+00:00"
+  },
+  {
+    "item_id": "MRJJRG7KDSWAI",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:33:25.306599+00:00"
+  },
+  {
+    "item_id": "MRJJEFUQOYMRE",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:33:25.412803+00:00"
+  },
+  {
+    "item_id": "MRJJEAHI1WDIL",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:33:27.247631+00:00"
+  },
+  {
+    "item_id": "MP8FWFLOTRGG6",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:33:27.247631+00:00"
+  },
+  {
+    "item_id": "MRALGCUDOKNU4",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:33:28.094756+00:00"
+  },
+  {
+    "item_id": "MRJJ0WXHT08M7",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:33:30.637368+00:00"
+  },
+  {
+    "item_id": "MRJJ0QHO7TVZK",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:33:30.637368+00:00"
+  },
+  {
+    "item_id": "MPY2W6WBF0EVF",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:33:35.297356+00:00"
+  },
+  {
+    "item_id": "MRJIZV67H25PK",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:33:35.297356+00:00"
+  },
+  {
+    "item_id": "MOX40EF6K4TZL",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:33:35.297356+00:00"
+  },
+  {
+    "item_id": "MRJISWHCYN4PF",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:33:35.297356+00:00"
+  },
+  {
+    "item_id": "MRJISU3GWG3HU",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:33:37.979525+00:00"
+  },
+  {
+    "item_id": "MPFOK9R8SO9V3",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:33:38.052650+00:00"
+  },
+  {
+    "item_id": "MRJIGFRU9TW5H",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:33:42.278122+00:00"
+  },
+  {
+    "item_id": "MPE4MW5384BA9",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:33:42.278122+00:00"
+  },
+  {
+    "item_id": "MRJHSYSVZND89",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:33:42.278122+00:00"
+  },
+  {
+    "item_id": "MRJEP4SOJ28V0",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:33:42.278122+00:00"
+  },
+  {
+    "item_id": "MRJENE4ZN9MD2",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:33:42.278122+00:00"
+  },
+  {
+    "item_id": "MRJEN1DNCXULE",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:33:43.050562+00:00"
+  },
+  {
+    "item_id": "MRJEK9XBH03DE",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:33:44.001318+00:00"
+  },
+  {
+    "item_id": "MPI52TQWAIYBH",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:33:47.669219+00:00"
+  },
+  {
+    "item_id": "MPB8GMOEV7AFA",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:33:47.699495+00:00"
+  },
+  {
+    "item_id": "MRI2T1ZUJS2UG",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:33:47.699495+00:00"
+  },
+  {
+    "item_id": "MRI14Y8I4APYM",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:33:47.699495+00:00"
+  },
+  {
+    "item_id": "MRI13VLWH1CPG",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:33:47.739768+00:00"
+  },
+  {
+    "item_id": "MRI10PZAINU9W",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:33:51.491831+00:00"
+  },
+  {
+    "item_id": "MRI10H4FJCU8X",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:33:51.684084+00:00"
+  },
+  {
+    "item_id": "MPSJNSDOFNWNN",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:33:56.195743+00:00"
+  },
+  {
+    "item_id": "MRHWWIWL32JLN",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:33:56.195743+00:00"
+  },
+  {
+    "item_id": "MRHWW7488W15E",
+    "status": "failed",
+    "failure_reason": "mimo_exhausted",
+    "failure_attempt": 1,
+    "processed_at": "2026-08-12T04:33:56.196742+00:00"
+  }
+]

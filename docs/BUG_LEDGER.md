@@ -1,5 +1,54 @@
 # BUG 台账
 
+## BUG-006: mimo key 失效时整批静默空转，且会把好素材拉黑
+
+- **发现日期**：2026-08-12
+- **严重性**：高（数据污染风险）
+- **现象**：`--apply-batch --size 200` 正常退出（exit 0），末尾打印 `✅ 批量完成：0 成功 / 200 失败`，
+  `pending.json` 照常归档，`derived/` 照常同步。表面上"跑完了一批"，实际一张图都没读。
+  日志开头是刷屏的 `[mimo] AuthenticationError 退避 1s/2s (attempt N/3)`。
+- **根因**：两层问题叠加
+  1. `.env` 里的 `MIMO_API_KEY` 已过期 —— 直接请求 `GET {MIMO_BASE_URL}/models` 返回
+     `401 {"message": "Invalid API Key", "type": "invalid_key"}`。认证失败走的是和"模型拒答"
+     完全相同的重试→`mimo_exhausted` 路径，脚本无法区分"key 坏了"和"这张图 mimo 不肯答"。
+  2. `_scan_rejected_items()` 统计所有 `batch_results_*.json` 里的 `mimo_exhausted` 次数，
+     达到 `MAX_REJECT_COUNT = 5` 就给 item 打 `mimo_拒绝` 标签并**永久跳过**。
+     坏 key 连跑 5 轮 → 200 张正常素材被误判为"mimo 内容安全拒绝"，写进 Eagle 且不再重试。
+- **诊断特征**（下次遇到照这个判）：
+  - 整批耗时异常短：约 1.1 秒/张（正常读图是 10~20 秒/张）
+  - `tokens: prompt=0 completion=0 cached=0` —— 根本没发生推理
+  - `batch_results_NNN.json` 里 `failure_reason` 100% 是 `mimo_exhausted`（真实拒答不会这么整齐）
+- **最终方案**：不修 mimo 链路（key 不续费了），改打标模式
+  - 新增 `--apply-agent`，视觉部分由 agent 直接读图完成，彻底绕开 LLM API
+  - 配套 `scripts/make_previews.py`（640px 预览，控 token）+ `scripts/validate_agent_tags.py`（写回前校验）
+  - 把坏 key 产生的 `batch_results_3315.json` 移出 `data/batches/`（改名
+    `archive/batches/batch_results_3315.auth_failed.json`），清掉 200 条拉黑计数
+  - README / `derived/` 三份模板 / CHANGELOG 全部标注 mimo 停用，禁止再启 `run.bat` / `run_loop.py`
+- **未修的已知缺陷**：`cmd_apply_batch` 仍然不会在跑批前做一次认证探活。若日后恢复 mimo，
+  建议在 Pool 启动前先打一次 `/models` 或 `--test-llm`，401 直接中止而不是烧 200 张的重试。
+- **涉及文件**：`tag_real.py`、`scripts/make_previews.py`、`scripts/validate_agent_tags.py`、
+  `README.md`、`config/CHANGELOG.md`、`archive/batches/batch_results_3315.auth_failed.json`
+- **验证方式**：`python scripts/validate_agent_tags.py <结果文件>` 全绿后
+  `python tag_real.py --apply-agent <结果文件>`；本轮 200 张写回后回查 Eagle API，200/200 均有标签
+
+---
+
+## BUG-005: 缺失源文件 item 反复进入 pending 并刷爆 exceptions
+
+- **发现日期**：2026-05-12
+- **严重性**：中等
+- **现象**：`LDB3BJU429160`（`Crystal.jpg`）在 `pending.json` 中反复出现，`apply-batch` 每轮进入 Pool 后报 `FileNotFoundError`，累计产生 331 条重复异常
+- **根因**：`cmd_prepare` 只根据 Eagle item 元数据生成路径，没有在入队前检查源文件是否存在；`cmd_apply_batch` 也没有在启动 mimo/Pool 前过滤缺失文件，导致文件系统错误被归类为 `mimo_error`，且该 item 没有写入 `processed_ids`
+- **最终方案**：
+  - 新增 `file_missing` 运行时异常类型
+  - `cmd_prepare` 在入队前检查 `resolve_path(item).exists()`，缺失时写入 exceptions、记录 progress，并跳过视觉打标
+  - `cmd_apply_batch` 对已有 pending 再做一次缺文件过滤，写入 `skipped_missing_file` 批次结果，不启动 Pool
+  - 将当前运行态中 `LDB3BJU429160` 标记为已处理异常，`pending.json` 从 20 条降至 19 条，331 条重复异常合并为 1 条 `file_missing`
+- **涉及文件**：`tag_real.py`、`data/progress.json`、`data/pending.json`、`data/batches/batch_results_3305.json`、`data/exceptions.json`
+- **验证方式**：`python scripts/test_missing_file_handling.py`，覆盖 prepare 和 apply-batch 两条路径
+
+---
+
 ## BUG-004: bash while + timeout 命令不杀 Python 子进程
 
 - **发现日期**：2026-05-07
