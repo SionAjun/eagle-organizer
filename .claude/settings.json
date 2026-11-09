@@ -1,13 +1,13 @@
 {
   "permissions": {
     "additionalDirectories": [
-      "D:\\杂项\\素材.library"
+      "S:\\02_Reference_参考图库\\素材.library"
     ],
     "allow": [
       "Read",
       "Glob",
       "Grep",
-      "Read(D:\\杂项\\素材.library/**)",
+      "Read(S:\\02_Reference_参考图库\\素材.library/**)",
       "Bash(ls *)",
       "Bash(find *)",
       "Bash(cat *)",

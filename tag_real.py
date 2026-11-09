@@ -60,10 +60,68 @@ MIMO_MODEL       = os.getenv("MIMO_MODEL", "mimo-v2.5")
 MIMO_TEMPERATURE = 0.3
 MIMO_TOP_P       = 0.95
 
-LIB_PATH         = Path("D:/杂项/素材.library")
+# ── 视觉打标 provider：deepseek（默认，V4.1-Flash 支持 image 输入）/ mimo（旧链路，预留）──
+VISION_PROVIDER   = os.getenv("VISION_PROVIDER") or ("deepseek" if os.getenv("DEEPSEEK_API_KEY") else "mimo")
+DEEPSEEK_API_KEY  = os.getenv("DEEPSEEK_API_KEY")
+DEEPSEEK_BASE_URL = os.getenv("DEEPSEEK_BASE_URL", "https://api.deepseek.com")
+DEEPSEEK_MODEL    = os.getenv("DEEPSEEK_MODEL", "deepseek-flash")
+DEEPSEEK_EFFORT   = os.getenv("DEEPSEEK_REASONING_EFFORT", "low")
+VISION_MAX_TOKENS = int(os.getenv("VISION_MAX_TOKENS", "3000"))
+VISION_MAX_EDGE   = int(os.getenv("VISION_MAX_EDGE", "768"))
+VISION_TIMEOUT    = float(os.getenv("VISION_TIMEOUT", "180"))
+VISION_WORKERS    = int(os.getenv("VISION_WORKERS", "4"))
+
+# 探活用 1x1 白色 JPEG（无 Pillow 时的兜底）
+_TINY_JPEG_B64 = (
+    "/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0a"
+    "HBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPDs0NDT/wAALCAABAAEBAREA/8QAFAABAQAAAAAA"
+    "AAAAAAAAAAAAAAr/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/a"
+    "AAwDAQACEQMRAD8AmgA/9k="
+)
+
+try:
+    from PIL import Image as _PILImage, ImageOps as _PILImageOps
+    _PIL_OK = True
+except Exception:  # Pillow 缺失时退回原图直传
+    _PIL_OK = False
+
+# 库路径不再硬编码：2026-10-26 素材库已从 D:\杂项 迁至 S:\02_Reference_参考图库
+# 解析顺序：环境变量 EAGLE_LIBRARY_PATH → Eagle API /library/info → config/workflow.json
+LIB_PATH_ENV    = os.getenv("EAGLE_LIBRARY_PATH", "")
+_LIB_PATH_CACHE = None
+
+
+def lib_path() -> Path:
+    """返回 Eagle 库根目录；只保留 images/ 真实存在的候选。"""
+    global _LIB_PATH_CACHE
+    if _LIB_PATH_CACHE is not None:
+        return _LIB_PATH_CACHE
+    cands = []
+    if LIB_PATH_ENV:
+        cands.append(Path(LIB_PATH_ENV))
+    try:
+        info = eagle_get("/library/info")
+        p = ((info or {}).get("data") or {}).get("library", {}).get("path")
+        if p:
+            cands.append(Path(p))
+    except Exception as e:
+        print(f"  [库路径] Eagle API 读取失败: {e}")
+    try:
+        wf_path = load_json(CONFIG_DIR / "workflow.json", {}).get("library_path")
+        if wf_path:
+            cands.append(Path(wf_path))
+    except Exception:
+        pass
+    for c in cands:
+        if (c / "images").is_dir():
+            _LIB_PATH_CACHE = c
+            return c
+    raise RuntimeError(f"无法定位 Eagle 库根目录，候选均无 images/：{[str(c) for c in cands]}")
+
+
 PAGE_LIMIT       = 25000  # Eagle API offset 分页失效，需单次大 limit 拉全量
 PROTECTION_HOURS = 24
-LIBRARY_TOTAL    = 20605
+LIBRARY_TOTAL    = 22692  # 兜底值；cmd_prepare 会用实测总数回写 config/workflow.json
 CHECKPOINT_EVERY      = 50
 COMPRESS_AFTER        = 10   # 检查点超过此数时压缩旧记录
 BATCH_SIZE            = 20
@@ -262,7 +320,7 @@ def resolve_path(item: dict) -> Path:
     item_id = item["id"]
     name    = item.get("name", item_id)
     ext     = item.get("ext", "")
-    return LIB_PATH / "images" / f"{item_id}.info" / f"{name}.{ext}"
+    return lib_path() / "images" / f"{item_id}.info" / f"{name}.{ext}"
 
 def default_prog() -> dict:
     return {
@@ -362,8 +420,38 @@ _MIME_MAP = {
     "gif":  "image/gif",
 }
 
+def _encode_image(path: Path, mime: str, max_edge: int = None) -> tuple:
+    """读图 → 长边压到 max_edge（默认 VISION_MAX_EDGE）→ 返回 (base64, mime)。
+
+    透明 PNG 先合成白底，避免 RGB 全 0 变纯黑；Pillow 不可用或处理失败时退回原图。
+    """
+    max_edge = max_edge or VISION_MAX_EDGE
+    raw = path.read_bytes()
+    if not _PIL_OK or max_edge <= 0:
+        return base64.b64encode(raw).decode("ascii"), mime
+    try:
+        import io as _io
+        with _PILImage.open(_io.BytesIO(raw)) as im:
+            im = _PILImageOps.exif_transpose(im)
+            if im.mode in ("RGBA", "LA") or (im.mode == "P" and "transparency" in im.info):
+                im = im.convert("RGBA")
+                bg = _PILImage.new("RGB", im.size, (255, 255, 255))
+                bg.paste(im, mask=im.split()[-1])
+                im = bg
+            elif im.mode not in ("RGB", "L"):
+                im = im.convert("RGB")
+            if max(im.size) > max_edge:
+                im.thumbnail((max_edge, max_edge), _PILImage.LANCZOS)
+            buf = _io.BytesIO()
+            im.convert("RGB").save(buf, format="JPEG", quality=85, optimize=True)
+            return base64.b64encode(buf.getvalue()).decode("ascii"), "image/jpeg"
+    except Exception as e:
+        print(f"  [降采样失败，用原图] {path.name}: {e}")
+        return base64.b64encode(raw).decode("ascii"), mime
+
+
 def build_messages(item: dict) -> list:
-    """装配 mimo 视觉调用的 messages（system + user）。"""
+    """装配视觉调用的 messages（system + user），provider 无关。"""
     tags_data   = load_json(TAGS_FILE, {})
     tags_by_pfx = tags_data.get("tags", {})
     tags_ver    = tags_data.get("version", "unknown")
@@ -402,11 +490,11 @@ def build_messages(item: dict) -> list:
         checkpoint_every=checkpoint_every,
     )
 
-    # 图片 base64
+    # 图片：降采样后转 base64（原图动辄几千像素，统一长边 768px 省 token）
     img_path = resolve_path(item)
     ext      = item.get("ext", "jpg").lower()
     mime     = _MIME_MAP.get(ext, "image/jpeg")
-    img_b64  = base64.b64encode(img_path.read_bytes()).decode("ascii")
+    img_b64, mime = _encode_image(img_path, mime)
 
     return [
         {"role": "system", "content": sys_text},
@@ -480,6 +568,153 @@ def call_mimo(messages: list, max_retries: int = 3):
     return None
 
 
+# ── DeepSeek 视觉打标（DeepSeek-V4.1-Flash，input_modalities 含 image）────────
+_DEEPSEEK_NO_JSON_MODE = False
+
+
+def _deepseek_client() -> OpenAI:
+    if not DEEPSEEK_API_KEY:
+        raise RuntimeError("DEEPSEEK_API_KEY 未设置（.env 或用户环境变量）")
+    return OpenAI(api_key=DEEPSEEK_API_KEY, base_url=DEEPSEEK_BASE_URL, timeout=VISION_TIMEOUT)
+
+
+def _deepseek_raw_request() -> dict:
+    """直接打 /models，用于探活。返回原始 JSON。"""
+    req = urllib.request.Request(
+        f"{DEEPSEEK_BASE_URL.rstrip('/')}/models",
+        headers={"Authorization": f"Bearer {DEEPSEEK_API_KEY}"},
+    )
+    opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
+    with opener.open(req, timeout=30) as r:
+        return json.loads(r.read().decode("utf-8"))
+
+
+def probe_vision(with_image: bool = False) -> tuple:
+    """批次前置探活。返回 (ok: bool, msg: str)。
+
+    DeepSeek 分支检查：key 是否存在 → /models 是否 200 → 目标模型是否支持 image 输入
+    →（可选）真的发一张图确认视觉链路通。BUG-006 的教训是坏 key 必须挡在批量之前。
+    """
+    provider = VISION_PROVIDER
+    if provider == "mimo":
+        if not MIMO_API_KEY:
+            return False, "VISION_PROVIDER=mimo 但 MIMO_API_KEY 为空"
+        return True, f"mimo provider（{MIMO_MODEL}），未做在线探活"
+    if provider != "deepseek":
+        return False, f"未知 VISION_PROVIDER: {provider}"
+    if not DEEPSEEK_API_KEY:
+        return False, "DEEPSEEK_API_KEY 未设置"
+    try:
+        data = _deepseek_raw_request()
+    except Exception as e:
+        return False, f"DeepSeek /models 请求失败: {e}"
+    models = {m.get("id"): m for m in data.get("data", [])}
+    if DEEPSEEK_MODEL not in models:
+        return False, f"模型 {DEEPSEEK_MODEL} 不在可用列表: {list(models)}"
+    modalities = models[DEEPSEEK_MODEL].get("input_modalities") or []
+    if "image" not in modalities:
+        return False, f"模型 {DEEPSEEK_MODEL} 不支持 image 输入（{modalities}）"
+    if not with_image:
+        return True, f"DeepSeek 就绪：{DEEPSEEK_MODEL}（image 输入已确认）"
+    # 真发一张图
+    try:
+        import io as _io
+        if _PIL_OK:
+            buf = _io.BytesIO()
+            _PILImage.new("RGB", (64, 64), (200, 60, 40)).save(buf, format="JPEG")
+            b64 = base64.b64encode(buf.getvalue()).decode("ascii")
+        else:
+            b64 = _TINY_JPEG_B64
+        res = call_deepseek([{
+            "role": "user",
+            "content": [
+                {"type": "text", "text": "这张图的主色调是什么？用 JSON 回答：{\"color\": \"...\"}"},
+                {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{b64}"}},
+            ],
+        }], max_retries=2)
+    except Exception as e:
+        return False, f"视觉探活异常: {e}"
+    if not res:
+        return False, "视觉探活无返回（认证/额度/网络问题）"
+    return True, f"DeepSeek 视觉链路可用：{DEEPSEEK_MODEL} → {res['raw'][:60]!r}"
+
+
+def call_deepseek(messages: list, max_retries: int = 3):
+    """调用 DeepSeek 视觉模型，返回 {raw, tags, usage}；重试耗尽返回 None。"""
+    global _DEEPSEEK_NO_JSON_MODE
+    try:
+        client = _deepseek_client()
+    except Exception as e:
+        print(f"  [deepseek] {e}")
+        return None
+    last_exc = None
+    max_tokens = VISION_MAX_TOKENS
+    # +1：关掉 response_format 的那一次重试不占用正常重试预算
+    for attempt in range(max_retries + 1):
+        kwargs = {
+            "model":       DEEPSEEK_MODEL,
+            "messages":    messages,
+            "max_tokens":  max_tokens,
+            "temperature": 0.2,
+        }
+        if DEEPSEEK_EFFORT:
+            kwargs["extra_body"] = {"reasoning_effort": DEEPSEEK_EFFORT}
+        if not _DEEPSEEK_NO_JSON_MODE:
+            kwargs["response_format"] = {"type": "json_object"}
+        try:
+            resp = client.chat.completions.create(**kwargs)
+            msg  = resp.choices[0].message
+            raw  = (msg.content or "").strip()
+            usage = resp.usage
+            details = getattr(usage, "prompt_tokens_details", None)
+            cached  = getattr(details, "cached_tokens", 0) or 0
+            if not raw:
+                # 推理档位吃光了 max_tokens：加倍再来一次
+                max_tokens = min(max_tokens * 2, 16000)
+                print(f"  [deepseek] 空 content（推理占满 {max_tokens//2} tokens），提到 {max_tokens} 重试")
+                continue
+            return {
+                "raw":  raw,
+                "tags": _extract_tags(raw),
+                "usage": {
+                    "prompt_tokens":     usage.prompt_tokens,
+                    "completion_tokens": usage.completion_tokens,
+                    "cached_tokens":     cached,
+                },
+            }
+        except Exception as e:
+            last_exc = e
+            text = str(e)
+            if not _DEEPSEEK_NO_JSON_MODE and "response_format" in text:
+                _DEEPSEEK_NO_JSON_MODE = True
+                print("  [deepseek] 该端点不支持 response_format=json_object，改为纯文本解析")
+                continue
+            status = getattr(e, "status_code", None)
+            if status == 401:
+                print("  [deepseek] 401 认证失败，终止本项（不写黑名单）")
+                return None
+            if status == 429 or (status is not None and status >= 500):
+                wait = 2 ** attempt
+                print(f"  [deepseek] HTTP {status} 退避 {wait}s (attempt {attempt+1}/{max_retries})")
+                time.sleep(wait)
+            elif attempt < max_retries - 1:
+                wait = 2 ** attempt
+                print(f"  [deepseek] {type(e).__name__} 退避 {wait}s (attempt {attempt+1}/{max_retries})")
+                time.sleep(wait)
+            else:
+                break
+    if last_exc:
+        print(f"  [deepseek] 重试耗尽: {last_exc}")
+    return None
+
+
+def call_vision(messages: list):
+    """按 VISION_PROVIDER 分派。"""
+    if VISION_PROVIDER == "deepseek":
+        return call_deepseek(messages)
+    return call_mimo(messages)
+
+
 # ── --prepare ─────────────────────────────────────────────────────────────────
 def cmd_prepare(limit: int) -> None:
     prog          = ensure_prog_fields(load_json(PROGRESS_FILE, default_prog()))
@@ -509,7 +744,32 @@ def cmd_prepare(limit: int) -> None:
     skip_missing   = 0
 
     skip_format = 0
-    for item in iter_items():
+
+    # ── 库路径预检（P0 防护）───────────────────────────────────────────────
+    # 路径错时绝不能把整库素材烧进 processed_ids；先确认库根 + 抽样源文件都在。
+    try:
+        lib = lib_path()
+    except Exception as e:
+        print(f"❌ 无法定位 Eagle 库路径，已中止 prepare：{e}")
+        return
+    items = list(iter_items())
+    total_items = len(items)
+    if total_items:
+        wf = load_json(CONFIG_DIR / "workflow.json", {})
+        if wf.get("library_total") != total_items or wf.get("library_path") != str(lib):
+            wf["library_total"] = total_items
+            wf["library_path"] = str(lib)
+            save_json(CONFIG_DIR / "workflow.json", wf)
+            print(f"  [库] 实测总量 {total_items}，库路径 {lib}，已回写 config/workflow.json")
+    unresolved = [it for it in items if it["id"] not in processed_set][:20]
+    missing_probe = [it for it in unresolved if not resolve_path(it).exists()]
+    if len(unresolved) >= 10 and len(missing_probe) > len(unresolved) // 2:
+        print(f"❌ 预检失败：前 {len(unresolved)} 个待处理素材中有 {len(missing_probe)} 个源文件不存在。")
+        print(f"   当前库路径: {lib}")
+        print("   疑似库路径配置错误，已中止（未写入 progress.json / pending.json）。")
+        return
+
+    for item in items:
         item_id = item["id"]
         if item_id in processed_set:
             skip_already += 1
@@ -731,10 +991,10 @@ def _worker_fn(idx, entry, pending_dict, rate_limiter):
         item = {**entry, "id": item_id}
 
     rate_limiter.acquire()
-    result = call_mimo(build_messages(item))
+    result = call_vision(build_messages(item))
 
     if result is None:
-        return (idx, item_id, {"ok": False, "reason": "mimo_exhausted"})
+        return (idx, item_id, {"ok": False, "reason": f"{VISION_PROVIDER}_exhausted"})
 
     tags_to_add = result["tags"]
     elapsed_ms = int((time.time() - worker_t0) * 1000)
@@ -794,6 +1054,14 @@ def _tag_unsupported_format(item_id: str, tag: str) -> bool:
 
 def cmd_apply_batch(batch_id: str = "", batch_size: int = 0, workers: int = 5) -> None:
     t0   = time.time()
+
+    # ── 视觉链路前置探活（BUG-006：坏 key 必须挡在批量之前）──────────────
+    ok, msg = probe_vision()
+    print(f"  [视觉 provider] {VISION_PROVIDER} | {msg}")
+    if not ok:
+        print("❌ 视觉链路探活失败，已中止批量（pending.json / progress.json 原样保留）")
+        return
+
     prog = ensure_prog_fields(load_json(PROGRESS_FILE, default_prog()))
 
     if batch_id:
@@ -938,7 +1206,7 @@ def cmd_apply_batch(batch_id: str = "", batch_size: int = 0, workers: int = 5) -
                 "processed_at": datetime.now(timezone.utc).isoformat(),
             }
             fail_count += 1
-            print(f"  ❌ [{idx}/{total}] {item_id} mimo 失败")
+            print(f"  ❌ [{idx}/{total}] {item_id} {VISION_PROVIDER} 失败")
             return False
         else:
             tags_to_add = res["tags_to_add"]
@@ -1043,17 +1311,406 @@ def cmd_apply_batch(batch_id: str = "", batch_size: int = 0, workers: int = 5) -
     print(f"   本批耗时: {elapsed:.1f}s（平均 {avg:.1f}s/张）")
     print(f"   tokens: prompt={total_usage['prompt_tokens']} completion={total_usage['completion_tokens']} cached={total_usage['cached_tokens']}")
 
-    BATCHES_ARCHIVE_DIR.mkdir(parents=True, exist_ok=True)
-    if PENDING_FILE.exists():
+    # 归档门槛：pending 里每一项都必须落地（成功/格式跳过/缺文件/黑名单），
+    # 否则保留 pending.json，让下一次运行继续补 —— 这是 BUG-006 的教训。
+    done_states = {"success", "skipped_format", "skipped_missing_file", "skipped_rejected"}
+    remain = [e["item_id"] for e in pending
+              if batch_results.get(e["item_id"], {}).get("status") not in done_states]
+    if success_count == 0 and fail_count > 0:
+        print("⚠️ 本批 0 成功且全部失败：疑似认证/额度/网络问题。"
+              "pending.json 已保留，未归档，未写任何黑名单。")
+    elif remain:
+        print(f"  [保留] pending.json 还有 {len(remain)} 条未落地，暂不归档")
+    else:
+        BATCHES_ARCHIVE_DIR.mkdir(parents=True, exist_ok=True)
+        if PENDING_FILE.exists():
+            try:
+                dst = BATCHES_ARCHIVE_DIR / f"pending_{batch_num:03d}.json"
+                PENDING_FILE.rename(dst)
+                print(f"  [归档] pending.json → archive/batches/{dst.name}")
+            except Exception as e:
+                print(f"  [归档] pending.json 归档失败: {e}")
+
+    # 自动晋升：跑完一批就把 count 达标的 suggested 收进词表（AUTO_PROMOTE=0 可关）
+    if os.getenv("AUTO_PROMOTE", "1") == "1":
         try:
-            dst = BATCHES_ARCHIVE_DIR / f"pending_{batch_num:03d}.json"
-            PENDING_FILE.rename(dst)
-            print(f"  [归档] pending.json → archive/batches/{dst.name}")
+            promote_suggested(auto=True)
         except Exception as e:
-            print(f"  [归档] pending.json 归档失败: {e}")
+            print(f"  [晋升] 自动晋升异常（不影响本批写回）: {e}")
 
     _cleanup_dry_run_hint()
     cmd_sync()
+
+
+# ── 线程版批量（可观测、逐条落盘，替代 multiprocessing.Pool）──────────────────
+def cmd_apply_batch_threaded(batch_id: str = "", batch_size: int = 0, workers: int = 4) -> None:
+    """DeepSeek/mimo 视觉打标：线程池并发 + 逐条打印 + 逐条落盘。
+
+    与 cmd_apply_batch 的区别：
+      - 不用 multiprocessing（Windows 上孤儿进程、90s 假超时、输出全缓冲，2026-11-09 实测卡死）
+      - 每条完成立刻写 batch_results，日志带 flush，随时可看进度
+      - HTTP 客户端自带 VISION_TIMEOUT，单条不会无限挂
+    """
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+
+    t0 = time.time()
+    ok, msg = probe_vision()
+    print(f"  [视觉 provider] {VISION_PROVIDER} | {msg}", flush=True)
+    if not ok:
+        print("❌ 视觉链路探活失败，已中止（pending / progress 原样保留）", flush=True)
+        return
+
+    prog = ensure_prog_fields(load_json(PROGRESS_FILE, default_prog()))
+    batch_num = int(batch_id) if batch_id else prog.get("batch_counter", 0)
+    batch_file = BATCHES_DIR / f"batch_results_{batch_num:03d}.json"
+
+    if batch_file.exists():
+        existing = load_json(batch_file, [])
+        batch_results = {r["item_id"]: r for r in existing if "item_id" in r} \
+            if isinstance(existing, list) else existing
+        print(f"  读取 {batch_file.name}（已有 {len(batch_results)} 条）", flush=True)
+    else:
+        batch_results = {}
+
+    pending = load_json(PENDING_FILE, [])
+    if not pending:
+        print("❌ pending.json 为空，请先 --prepare", flush=True)
+        return
+    limit = batch_size if batch_size > 0 else BATCH_SIZE
+    pending = pending[:limit]
+
+    _, all_valid_tags, tag_version = load_tags()
+    sdata = load_json(SUGGESTED_FILE, {"version": "1.1", "suggested": {}})
+    done_states = {"success", "skipped_format", "skipped_missing_file", "skipped_rejected"}
+
+    # 预过滤：已完成 / 不支持格式 / 源文件缺失
+    todo = []
+    skip_cnt = 0
+    for i, entry in enumerate(pending, 1):
+        iid = entry["item_id"]
+        if batch_results.get(iid, {}).get("status") in done_states:
+            skip_cnt += 1
+            continue
+        ext = entry.get("ext", "").lower()
+        if ext in UNSUPPORTED_FORMATS:
+            tag = UNSUPPORTED_FORMATS[ext]
+            _tag_unsupported_format(iid, tag)
+            if iid not in prog["processed_ids"]:
+                prog["processed_ids"].append(iid)
+                prog["total_processed"] += 1
+            batch_results[iid] = {"item_id": iid, "status": "skipped_format",
+                                  "failure_reason": f"unsupported_format:{ext}",
+                                  "processed_at": datetime.now(timezone.utc).isoformat()}
+            skip_cnt += 1
+            print(f"  📁 [{i}/{len(pending)}] {iid} 格式不支持({ext}) → {tag}", flush=True)
+            continue
+        fp = pending_entry_path(entry)
+        if not fp.exists():
+            extra = {"path": str(fp)}
+            append_exception(iid, batch_num, "file_missing", extra=extra, dedupe=True)
+            mark_exception_processed(prog, iid, tag_version, "file_missing", extra=extra)
+            batch_results[iid] = {"item_id": iid, "status": "skipped_missing_file",
+                                  "failure_reason": "file_missing", "file_path": str(fp),
+                                  "processed_at": datetime.now(timezone.utc).isoformat()}
+            skip_cnt += 1
+            print(f"  🧩 [{i}/{len(pending)}] {iid} 源文件缺失 → file_missing", flush=True)
+            continue
+        todo.append(entry)
+
+    print(f"  待打标 {len(todo)} 条（跳过 {skip_cnt}），线程 {workers}，"
+          f"模型 {DEEPSEEK_MODEL if VISION_PROVIDER == 'deepseek' else MIMO_MODEL}", flush=True)
+    save_json(batch_file, list(batch_results.values()))
+
+    success = fail = 0
+    usage_total = {"prompt_tokens": 0, "completion_tokens": 0, "cached_tokens": 0}
+    lock = threading.Lock()
+
+    def _work(entry):
+        item = {**entry, "id": entry["item_id"]}
+        messages = build_messages(item)
+        res = call_vision(messages)
+        if res is not None and not res.get("tags"):
+            # 空标签多为模型抖动（推理吃光/截断），同一条再试一次
+            print(f"  [重试] {entry['item_id']} 返回空标签，再打一次", flush=True)
+            res2 = call_vision(messages)
+            if res2 is not None and res2.get("tags"):
+                return res2
+        return res
+
+    if todo:
+        with ThreadPoolExecutor(max_workers=max(1, workers)) as ex:
+            futures = {ex.submit(_work, e): e for e in todo}
+            total = len(todo)
+            for idx, fut in enumerate(as_completed(futures), 1):
+                entry = futures[fut]
+                iid = entry["item_id"]
+                try:
+                    res = fut.result()
+                except Exception as exc:
+                    res = None
+                    print(f"  ⚠️ [{idx}/{total}] {iid} 异常: {exc}", flush=True)
+                if not res:
+                    prev = batch_results.get(iid, {})
+                    att = prev.get("failure_attempt", 0) + 1 if prev.get("status") == "failed" else 1
+                    batch_results[iid] = {"item_id": iid, "status": "failed",
+                                          "failure_reason": f"{VISION_PROVIDER}_error",
+                                          "failure_attempt": att,
+                                          "processed_at": datetime.now(timezone.utc).isoformat()}
+                    fail += 1
+                    print(f"  ❌ [{idx}/{total}] {iid} 调用失败（第 {att} 次）", flush=True)
+                else:
+                    tags_to_add = res["tags"]
+                    applied = _apply_one(iid, tags_to_add, [], prog, sdata,
+                                         all_valid_tags, tag_version,
+                                         {e["item_id"]: e for e in pending})
+                    if applied and not tags_to_add:
+                        append_exception(iid, batch_num, "agent_unclassified",
+                                         extra={"note": "模型连续返回空标签"}, dedupe=True)
+                    if applied:
+                        batch_results[iid] = {"item_id": iid, "status": "success",
+                                              "tags_to_add": tags_to_add,
+                                              "raw_response": res["raw"][:2000],
+                                              "usage": res["usage"],
+                                              "source": VISION_PROVIDER,
+                                              "processed_at": datetime.now(timezone.utc).isoformat()}
+                        for k in usage_total:
+                            usage_total[k] += res["usage"].get(k, 0)
+                        success += 1
+                        print(f"  ✅ [{idx}/{total}] {iid} | {len(tags_to_add)} tags | "
+                              f"cached={res['usage'].get('cached_tokens', 0)}", flush=True)
+                    else:
+                        batch_results[iid] = {"item_id": iid, "status": "failed",
+                                              "failure_reason": "eagle_write_error",
+                                              "failure_attempt": 1,
+                                              "processed_at": datetime.now(timezone.utc).isoformat()}
+                        fail += 1
+                        print(f"  ❌ [{idx}/{total}] {iid} Eagle 写回失败", flush=True)
+
+                # 逐条落盘（崩溃也不丢），每 10 条存一次 progress
+                save_json(batch_file, list(batch_results.values()))
+                if idx % 10 == 0:
+                    save_json(PROGRESS_FILE, prog)
+                    save_json(SUGGESTED_FILE, sdata)
+                if prog["total_processed"] % CHECKPOINT_EVERY == 0:
+                    print(f"  [自动检查点] {prog['total_processed']} 张", flush=True)
+                    run_checkpoint(prog)
+
+    save_json(batch_file, list(batch_results.values()))
+    save_json(SUGGESTED_FILE, sdata)
+    save_json(PROGRESS_FILE, prog)
+
+    remain = [e["item_id"] for e in pending
+              if batch_results.get(e["item_id"], {}).get("status") not in done_states]
+    if success == 0 and fail > 0:
+        print("⚠️ 本批 0 成功：疑似认证/额度/网络问题，pending.json 保留、不写黑名单", flush=True)
+    elif remain:
+        print(f"  [保留] pending 还有 {len(remain)} 条未落地，暂不归档", flush=True)
+    else:
+        BATCHES_ARCHIVE_DIR.mkdir(parents=True, exist_ok=True)
+        if PENDING_FILE.exists():
+            try:
+                dst = BATCHES_ARCHIVE_DIR / f"pending_{batch_num:03d}.json"
+                PENDING_FILE.rename(dst)
+                print(f"  [归档] pending.json → archive/batches/{dst.name}", flush=True)
+            except Exception as e:
+                print(f"  [归档] 失败: {e}", flush=True)
+
+    elapsed = time.time() - t0
+    print(f"\n✅ 本批完成：{success} 成功 / {fail} 失败 / {skip_cnt} 跳过，耗时 {elapsed/60:.1f} 分钟", flush=True)
+    print(f"   tokens: prompt={usage_total['prompt_tokens']} completion={usage_total['completion_tokens']} "
+          f"cached={usage_total['cached_tokens']}", flush=True)
+
+    if os.getenv("AUTO_PROMOTE", "1") == "1":
+        try:
+            promote_suggested(auto=True)
+        except Exception as e:
+            print(f"  [晋升] 自动晋升异常（不影响写回）: {e}", flush=True)
+
+    _cleanup_dry_run_hint()
+    cmd_sync()
+
+
+# ── 建议标签自动晋升（suggested → tags.json）──────────────────────────────────
+PROMOTE_THRESHOLD = int(os.getenv("PROMOTE_THRESHOLD", "3"))
+SUGGESTED_ARCHIVE_DIR = BASE_DIR / "archive" / "suggested"
+
+# 明确不晋升：被既有裁决否掉，或应当走同义词映射而不是新增标签
+PROMOTE_BLOCKLIST = {
+    "题-战斗": "v2.5.1 已裁决删除（与 氛-战斗 / 姿-战斗 维度冲突），不再进表",
+    "题-末世": "已有 题-末日废土，不得造近义重复",
+    # 格-原神：2026-11-09 由 1726 次累计投为正式词表（官方中文名，格- 为首要检索维度）
+}
+# 旧词表/错前缀 → 目标标签（目标必须已在词表中，命中则只映射不新增）
+PROMOTE_REMAP = {
+    "物-现实动物": "角-现实动物",
+    "物-摩托": "载-摩托",
+    "物-飞船": "载-飞船",
+    "角-战士": "职-战士",
+    "角-平民": "职-平民",
+    "风-黑魂": "格-魂系",
+}
+
+
+def promote_suggested(auto: bool = False) -> dict:
+    """把 suggested_tags.json 里 count>=阈值 的候选按规则晋升进 tags.json。
+
+    规则：
+      1. 已存在同名词表标签 → 直接吸收（不新增）
+      2. 命中 PROMOTE_REMAP → 记录映射，不新增（避免前缀错位/近义重复）
+      3. 命中 PROMOTE_BLOCKLIST → 拒绝并留档（等用户改判）
+      4. 前缀不存在于词表 → 拒绝（不许凭空造前缀）
+      5. 其余 → 进表，experimental=True，hit_count=0
+    返回 {promoted, absorbed, remapped, rejected, skipped}。
+    """
+    tags_data = load_json(TAGS_FILE, {})
+    sdata     = load_json(SUGGESTED_FILE, {"version": "1.1", "suggested": {}})
+    sugg      = sdata.get("suggested", {})
+    by_pfx    = tags_data.get("tags", {})
+    existing  = {_tag_name(t) for v in by_pfx.values() for t in v}
+
+    candidates = [(name, meta) for name, meta in sugg.items()
+                  if (meta.get("count") or 0) >= PROMOTE_THRESHOLD]
+    if not candidates:
+        print(f"  [晋升] 没有 count>={PROMOTE_THRESHOLD} 的候选")
+        return {"promoted": [], "absorbed": [], "remapped": [], "rejected": [], "skipped": []}
+
+    result = {"promoted": [], "absorbed": [], "remapped": [], "rejected": [], "skipped": []}
+    consumed = []
+
+    for name, meta in sorted(candidates, key=lambda x: -(x[1].get("count") or 0)):
+        cnt = meta.get("count", 0)
+        if name in existing:
+            result["absorbed"].append(name)
+            consumed.append(name)
+            continue
+        if name in PROMOTE_BLOCKLIST:
+            reason = PROMOTE_BLOCKLIST[name]
+            if reason == "PENDING-USER-DECISION":
+                # 留给你拍板：不晋升也不消耗，继续挂在待审里
+                result["skipped"].append(name)
+                continue
+            result["rejected"].append((name, cnt, reason))
+            consumed.append(name)
+            continue
+        if name in PROMOTE_REMAP:
+            tgt = PROMOTE_REMAP[name]
+            if tgt in existing:
+                result["remapped"].append((name, tgt, cnt))
+                consumed.append(name)
+                continue
+        prefix_key = name.split("-", 1)[0]        # tags.json 的 key 不带 "-"
+        if prefix_key not in by_pfx:
+            result["rejected"].append((name, cnt, f"词表无此前缀 {prefix_key}-"))
+            consumed.append(name)
+            continue
+        if "-" not in name or len(name) < 3:
+            result["rejected"].append((name, cnt, "标签格式非法"))
+            consumed.append(name)
+            continue
+        by_pfx[prefix_key].append({
+            "name": name,
+            "applies_to": ["全图"],
+            "experimental": True,
+            "hit_count": 0,
+            "scope_count": 0,
+            "promoted_from": "suggested",
+            "promoted_count": cnt,
+            "promoted_at": datetime.now().strftime("%Y-%m-%d"),
+        })
+        existing.add(name)
+        result["promoted"].append((name, cnt))
+        consumed.append(name)
+
+    # 总结
+    print(f"  [晋升] 入表 {len(result['promoted'])} / 吸收 {len(result['absorbed'])} / "
+          f"映射 {len(result['remapped'])} / 拒绝 {len(result['rejected'])}")
+    for n, c in result["promoted"]:
+        print(f"    + {n}  (count={c})")
+    for n, c, r in result["rejected"]:
+        print(f"    - {n}  (count={c}) → {r}")
+    for n, t, c in result["remapped"]:
+        print(f"    ~ {n} → {t}  (count={c})")
+
+    if not result["promoted"] and not result["absorbed"] and not result["remapped"]:
+        return result
+
+    # 版本号：新增标签 → minor +1
+    old_ver = tags_data.get("version", "2.5.2")
+    if result["promoted"]:
+        parts = [int(x) if x.isdigit() else 0 for x in old_ver.split(".")]
+        while len(parts) < 3:
+            parts.append(0)
+        new_ver = f"{parts[0]}.{parts[1] + 1}.0"
+    else:
+        new_ver = old_ver
+    tags_data["version"] = new_ver
+
+    today = datetime.now().strftime("%Y-%m-%d")
+    changes = [f"自动晋升 {len(result['promoted'])} 个标签（阈值 count>={PROMOTE_THRESHOLD}）"]
+    changes += [f"+ {n}（count={c}）" for n, c in result["promoted"]]
+    if result["absorbed"]:
+        changes.append("已存在同名词表标签，直接吸收：" + "、".join(result["absorbed"]))
+    if result["remapped"]:
+        changes.append("同义词映射（不新增）：" + "、".join(f"{n}→{t}" for n, t, _ in result["remapped"]))
+    if result["rejected"]:
+        changes.append("拒绝：" + "、".join(f"{n}({r})" for n, _, r in result["rejected"]))
+    changes.append(f"合计 {sum(len(v) for v in by_pfx.values())} 标签 / {len(by_pfx)} 前缀")
+    tags_data.setdefault("changelog", []).insert(0, {
+        "version": new_ver,
+        "date": today,
+        "changes": changes,
+    })
+    save_json(TAGS_FILE, tags_data)
+
+    # CHANGELOG.md 追加
+    try:
+        changelog_md = CONFIG_DIR / "CHANGELOG.md"
+        head = changelog_md.read_text(encoding="utf-8")
+        marker = "# 词表 / 规则变更日志"
+        entry = f"\n## {today} — suggested 自动晋升（v{new_ver}）\n\n"
+        entry += "\n".join(f"- {c}" for c in changes) + "\n"
+        body = head.replace(marker, marker + "\n" + entry, 1)
+        changelog_md.write_text(body, encoding="utf-8")
+    except Exception as e:
+        print(f"  [晋升] CHANGELOG.md 写入失败: {e}")
+
+    # 从 suggested 移除已处理项，其余保留
+    for name in consumed:
+        sugg.pop(name, None)
+    save_json(SUGGESTED_FILE, sdata)
+
+    SUGGESTED_ARCHIVE_DIR.mkdir(parents=True, exist_ok=True)
+    arch = SUGGESTED_ARCHIVE_DIR / f"promoted_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+    save_json(arch, {"version": new_ver, "date": today, "result": {
+        "promoted": result["promoted"], "absorbed": result["absorbed"],
+        "remapped": result["remapped"],
+        "rejected": [[n, c, r] for n, c, r in result["rejected"]],
+    }})
+
+    # pending_review.md 重新生成
+    write_pending_review(sdata)
+    return result
+
+
+def write_pending_review(sdata: dict) -> None:
+    """按 count>=阈值 重写 data/pending_review.md。"""
+    rows = [(n, m) for n, m in sdata.get("suggested", {}).items()
+            if (m.get("count") or 0) >= PROMOTE_THRESHOLD]
+    rows.sort(key=lambda x: -(x[1].get("count") or 0))
+    lines = [f"# 待审标签（count>={PROMOTE_THRESHOLD}）", "",
+             f"生成时间：{datetime.now().strftime('%Y-%m-%d %H:%M')}", ""]
+    for name, meta in rows:
+        lines += [
+            f"## `{name}`", "",
+            f"- **count**: {meta.get('count')}",
+            f"- **example_items**: {meta.get('example_items', [])[:5]}",
+            f"- **first_seen**: {meta.get('first_seen', '')}",
+            f"- **last_seen**: {meta.get('last_seen', '')}",
+            "- **决定**: （自动晋升已执行；如反向否决，请在 PROMOTE_BLOCKLIST 增加条目）", "",
+        ]
+    if not rows:
+        lines.append("（当前没有达到阈值的候选）")
+    PENDING_REVIEW_FILE.write_text("\n".join(lines), encoding="utf-8")
 
 
 # ── --apply-agent（agent 视觉模式，不走 mimo） ─────────────────────────────────
@@ -1242,7 +1899,7 @@ def cmd_retry_failed(batch_id: str) -> None:
                 print(f"    ❌ 无法获取 item 信息: {e}")
                 continue
 
-        result = call_mimo(build_messages(item))
+        result = call_vision(build_messages(item))
 
         if result is None:
             batch_results[iid] = {
@@ -2091,7 +2748,7 @@ def cmd_review_prepare(limit: int) -> None:
             old_tags  = info_data.get("tags", [])
             name      = info_data.get("name", item_id)
             ext       = info_data.get("ext", "")
-            file_path = str(LIB_PATH / "images" / f"{item_id}.info" / f"{name}.{ext}")
+            file_path = str(lib_path() / "images" / f"{item_id}.info" / f"{name}.{ext}")
         except Exception as e:
             print(f"  ⚠️  Eagle API 异常，fallback 到打标时记录: {e}")
             old_tags  = entry.get("tags_at_tagging", [])
@@ -2789,7 +3446,7 @@ def _resolve_item_path(item_id: str):
         ext  = data.get("ext", "")
         if not ext:
             return None
-        return LIB_PATH / "images" / f"{item_id}.info" / f"{name}.{ext}"
+        return lib_path() / "images" / f"{item_id}.info" / f"{name}.{ext}"
     except Exception as e:
         print(f"  [警告] Eagle API 查询 {item_id} 失败: {e}")
         return None
@@ -3002,12 +3659,12 @@ def cmd_sync() -> None:
 2. 读 `config/tags.json`（完整词表）
 3. 读 `progress.json`（已处理 ID，打标时跳过）
 4. 读 `suggested_tags.json`（待审建议标签，先展示给用户）
-5. 按用户指示继续批量流程（agent 视觉模式：prepare → make_previews → agent 读图输出 JSON
-   → validate_agent_tags → apply-agent）
+5. 按用户指示继续批量流程（**DeepSeek 视觉模式**：prepare → apply-batch --threaded）
 
-⚠️ **mimo API 已于 2026-08-12 停用**（额度过期、不续费）。`--apply-batch` / `run.bat` /
-`run_loop.py` 会全批 AuthenticationError 空转，看着像跑完实际 0 成功 —— 不要再用。
-视觉打标由 agent（你）直接读图完成。
+⚡ **当前打标链路（2026-11-09 起）**：`VISION_PROVIDER=deepseek`，模型 `deepseek-flash`
+（input_modalities 含 image）。`--apply-batch --threaded` 走线程池，逐条落盘可观测；
+mimo 链路代码保留但 key 已过期，仅在 `VISION_PROVIDER=mimo` 时启用。
+跑批前先 `python tag_real.py --probe-llm` 探活；无人值守用 `python -u run_ai_loop.py`。
 
 ## 标签选择优先级
 
@@ -3063,18 +3720,19 @@ S4: 类-游戏截图 → skip
 - 有"类-角色原画"但无"类-角色设定" → 不能写"类-角色设定"
 - 有"类-概念图"但无"类-场景设定" → 不能写"类-场景设定"
 - 有"风-"前缀但"风-"下无具体作品名 → 风-不含作品名，作品走格-
-- 格-原神不在 v2.1 词表 → 不能写"格-原神"
+- 格-原神 自 v2.7.0 起在词表内（count 1726 自动晋升），可正常使用
 
 **正确做法：**
 - 俯视构图 → 选 tags.json 里已有的近义构标签，无则不补构
 - 末世废土题材 → 写"题-末日废土"（已有），不写"题-末世"
 - 角色设定图 → 写"类-角色原画"，不写"类-角色设定"
-- 日系风格明确对应游戏 → 格-明日方舟 或 格-绝区零（R8），不自造格-原神
+- 日系风格明确对应游戏 → 格-明日方舟 / 格-绝区零 / 格-原神，其余作品名仍不得自造
 
 ## 词表外概念
 
 词表无法表达的概念 → 写入 suggested 字段，不写入 tags_to_add。
-suggested 累计 count≥3 由用户决定是否升入词表。
+suggested 累计 count≥3 **自动晋升**（v2.6.0 起：`--promote-suggested` / 每批结束自动执行；
+同义词映射与黑名单见 tag_real.py 的 PROMOTE_REMAP / PROMOTE_BLOCKLIST）。
 
 ## 异常上报
 
@@ -3152,14 +3810,13 @@ suggested 累计 count≥3 由用户决定是否升入词表。
 
 ---
 
-## 下一步待办（agent 视觉模式，mimo API 已停用）
+## 下一步待办（DeepSeek 视觉模式）
 
-1. `python tag_real.py --prepare --limit 200`
-2. `python scripts/make_previews.py <预览目录>`
-3. agent 读图，输出结果 JSON（可分片，每片 20 条）
-4. `python scripts/validate_agent_tags.py <结果文件>`
-5. `python tag_real.py --apply-agent <结果文件>`
-6. 每 {chk_every} 张自动检查点
+1. `python tag_real.py --probe-llm`（确认 key/模型/图像输入可用）
+2. `python -u run_ai_loop.py --limit 200 --workers 4`（prepare + 线程版写回，跑到 pending 清空）
+3. 单独补打某批：`python tag_real.py --prepare --limit 200` → `--apply-batch --threaded`
+4. 词表晋升：`python tag_real.py --promote-suggested`（每批结束已自动跑）
+5. 每 {chk_every} 张自动检查点；`--sync` 刷新 derived/
 
 ---
 
@@ -3221,9 +3878,13 @@ tags.json v{tags_ver}，{total_tags} 标签 / {prefix_cnt} 前缀
 4. orderBy=-CREATEDATE 排序反了 → 去掉 orderBy
 5. btime=0 老素材 → 改用 modificationTime
 6. /api/v2/ 端点不存在 → 用 /api/ 前缀
-7. **mimo API 已停用**（2026-08-12 起）→ key 过期且不续费，`--apply-batch` 全批返回
-   AuthenticationError → mimo_exhausted，看着像"跑完了"实际 0 成功。视觉打标改由
-   agent 自己读图，走 `--apply-agent`，不要再启动 run.bat / run_loop.py
+7. **mimo 已停用，改用 DeepSeek 视觉**（2026-11-09 起）→ `VISION_PROVIDER=deepseek` +
+   `deepseek-flash`（支持 image 输入）。旧 `--apply-batch`（multiprocessing）在 Windows 上
+   会静默卡死、输出全缓冲，一律用 `--apply-batch --threaded` 或 `run_ai_loop.py`
+8. **库路径已从 D 盘迁到 S 盘**（2026-10-26）→ 代码不再硬编码，运行时按
+   Eagle API → workflow.json 解析；`.claude/settings.json` 里的目录也已改指 S 盘
+9. **multiprocessing.Pool 的 90s get 超时会反复重建 Pool** → 表现是进程活着但零输出，
+   已由线程版替代；旧命令仅留兼容
 
 ---
 
@@ -3235,27 +3896,28 @@ tags.json v{tags_ver}，{total_tags} 标签 / {prefix_cnt} 前缀
 
 ---
 
-## 下一步入口（agent 视觉模式 — mimo 已停用，勿走 --apply-batch）
+## 下一步入口（DeepSeek 视觉模式）
 
 ```bash
-# 1. 取待处理素材（一次可取 200）
+# 0. 探活：key + 模型 + 图像输入
+python tag_real.py --probe-llm
+
+# 1. 无人值守跑完整个待办（prepare + 线程版写回，pending 清空即停）
+python -u run_ai_loop.py --limit 200 --workers 4
+
+# 2. 单批手动：取数 → 线程版写回
 python tag_real.py --prepare --limit 200
+python tag_real.py --apply-batch --threaded --size 200 --workers 4
 
-# 2. 生成降采样预览图（长边 640px，省 token）
-python scripts/make_previews.py <预览目录>
+# 3. 词表晋升（每批结束已自动执行，可手动补跑）
+python tag_real.py --promote-suggested
 
-# 3. agent 自己读 <预览目录> 里的图，按词表输出结果 JSON：
-#    [{{"item_id": "...", "tags_to_add": ["类-概念图", ...], "suggested": ["..."]}}]
-
-# 4. 写回前先校验词表 + 排异（挡住前缀写错这类问题）
-python scripts/validate_agent_tags.py <结果文件>
-
-# 5. 写回 Eagle（不调任何 LLM API）
-python tag_real.py --apply-agent <结果文件>
+# 4. 刷新 derived/
+python tag_real.py --sync
 ```
 
-结果文件可以分片（每片 20 条），`--apply-agent` 可重复调用，
-pending 全部写回后才会自动归档。
+线程版逐条落盘：`data/batches/batch_results_NNN.json` 实时增长，`logs/run_ai2_*.log` 可 tail；
+pending 全部落地才归档，中途失败保留 pending 供下一轮续跑。
 """
 
     (DERIVED_DIR / "HANDOFF.md").write_text(handoff_md, encoding="utf-8")
@@ -3293,11 +3955,11 @@ def cmd_test_llm(item_id: str) -> None:
         print(f"❌ build_messages 失败: {e}")
         return
 
-    # d) 调用 mimo
+    # d) 调用视觉模型（provider 由 VISION_PROVIDER 决定）
     t0 = time.time()
-    result = call_mimo(messages)
+    result = call_vision(messages)
     if result is None:
-        print(f"❌ call_mimo 失败（重试耗尽）")
+        print(f"❌ {VISION_PROVIDER} 调用失败（重试耗尽）")
         return
     elapsed_ms = int((time.time() - t0) * 1000)
 
@@ -3307,7 +3969,7 @@ def cmd_test_llm(item_id: str) -> None:
     # e) 写 JSON 报告（不动 progress.json / batch_results）
     out = {
         "item_id":      item_id,
-        "model":        MIMO_MODEL,
+        "model":        DEEPSEEK_MODEL if VISION_PROVIDER == "deepseek" else MIMO_MODEL,
         "existing_tags": existing_tags,
         "new_tags":     new_tags,
         "raw_response": result["raw"],
@@ -3322,7 +3984,7 @@ def cmd_test_llm(item_id: str) -> None:
     intersection = sorted(set(existing_tags) & set(new_tags))
     print(f"\n{'─' * 52}")
     print(f"  item_id        : {item_id}")
-    print(f"  model          : {MIMO_MODEL}")
+    print(f"  model          : {DEEPSEEK_MODEL if VISION_PROVIDER == 'deepseek' else MIMO_MODEL}")
     print(f"  旧标签数        : {len(existing_tags)}")
     print(f"  新标签数        : {len(new_tags)}")
     print(f"  交集 ({len(intersection)})       : {intersection}")
@@ -3411,12 +4073,18 @@ def main():
                         help="复制 derived/HANDOFF.md 到 archive/handoffs/HANDOFF_YYYYMMDD_HHMMSS.md")
     parser.add_argument("--test-llm",         type=str, default="", dest="test_llm",
                         help="单张 LLM 测试（item_id），输出 reports/test_llm_<ID>.json，不改 Eagle / progress")
+    parser.add_argument("--probe-llm",        action="store_true", dest="probe_llm",
+                        help="视觉链路探活：key/models/image 能力，不发素材")
+    parser.add_argument("--promote-suggested", action="store_true", dest="promote_suggested",
+                        help="按阈值自动晋升 suggested 标签进词表（含同义改写/拒绝规则）")
     parser.add_argument("--size",             type=int, default=0, dest="batch_size",
                         help="--apply-batch 本批处理张数（默认 BATCH_SIZE）")
     parser.add_argument("--retry-failed",     type=str, default="", dest="retry_failed",
                         help="重跑指定 batch 中所有失败项（如 024）")
     parser.add_argument("--workers",          type=int, default=5, dest="workers",
                         help="--apply-batch 并行 worker 数（默认 5）")
+    parser.add_argument("--threaded",         action="store_true", dest="threaded",
+                        help="--apply-batch 使用线程池版（逐条落盘/可观测，推荐）")
     parser.add_argument("--batch-report",     type=str, default="", dest="batch_report",
                         help="输出指定 batch 的简报到 reports/batch_<id>_report.md")
     parser.add_argument("--sample-baseline",  action="store_true", dest="sample_baseline",
@@ -3436,6 +4104,9 @@ def main():
     elif args.apply_batch is not None:
         if args.batch and args.batch.startswith("ge_"):
             cmd_ge_apply_batch(args.batch[3:], dry_run=args.dry_run)
+        elif args.threaded:
+            cmd_apply_batch_threaded(batch_id=args.apply_batch, batch_size=args.batch_size,
+                                     workers=args.workers)
         else:
             cmd_apply_batch(batch_id=args.apply_batch, batch_size=args.batch_size, workers=args.workers)
     elif args.apply_agent:
@@ -3468,6 +4139,11 @@ def main():
         cmd_handoff_snapshot()
     elif args.test_llm:
         cmd_test_llm(args.test_llm)
+    elif args.probe_llm:
+        ok, msg = probe_vision(with_image=True)
+        print(("✅ " if ok else "❌ ") + msg)
+    elif args.promote_suggested:
+        promote_suggested()
     elif args.retry_failed:
         cmd_retry_failed(args.retry_failed)
     elif args.batch_report:

@@ -1,8 +1,11 @@
-"""主线 0 持续跑批循环 - 带子进程硬超时防护。"""
+"""主循环 - DeepSeek 视觉 + 线程版批量（2026-11-09 起；旧 multiprocessing 版已弃用）。
+
+保留子进程硬超时：单批超过 BATCH_TIMEOUT 秒就杀掉整棵进程树，下一轮继续。
+"""
 import subprocess, sys, time, signal, os
 
 SCRIPT = os.path.join(os.path.dirname(__file__), "tag_real.py")
-BATCH_TIMEOUT = 300  # apply-batch 单批超时秒数
+BATCH_TIMEOUT = 1800  # apply-batch 单批超时秒数
 
 def run(args, timeout=None):
     """运行子进程，超时则杀掉整个进程树。返回 exit code，超时返回 -1。"""
@@ -25,11 +28,11 @@ def main():
     while True:
         ts = time.strftime("%H:%M:%S")
         print(f"\n[{ts}] === prepare ===")
-        run(["--prepare", "--limit", "20"])
+        run(["--prepare", "--limit", "200"])
 
         ts = time.strftime("%H:%M:%S")
         print(f"[{ts}] === apply-batch (timeout {BATCH_TIMEOUT}s) ===")
-        rc = run(["--apply-batch", "--size", "20", "--workers", "5"], timeout=BATCH_TIMEOUT)
+        rc = run(["--apply-batch", "--threaded", "--size", "200", "--workers", "4"], timeout=BATCH_TIMEOUT)
         if rc == -1:
             print(f"[{time.strftime('%H:%M:%S')}] ⚠️ apply-batch 超时，跳过继续下一轮")
         elif rc != 0:

@@ -1,10 +1,8 @@
 <!-- AUTO-GENERATED FROM /config/. DO NOT EDIT.
-     Last sync: 2026-08-15 13:41:32 from tags.json v2.5.2 -->
+     Last sync: 2026-11-09 21:21:19 from tags.json v2.7.0 -->
 
 # Eagle 打标项目 — 新对话开场交接文档
 
-
-⚠️ exceptions.json 累计 78 条，建议集中处理
 
 > 新会话开始时只需粘贴本文件，无需其他文档。
 
@@ -12,22 +10,22 @@
 
 ## 当前进度
 
-- 已处理：**21818 / 20605** 张（105.89%）
-- 批次号：3320
-- 最后 item_id：`MP8IULGWIWFFZ`
+- 已处理：**22700 / 22692** 张（100.04%）
+- 批次号：3328
+- 最后 item_id：`LJ2I7P2BUAD7L`
 
 ---
 
 ## 当前词表版本与近期变更
 
-tags.json v2.5.2，367 标签 / 23 前缀
+tags.json v2.7.0，382 标签 / 23 前缀
 
 最近 5 条变更：
-- mimo API key 过期且不续费（实测 `GET /v1/models` 返回 401 `Invalid API Key`），200 张批次全部
-- 新增 `--apply-agent <结果文件>`：把 agent 读图产出的标签写回 Eagle，不调任何 LLM API，复用
-- 新增 `scripts/make_previews.py`：把 pending 素材压成长边 640px 预览图（单张读图成本约 1.6k → 500 token）
-- 新增 `scripts/validate_agent_tags.py`：写回前校验词表合法性 + 排异冲突，并对前缀写错给出提示
-- `derived/` 三份模板同步改写为 agent 模式入口，已知坑追加第 7 条
+- 自动晋升 1 个标签（阈值 count>=3）
+- + 格-原神（count=1726）
+- 合计 382 标签 / 23 前缀
+- 自动晋升 14 个标签（阈值 count>=3）
+- + 镜-全身（count=421）
 
 ---
 
@@ -51,38 +49,43 @@ tags.json v2.5.2，367 标签 / 23 前缀
 4. orderBy=-CREATEDATE 排序反了 → 去掉 orderBy
 5. btime=0 老素材 → 改用 modificationTime
 6. /api/v2/ 端点不存在 → 用 /api/ 前缀
-7. **mimo API 已停用**（2026-08-12 起）→ key 过期且不续费，`--apply-batch` 全批返回
-   AuthenticationError → mimo_exhausted，看着像"跑完了"实际 0 成功。视觉打标改由
-   agent 自己读图，走 `--apply-agent`，不要再启动 run.bat / run_loop.py
+7. **mimo 已停用，改用 DeepSeek 视觉**（2026-11-09 起）→ `VISION_PROVIDER=deepseek` +
+   `deepseek-flash`（支持 image 输入）。旧 `--apply-batch`（multiprocessing）在 Windows 上
+   会静默卡死、输出全缓冲，一律用 `--apply-batch --threaded` 或 `run_ai_loop.py`
+8. **库路径已从 D 盘迁到 S 盘**（2026-10-26）→ 代码不再硬编码，运行时按
+   Eagle API → workflow.json 解析；`.claude/settings.json` 里的目录也已改指 S 盘
+9. **multiprocessing.Pool 的 90s get 超时会反复重建 Pool** → 表现是进程活着但零输出，
+   已由线程版替代；旧命令仅留兼容
 
 ---
 
 ## 待处理清单（不主动 surface）
 
-- suggested_tags.json count≥3 待审：18 个
-- exceptions.json 累计：78 条
+- suggested_tags.json count≥3 待审：0 个
+- exceptions.json 累计：2 条
 - 词表外概念建议：读 suggested_tags.json
 
 ---
 
-## 下一步入口（agent 视觉模式 — mimo 已停用，勿走 --apply-batch）
+## 下一步入口（DeepSeek 视觉模式）
 
 ```bash
-# 1. 取待处理素材（一次可取 200）
+# 0. 探活：key + 模型 + 图像输入
+python tag_real.py --probe-llm
+
+# 1. 无人值守跑完整个待办（prepare + 线程版写回，pending 清空即停）
+python -u run_ai_loop.py --limit 200 --workers 4
+
+# 2. 单批手动：取数 → 线程版写回
 python tag_real.py --prepare --limit 200
+python tag_real.py --apply-batch --threaded --size 200 --workers 4
 
-# 2. 生成降采样预览图（长边 640px，省 token）
-python scripts/make_previews.py <预览目录>
+# 3. 词表晋升（每批结束已自动执行，可手动补跑）
+python tag_real.py --promote-suggested
 
-# 3. agent 自己读 <预览目录> 里的图，按词表输出结果 JSON：
-#    [{"item_id": "...", "tags_to_add": ["类-概念图", ...], "suggested": ["..."]}]
-
-# 4. 写回前先校验词表 + 排异（挡住前缀写错这类问题）
-python scripts/validate_agent_tags.py <结果文件>
-
-# 5. 写回 Eagle（不调任何 LLM API）
-python tag_real.py --apply-agent <结果文件>
+# 4. 刷新 derived/
+python tag_real.py --sync
 ```
 
-结果文件可以分片（每片 20 条），`--apply-agent` 可重复调用，
-pending 全部写回后才会自动归档。
+线程版逐条落盘：`data/batches/batch_results_NNN.json` 实时增长，`logs/run_ai2_*.log` 可 tail；
+pending 全部落地才归档，中途失败保留 pending 供下一轮续跑。

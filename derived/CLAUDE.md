@@ -1,17 +1,15 @@
 <!-- AUTO-GENERATED FROM /config/. DO NOT EDIT.
-     Last sync: 2026-08-15 13:41:32 from tags.json v2.5.2 -->
+     Last sync: 2026-11-09 21:21:19 from tags.json v2.7.0 -->
 
 # Eagle 素材库打标 — Claude Code 启动手册
 
-
-⚠️ exceptions.json 累计 78 条，建议集中处理
 
 ## 项目身份
 
 - 用户角色：概念设计师 / 游戏美术
 - 打标意图：翻图为偷美学，不是研究 UI 功能
-- 词表版本：tags.json v2.5.2，367 个标签，23 个前缀
-- 库总量：20605 张
+- 词表版本：tags.json v2.7.0，382 个标签，23 个前缀
+- 库总量：22692 张
 
 ## 启动顺序（固定）
 
@@ -19,12 +17,12 @@
 2. 读 `config/tags.json`（完整词表）
 3. 读 `progress.json`（已处理 ID，打标时跳过）
 4. 读 `suggested_tags.json`（待审建议标签，先展示给用户）
-5. 按用户指示继续批量流程（agent 视觉模式：prepare → make_previews → agent 读图输出 JSON
-   → validate_agent_tags → apply-agent）
+5. 按用户指示继续批量流程（**DeepSeek 视觉模式**：prepare → apply-batch --threaded）
 
-⚠️ **mimo API 已于 2026-08-12 停用**（额度过期、不续费）。`--apply-batch` / `run.bat` /
-`run_loop.py` 会全批 AuthenticationError 空转，看着像跑完实际 0 成功 —— 不要再用。
-视觉打标由 agent（你）直接读图完成。
+⚡ **当前打标链路（2026-11-09 起）**：`VISION_PROVIDER=deepseek`，模型 `deepseek-flash`
+（input_modalities 含 image）。`--apply-batch --threaded` 走线程池，逐条落盘可观测；
+mimo 链路代码保留但 key 已过期，仅在 `VISION_PROVIDER=mimo` 时启用。
+跑批前先 `python tag_real.py --probe-llm` 探活；无人值守用 `python -u run_ai_loop.py`。
 
 ## 标签选择优先级
 
@@ -95,12 +93,13 @@ S4: 类-游戏截图 → skip
 ## 词表外概念
 
 词表无法表达的概念 → 写入 suggested 字段，不写入 tags_to_add。
-suggested 累计 count≥3 由用户决定是否升入词表。
+suggested 累计 count≥3 **自动晋升**（v2.6.0 起：`--promote-suggested` / 每批结束自动执行；
+同义词映射与黑名单见 tag_real.py 的 PROMOTE_REMAP / PROMOTE_BLOCKLIST）。
 
 ## 异常上报
 
 无法归类时：tags_to_add 留空 []，不在正文写长篇解释。
-脚本自动写入 exceptions.json（当前 78 条）。
+脚本自动写入 exceptions.json（当前 2 条）。
 ⚠️ exceptions.json 累计 ≥ 20 条时需要集中处理，避免同一异常反复消耗批次。
 
 ## 输出格式
@@ -114,4 +113,4 @@ suggested 累计 count≥3 由用户决定是否升入词表。
 - 一张图只做一次视觉分析
 - 写回前脚本自动合并旧标签
 - 每 50 张自动触发检查点
-- 当前进度：21818 / 20605 张
+- 当前进度：22700 / 22692 张

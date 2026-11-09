@@ -1,0 +1,551 @@
+{
+  "archived_at": "2026-11-09T12:31:33.762Z",
+  "reason": "mimo API 时代的 75 条 mimo_error + 1 条 mimo_timeout，链路已停用，仅存档",
+  "rows": [
+    {
+      "id": "LBQBHH1ATNW3K",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-07T14:43:05.432986+00:00",
+      "batch": 2979,
+      "extra": {}
+    },
+    {
+      "id": "LBOTGZ8SN1WFA",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-07T14:55:58.652759+00:00",
+      "batch": 2985,
+      "extra": {}
+    },
+    {
+      "id": "LBOTGZ8SMF1ZQ",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-07T14:56:24.264208+00:00",
+      "batch": 2985,
+      "extra": {}
+    },
+    {
+      "id": "LBOTGZ8SHPJOL",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-07T14:58:00.379122+00:00",
+      "batch": 2986,
+      "extra": {}
+    },
+    {
+      "id": "LB75ET89B72O3",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-07T15:39:15.786956+00:00",
+      "batch": 3003,
+      "extra": {}
+    },
+    {
+      "id": "LB07V3HAO00OS",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-07T15:41:09.027741+00:00",
+      "batch": 3004,
+      "extra": {}
+    },
+    {
+      "id": "LB05J6S1H22E6",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-07T15:44:11.207313+00:00",
+      "batch": 3005,
+      "extra": {}
+    },
+    {
+      "id": "LA6FTN524A4PJ",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-07T15:53:20.547676+00:00",
+      "batch": 3009,
+      "extra": {}
+    },
+    {
+      "id": "L9Y5S7SCP4T0K",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-07T16:02:50.555811+00:00",
+      "batch": 3013,
+      "extra": {}
+    },
+    {
+      "id": "L9WFPPGAQC7IM",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-07T16:09:31.303508+00:00",
+      "batch": 3016,
+      "extra": {}
+    },
+    {
+      "id": "L9W2O71OT450H",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-07T16:16:57.697533+00:00",
+      "batch": 3019,
+      "extra": {}
+    },
+    {
+      "id": "L2G30XSE96SHW",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-07T16:36:29.066361+00:00",
+      "batch": 3027,
+      "extra": {}
+    },
+    {
+      "id": "L93U4L1PTSBYT",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-07T16:44:49.485972+00:00",
+      "batch": 3031,
+      "extra": {}
+    },
+    {
+      "id": "L921J6HRENLUG",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-07T16:47:13.780134+00:00",
+      "batch": 3032,
+      "extra": {}
+    },
+    {
+      "id": "L921HKJD3BMRK",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-07T16:47:53.048763+00:00",
+      "batch": 3032,
+      "extra": {}
+    },
+    {
+      "id": "L767SCEX38EJK",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-07T17:10:07.359364+00:00",
+      "batch": 3042,
+      "extra": {}
+    },
+    {
+      "id": "L70V9YFQAPNQH",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-07T17:15:20.224399+00:00",
+      "batch": 3044,
+      "extra": {}
+    },
+    {
+      "id": "L70KUHDJ8SWUY",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-07T17:18:49.149654+00:00",
+      "batch": 3046,
+      "extra": {}
+    },
+    {
+      "id": "L6QGOR43VIL1J",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-07T17:32:47.157688+00:00",
+      "batch": 3053,
+      "extra": {}
+    },
+    {
+      "id": "L6P99YI7OS0T7",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-07T17:33:33.282697+00:00",
+      "batch": 3053,
+      "extra": {}
+    },
+    {
+      "id": "L6P826VBX0L63",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-07T17:36:46.075514+00:00",
+      "batch": 3055,
+      "extra": {}
+    },
+    {
+      "id": "L6D79FPGBMH17",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-07T17:45:33.312409+00:00",
+      "batch": 3059,
+      "extra": {}
+    },
+    {
+      "id": "L4ZLD5VRJCQAM",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-07T17:57:30.759557+00:00",
+      "batch": 3065,
+      "extra": {}
+    },
+    {
+      "id": "L4ZLM8O45RL4U",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-07T18:01:20.648744+00:00",
+      "batch": 3067,
+      "extra": {}
+    },
+    {
+      "id": "L5MJQJ3WRR8UW",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-07T18:03:17.578178+00:00",
+      "batch": 3068,
+      "extra": {}
+    },
+    {
+      "id": "L5MJQJ3W3B1Z3",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-07T18:04:41.756780+00:00",
+      "batch": 3069,
+      "extra": {}
+    },
+    {
+      "id": "L5MJQJ3VX0SPX",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-07T18:12:00.625273+00:00",
+      "batch": 3072,
+      "extra": {}
+    },
+    {
+      "id": "L5MJQJ3V671OJ",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-07T18:16:45.651621+00:00",
+      "batch": 3075,
+      "extra": {}
+    },
+    {
+      "id": "L5MJQJ3USO6U1",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-07T18:20:36.363496+00:00",
+      "batch": 3077,
+      "extra": {}
+    },
+    {
+      "id": "L5MJQJ3T9C6H5",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-07T18:24:04.732494+00:00",
+      "batch": 3079,
+      "extra": {}
+    },
+    {
+      "id": "L5MJQJ3TTGFKN",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-07T18:24:08.296373+00:00",
+      "batch": 3079,
+      "extra": {}
+    },
+    {
+      "id": "L5MJPTDMVOBD4",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-07T18:34:29.465705+00:00",
+      "batch": 3084,
+      "extra": {}
+    },
+    {
+      "id": "L59HVG3S7FVOM",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-07T18:36:47.784372+00:00",
+      "batch": 3085,
+      "extra": {}
+    },
+    {
+      "id": "L53E3BSPEMGQW",
+      "reason": "mimo_timeout",
+      "timestamp": "2026-05-07T18:43:17.466974+00:00",
+      "batch": 3088,
+      "extra": {}
+    },
+    {
+      "id": "L4ZLD5VRQUMYE",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-07T18:48:16.605848+00:00",
+      "batch": 3090,
+      "extra": {}
+    },
+    {
+      "id": "L4ZLD5VRVPH9M",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-07T18:48:22.593777+00:00",
+      "batch": 3090,
+      "extra": {}
+    },
+    {
+      "id": "L4ZLD5VRCNF1J",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-07T18:50:16.039465+00:00",
+      "batch": 3091,
+      "extra": {}
+    },
+    {
+      "id": "L4ZLD5VR2XIUD",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-07T18:50:36.107761+00:00",
+      "batch": 3091,
+      "extra": {}
+    },
+    {
+      "id": "L4ZLD5VRS6118",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-07T18:52:21.396162+00:00",
+      "batch": 3092,
+      "extra": {}
+    },
+    {
+      "id": "L4ZLD5VRWI220",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-07T18:57:10.721373+00:00",
+      "batch": 3095,
+      "extra": {}
+    },
+    {
+      "id": "L4SLTB106R6ME",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-07T19:04:14.569838+00:00",
+      "batch": 3098,
+      "extra": {}
+    },
+    {
+      "id": "L4MXEVSWR80PF",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-08T01:44:09.659203+00:00",
+      "batch": 3100,
+      "extra": {}
+    },
+    {
+      "id": "L48JDUZPPBVDG",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-08T01:52:16.042687+00:00",
+      "batch": 3104,
+      "extra": {}
+    },
+    {
+      "id": "L48JDUZOJPYV3",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-08T01:57:30.262377+00:00",
+      "batch": 3106,
+      "extra": {}
+    },
+    {
+      "id": "L48JDUZOLW8SA",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-08T02:07:09.871684+00:00",
+      "batch": 3110,
+      "extra": {}
+    },
+    {
+      "id": "L48JDUZOMPKFG",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-08T02:09:40.947979+00:00",
+      "batch": 3111,
+      "extra": {}
+    },
+    {
+      "id": "L48HQWZ64NHCP",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-08T02:12:46.170325+00:00",
+      "batch": 3112,
+      "extra": {}
+    },
+    {
+      "id": "L48HQWZ67GU3H",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-08T02:17:10.457566+00:00",
+      "batch": 3114,
+      "extra": {}
+    },
+    {
+      "id": "L48HQWZ6A5X6K",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-08T02:19:47.194618+00:00",
+      "batch": 3115,
+      "extra": {}
+    },
+    {
+      "id": "L3V73D9U3X0EY",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-08T02:24:10.303126+00:00",
+      "batch": 3117,
+      "extra": {}
+    },
+    {
+      "id": "L3P8BCYWOS0OK",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-08T02:28:52.905646+00:00",
+      "batch": 3119,
+      "extra": {}
+    },
+    {
+      "id": "L3I7YGUAQ6FUB",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-08T04:58:08.128721+00:00",
+      "batch": 3127,
+      "extra": {}
+    },
+    {
+      "id": "L2VXJXFOZLKEL",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-08T05:02:03.358074+00:00",
+      "batch": 3129,
+      "extra": {}
+    },
+    {
+      "id": "L2Q0Y30RXMK0D",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-08T05:06:26.520933+00:00",
+      "batch": 3131,
+      "extra": {}
+    },
+    {
+      "id": "L2NBTNHLLFH71",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-08T05:18:56.775312+00:00",
+      "batch": 3137,
+      "extra": {}
+    },
+    {
+      "id": "L2LQBF2S4BBM0",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-08T05:20:55.155430+00:00",
+      "batch": 3138,
+      "extra": {}
+    },
+    {
+      "id": "L2IIAWYX7BLGQ",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-08T05:38:07.992052+00:00",
+      "batch": 3145,
+      "extra": {}
+    },
+    {
+      "id": "L2G5I09T8Q86S",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-08T06:22:14.644844+00:00",
+      "batch": 3165,
+      "extra": {}
+    },
+    {
+      "id": "L2G5I09R9DXNS",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-08T06:46:10.589423+00:00",
+      "batch": 3176,
+      "extra": {}
+    },
+    {
+      "id": "L2G5I05G8O9OS",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-08T06:50:08.687024+00:00",
+      "batch": 3178,
+      "extra": {}
+    },
+    {
+      "id": "L2G5I05GRE3IL",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-08T07:02:31.035663+00:00",
+      "batch": 3183,
+      "extra": {}
+    },
+    {
+      "id": "L2G5I05GID969",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-08T07:04:46.111019+00:00",
+      "batch": 3184,
+      "extra": {}
+    },
+    {
+      "id": "L2G2AUK3NU3IZ",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-08T07:13:14.380875+00:00",
+      "batch": 3188,
+      "extra": {}
+    },
+    {
+      "id": "54366da7-7303-a58f-b620-01b2954ed2f2",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-08T13:34:42.195944+00:00",
+      "batch": 3239,
+      "extra": {}
+    },
+    {
+      "id": "0bdd7c1c-ef67-651c-5a0f-5c4a120dc20b",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-08T14:12:43.152153+00:00",
+      "batch": 3254,
+      "extra": {}
+    },
+    {
+      "id": "d45821ed-4cb6-9922-0cae-f86cf2f7b70d",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-08T14:15:01.657142+00:00",
+      "batch": 3255,
+      "extra": {}
+    },
+    {
+      "id": "d1f15883-cf1c-0db2-fba0-a37786c6491d",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-08T14:30:43.544875+00:00",
+      "batch": 3261,
+      "extra": {}
+    },
+    {
+      "id": "9febd1f0-0cc0-00a3-17c4-86a959c57dc9",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-08T14:59:48.238541+00:00",
+      "batch": 3271,
+      "extra": {}
+    },
+    {
+      "id": "fe027d7f-ee89-6249-4a83-acb4d7f514e2",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-08T15:07:14.763010+00:00",
+      "batch": 3274,
+      "extra": {}
+    },
+    {
+      "id": "6ff816a5-3e6f-4d9d-7b45-f3155a1c335a",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-08T15:07:19.780996+00:00",
+      "batch": 3274,
+      "extra": {}
+    },
+    {
+      "id": "637c8676-a21c-1ac7-6f0c-29c54d124ab0",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-08T15:30:11.540186+00:00",
+      "batch": 3283,
+      "extra": {}
+    },
+    {
+      "id": "343e6fe7-c273-c735-c023-acfa8182a7ca",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-08T15:57:55.086346+00:00",
+      "batch": 3294,
+      "extra": {}
+    },
+    {
+      "id": "3b3d6f94-e3f4-7073-f78f-9bf62f7de7c9",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-08T15:58:30.517335+00:00",
+      "batch": 3294,
+      "extra": {}
+    },
+    {
+      "id": "386cf263-24b7-e2db-56b3-5271c6a8bc3a",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-08T16:06:24.839751+00:00",
+      "batch": 3297,
+      "extra": {}
+    },
+    {
+      "id": "ae54ec77-814f-c9a9-96c0-5088e646f0bb",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-08T16:18:04.793001+00:00",
+      "batch": 3302,
+      "extra": {}
+    },
+    {
+      "id": "LDB3BJU429160",
+      "reason": "file_missing",
+      "timestamp": "2026-05-12T12:40:26.482851+00:00",
+      "batch": 3305,
+      "extra": {
+        "path": "D:\\杂项\\素材.library\\images\\LDB3BJU429160.info\\Crystal.jpg",
+        "deduped_previous_exceptions": 331,
+        "previous_reasons": {
+          "mimo_error": 331
+        }
+      }
+    },
+    {
+      "id": "MOZV9TBWWZHA3",
+      "reason": "mimo_error",
+      "timestamp": "2026-05-13T13:40:12.881934+00:00",
+      "batch": 3306,
+      "extra": {}
+    }
+  ]
+}

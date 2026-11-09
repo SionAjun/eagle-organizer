@@ -1,4 +1,5 @@
 @echo off
+REM 2026-11-09: 改用 DeepSeek + 线程版批量（旧 multiprocessing 版在 Windows 会静默卡死）
 setlocal
 
 set LOCK=data\run.lock
@@ -18,9 +19,9 @@ python -c "import os;open(r'data\run.lock','w').write(str(os.getppid()))"
 echo 循环启动，PID 写入 %LOCK%
 
 :loop
-python tag_real.py --prepare --limit 20
+python -u tag_real.py --prepare --limit 200
 if errorlevel 1 goto cleanup
-python tag_real.py --apply-batch --size 20 --workers 5
+python -u tag_real.py --apply-batch --threaded --size 200 --workers 4
 if errorlevel 1 goto cleanup
 timeout /t 2 >nul
 goto loop

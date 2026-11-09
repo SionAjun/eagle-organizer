@@ -1,5 +1,74 @@
 # BUG 台账
 
+## BUG-011: DeepSeek 探活被 response_format 反咬一口
+
+- **发现日期**：2026-11-09
+- **现象**：`--probe-llm` 报"视觉探活无返回"，日志只有一句
+  `该端点不支持 response_format=json_object`，但同一 key 直接 POST 明明能过
+- **根因**：DeepSeek 的 `response_format={"type":"json_object"}` 要求 prompt 里出现
+  "json" 字样，否则 400 `Prompt must contain the word 'json'`。探活 prompt 写的是
+  "只回一个词"，没提 JSON；而降级重试只给了一次预算（`max_retries=1`），第一次就耗光
+- **修复**：探活 prompt 改成 "用 JSON 回答："；`call_deepseek` 重试轮次 +1（关 json 模式那次
+  不占预算）；正式打标的 system prompt 本来就含"JSON 输出格式硬约束"，不受影响
+
+---
+
+## BUG-010: multiprocessing 批量在 Windows 静默卡死（零输出）
+
+- **发现日期**：2026-11-09
+- **现象**：`--apply-batch --size 200` 起了 5 个 worker，日志停在"启动 Pool(5)"，
+  15 分钟没有任何输出；worker 进程 CPU 各 2 秒（= 只干了一两张），parent 空转
+- **根因**：两层叠加
+  1. `h.get(timeout=90)` 超时后重建 Pool 并重投未完成项，没有尝试计数上限 → 单张卡住会
+     无限重建；实测 20:33:45 就重建过一轮，成为 20:31 那批的孤儿 worker
+  2. 重定向到日志文件时 Python 全缓冲，主进程的进度打印一次都没落盘，看起来像"没跑"
+- **修复**：新增 `cmd_apply_batch_threaded`（`--apply-batch --threaded`）：
+  线程池 + `as_completed` + 逐条 `flush` 打印 + 逐条写 `batch_results`，
+  HTTP 客户端自带 `VISION_TIMEOUT`，不再依赖 Pool 的 get 超时
+- **验证**：6 张 24 秒完成、200 张批次日志实时可见；本机 4 线程 ≈ 3.5s/张
+
+---
+
+## BUG-009: records 账本对不平（少 1,983 条）
+
+- **发现日期**：2026-11-09
+- **现象**：`progress.total_processed` = 21,818，但 `records` 135 + `archive/records` 197 个文件
+  19,700 条 = 19,835，缺口 1,983
+- **根因**：早期版本按 `RECORDS_KEEP_RECENT` 截断 `records` 时没有同步归档，历史轮次直接丢账
+- **处理**：不回填（原始 tags 已在 Eagle 侧，重算无意义），在台账登记口径：
+  **进度以 `processed_ids` 为准，records 仅作近期审计样本**
+
+---
+
+## BUG-008: library_total 长期失真，派生文件算出 105.89% 完成度
+
+- **发现日期**：2026-11-09
+- **现象**：`workflow.json.library_total` 停在 20,605，实际库 22,692；
+  `derived/STATE.md` 显示 "21818 / 20605（105.89%）"，新会话据此判断进度会直接跑偏
+- **根因**：总量是 2026-05-12 手填的常量，之后库持续新增（21,925 → 22,692）没人改
+- **修复**：`cmd_prepare` 每次拉全量后把实测条数回写 `workflow.json.library_total` 与
+  `library_path`；`tag_real.py` 的 `LIBRARY_TOTAL` 只作兜底
+
+---
+
+## BUG-007: 库迁移后 tag_real.py 仍硬编码 D 盘，prepare 会把整库烧成 file_missing
+
+- **发现日期**：2026-11-09（库迁移发生在 2026-10-26）
+- **现象**：`LIB_PATH = Path("D:/杂项/素材.library")` 等 4 处硬编码；本机已无 D 盘。
+  一旦执行 `--prepare`，每条素材都会走 `resolve_path()` 判不存在 →
+  `append_exception(file_missing)` + `mark_exception_processed()`，
+  **把 800+ 张正常素材写进 processed_ids 永久跳过**
+- **根因**：2026-10-26 素材库从 USB 机械盘迁到 `S:\02_Reference_参考图库\素材.library`，
+  迁移只改了 Eagle Settings，没动代码常量
+- **修复**：
+  1. 新增 `lib_path()`：环境变量 `EAGLE_LIBRARY_PATH` → Eagle API `/library/info` →
+     `config/workflow.json` 三级解析，只认 `images/` 真实存在的候选
+  2. `cmd_prepare` 加预检：前 20 个待处理素材若过半源文件缺失，直接中止且不写 progress
+  3. `config/workflow.json`、`.claude/settings.json` 同步改指 S 盘
+- **验证**：`--prepare --limit 3` 正常取到 S 盘路径；`--apply-batch --threaded` 6/6 写回成功
+
+---
+
 ## BUG-006: mimo key 失效时整批静默空转，且会把好素材拉黑
 
 - **发现日期**：2026-08-12
